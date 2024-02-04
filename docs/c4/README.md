@@ -4,10 +4,10 @@ Nach dem vergleich verschiedener Technologien fällt die Wahl auf den Mermaid Li
 Der Editior kann wie folgt aufgerufen werden:
 https://mermaid.live/
 
-##### Workflow
+### Workflow
 Das Directory enthält die Datei **IoTC4.json** diese muss bei Änderung in den Live editor hochgeladen werden und nach Änderungen wieder gedownloaded und ins Git geschrieben werden. 
 
-##### Dokumentation
+### Dokumentation
 Die Dokumentation von mermaid zu C4 findet sich unter:
 https://mermaid.js.org/syntax/c4.html
 
