@@ -2,7 +2,6 @@
 https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog
 
 ## Definition of done (Dod)
-## Definition of Done
 
 Im Team wurden die folgenden Kriterien definiert, damit eine Aufgabe oder ein Produkt als abgeschlossen gilt:
 1. **Code-Review:** Der Code wurde von mindestens einem Teammitglied überprüft.
