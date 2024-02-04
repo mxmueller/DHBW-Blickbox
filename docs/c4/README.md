@@ -14,7 +14,7 @@ https://mermaid.js.org/syntax/c4.html
 Wichtig! Die Syntax von Plant UML kann verwendet werden: https://github.com/plantuml-stdlib/C4-PlantUML/blob/master/README.md
 
 Basiscode Beispiel eines C4 Diagramms:
-´´´
+
     C4Context
       title System Context diagram for Internet Banking System
       Enterprise_Boundary(b0, "BankBoundary0") {
@@ -57,4 +57,4 @@ Basiscode Beispiel eines C4 Diagramms:
       UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
 
       UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
-´´´
+
