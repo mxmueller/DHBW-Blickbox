@@ -1,0 +1,1151 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={arc42 Template},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{\includegraphics{images/arc42-logo.png} Template}
+\author{}
+\date{Januar 2023}
+
+\begin{document}
+\maketitle
+
+\section{}
+
+\textbf{Über arc42}
+
+arc42, das Template zur Dokumentation von Software- und
+Systemarchitekturen.
+
+Template Version 8.2 DE. (basiert auf AsciiDoc Version), Januar 2023
+
+Created, maintained and © by Dr. Peter Hruschka, Dr. Gernot Starke and
+contributors. Siehe \url{https://arc42.org}.
+
+Diese Version des Templates enthält Hilfen und Erläuterungen. Sie dient
+der Einarbeitung in arc42 sowie dem Verständnis der Konzepte. Für die
+Dokumentation eigener System verwenden Sie besser die \emph{plain}
+Version.
+
+\hypertarget{section-introduction-and-goals}{%
+\section{Einführung und Ziele}\label{section-introduction-and-goals}}
+
+Beschreibt die wesentlichen Anforderungen und treibenden Kräfte, die bei
+der Umsetzung der Softwarearchitektur und Entwicklung des Systems
+berücksichtigt werden müssen.
+
+Dazu gehören:
+
+\begin{itemize}
+\item
+  zugrunde liegende Geschäftsziele,
+\item
+  wesentliche Aufgabenstellungen,
+\item
+  wesentliche funktionale Anforderungen,
+\item
+  Qualitätsziele für die Architektur und
+\item
+  relevante Stakeholder und deren Erwartungshaltung.
+\end{itemize}
+
+\hypertarget{_aufgabenstellung}{%
+\subsection{Aufgabenstellung}\label{_aufgabenstellung}}
+
+\textbf{Inhalt}
+
+Kurzbeschreibung der fachlichen Aufgabenstellung, treibenden Kräfte,
+Extrakt (oder Abstract) der Anforderungen. Verweis auf (hoffentlich
+vorliegende) Anforderungsdokumente (mit Versionsbezeichnungen und
+Ablageorten).
+
+\textbf{Motivation}
+
+Aus Sicht der späteren Nutzung ist die Unterstützung einer fachlichen
+Aufgabe oder Verbesserung der Qualität der eigentliche Beweggrund, ein
+neues System zu schaffen oder ein bestehendes zu modifizieren.
+
+\textbf{Form}
+
+Kurze textuelle Beschreibung, eventuell in tabellarischer Use-Case Form.
+Sofern vorhanden, sollte die Aufgabenstellung Verweise auf die
+entsprechenden Anforderungsdokumente enthalten.
+
+Halten Sie diese Auszüge so knapp wie möglich und wägen Sie Lesbarkeit
+und Redundanzfreiheit gegeneinander ab.
+
+Siehe \href{https://docs.arc42.org/section-1/}{Anforderungen und Ziele}
+in der online-Dokumentation (auf Englisch!).
+
+\hypertarget{_qualit_tsziele}{%
+\subsection{Qualitätsziele}\label{_qualit_tsziele}}
+
+\textbf{Inhalt}
+
+Die Top-3 bis Top-5 der Qualitätsanforderungen für die Architektur,
+deren Erfüllung oder Einhaltung den maßgeblichen Stakeholdern besonders
+wichtig sind. Gemeint sind hier wirklich Qualitätsziele, die nicht
+unbedingt mit den Zielen des Projekts übereinstimmen. Beachten Sie den
+Unterschied.
+
+Hier ein Überblick möglicher Themen (basierend auf dem ISO 25010
+Standard):
+
+\includegraphics{images/01_2_iso-25010-topics-DE.drawio.png}
+
+\textbf{Motivation}
+
+Weil Qualitätsziele grundlegende Architekturentscheidungen oft
+maßgeblich beeinflussen, sollten Sie die für Ihre Stakeholder relevanten
+Qualitätsziele kennen, möglichst konkret und operationalisierbar.
+
+\textbf{Form}
+
+Tabellarische Darstellung der Qualitätsziele mit möglichst konkreten
+Szenarien, geordnet nach Prioritäten.
+
+\hypertarget{_stakeholder}{%
+\subsection{Stakeholder}\label{_stakeholder}}
+
+\textbf{Inhalt}
+
+Expliziter Überblick über die Stakeholder des Systems -- über alle
+Personen, Rollen oder Organisationen --, die
+
+\begin{itemize}
+\item
+  die Architektur kennen sollten oder
+\item
+  von der Architektur überzeugt werden müssen,
+\item
+  mit der Architektur oder dem Code arbeiten (z.B. Schnittstellen
+  nutzen),
+\item
+  die Dokumentation der Architektur für ihre eigene Arbeit benötigen,
+\item
+  Entscheidungen über das System und dessen Entwicklung treffen.
+\end{itemize}
+
+\textbf{Motivation}
+
+Sie sollten die Projektbeteiligten und -betroffenen kennen, sonst
+erleben Sie später im Entwicklungsprozess Überraschungen. Diese
+Stakeholder bestimmen unter anderem Umfang und Detaillierungsgrad der
+von Ihnen zu leistenden Arbeit und Ergebnisse.
+
+\textbf{Form}
+
+Tabelle mit Rollen- oder Personennamen, sowie deren Erwartungshaltung
+bezüglich der Architektur und deren Dokumentation.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5000}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Rolle
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Kontakt
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Erwartungshaltung
+\end{minipage} \\
+\midrule
+\endhead
+\emph{\textless Rolle-1\textgreater{}} &
+\emph{\textless Kontakt-1\textgreater{}} &
+\emph{\textless Erwartung-1\textgreater{}} \\
+\emph{\textless Rolle-2\textgreater{}} &
+\emph{\textless Kontakt-2\textgreater{}} &
+\emph{\textless Erwartung-2\textgreater{}} \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{section-architecture-constraints}{%
+\section{Randbedingungen}\label{section-architecture-constraints}}
+
+\textbf{Inhalt}
+
+Randbedingungen und Vorgaben, die ihre Freiheiten bezüglich Entwurf,
+Implementierung oder Ihres Entwicklungsprozesses einschränken. Diese
+Randbedingungen gelten manchmal organisations- oder firmenweit über die
+Grenzen einzelner Systeme hinweg.
+
+\textbf{Motivation}
+
+Für eine tragfähige Architektur sollten Sie genau wissen, wo Ihre
+Freiheitsgrade bezüglich der Entwurfsentscheidungen liegen und wo Sie
+Randbedingungen beachten müssen. Sie können Randbedingungen vielleicht
+noch verhandeln, zunächst sind sie aber da.
+
+\textbf{Form}
+
+Einfache Tabellen der Randbedingungen mit Erläuterungen. Bei Bedarf
+unterscheiden Sie technische, organisatorische und politische
+Randbedingungen oder übergreifende Konventionen (beispielsweise
+Programmier- oder Versionierungsrichtlinien, Dokumentations- oder
+Namenskonvention).
+
+Siehe \href{https://docs.arc42.org/section-2/}{Randbedingungen} in der
+online-Dokumentation (auf Englisch!).
+
+\hypertarget{section-system-scope-and-context}{%
+\section{Kontextabgrenzung}\label{section-system-scope-and-context}}
+
+\textbf{Inhalt}
+
+Die Kontextabgrenzung grenzt das System gegen alle Kommunikationspartner
+(Nachbarsysteme und Benutzerrollen) ab. Sie legt damit die externen
+Schnittstellen fest und zeigt damit auch die Verantwortlichkeit (scope)
+Ihres Systems: Welche Verantwortung trägt das System und welche
+Verantwortung übernehmen die Nachbarsysteme?
+
+Differenzieren Sie fachlichen (Ein- und Ausgaben) und technischen
+Kontext (Kanäle, Protokolle, Hardware), falls nötig.
+
+\textbf{Motivation}
+
+Die fachlichen und technischen Schnittstellen zur Kommunikation gehören
+zu den kritischsten Aspekten eines Systems. Stellen Sie sicher, dass Sie
+diese komplett verstanden haben.
+
+\textbf{Form}
+
+Verschiedene Optionen:
+
+\begin{itemize}
+\item
+  Diverse Kontextdiagramme
+\item
+  Listen von Kommunikationsbeziehungen mit deren Schnittstellen
+\end{itemize}
+
+Siehe \href{https://docs.arc42.org/section-3/}{Kontextabgrenzung} in der
+online-Dokumentation (auf Englisch!).
+
+\hypertarget{_fachlicher_kontext}{%
+\subsection{Fachlicher Kontext}\label{_fachlicher_kontext}}
+
+\textbf{Inhalt}
+
+Festlegung \textbf{aller} Kommunikationsbeziehungen (Nutzer, IT-Systeme,
+\ldots) mit Erklärung der fachlichen Ein- und Ausgabedaten oder
+Schnittstellen. Zusätzlich (bei Bedarf) fachliche Datenformate oder
+Protokolle der Kommunikation mit den Nachbarsystemen.
+
+\textbf{Motivation}
+
+Alle Beteiligten müssen verstehen, welche fachlichen Informationen mit
+der Umwelt ausgetauscht werden.
+
+\textbf{Form}
+
+Alle Diagrammarten, die das System als Blackbox darstellen und die
+fachlichen Schnittstellen zu den Nachbarsystemen beschreiben.
+
+Alternativ oder ergänzend können Sie eine Tabelle verwenden. Der Titel
+gibt den Namen Ihres Systems wieder; die drei Spalten sind:
+Kommunikationsbeziehung, Eingabe, Ausgabe.
+
+\textbf{\textless Diagramm und/oder Tabelle\textgreater{}}
+
+\textbf{\textless optional: Erläuterung der externen fachlichen
+Schnittstellen\textgreater{}}
+
+\hypertarget{_technischer_kontext}{%
+\subsection{Technischer Kontext}\label{_technischer_kontext}}
+
+\textbf{Inhalt}
+
+Technische Schnittstellen (Kanäle, Übertragungsmedien) zwischen dem
+System und seiner Umwelt. Zusätzlich eine Erklärung (\emph{mapping}),
+welche fachlichen Ein- und Ausgaben über welche technischen Kanäle
+fließen.
+
+\textbf{Motivation}
+
+Viele Stakeholder treffen Architekturentscheidungen auf Basis der
+technischen Schnittstellen des Systems zu seinem Kontext.
+
+Insbesondere bei der Entwicklung von Infrastruktur oder Hardware sind
+diese technischen Schnittstellen durchaus entscheidend.
+
+\textbf{Form}
+
+Beispielsweise UML Deployment-Diagramme mit den Kanälen zu
+Nachbarsystemen, begleitet von einer Tabelle, die Kanäle auf
+Ein-/Ausgaben abbildet.
+
+\textbf{\textless Diagramm oder Tabelle\textgreater{}}
+
+\textbf{\textless optional: Erläuterung der externen technischen
+Schnittstellen\textgreater{}}
+
+\textbf{\textless Mapping fachliche auf technische
+Schnittstellen\textgreater{}}
+
+\hypertarget{section-solution-strategy}{%
+\section{Lösungsstrategie}\label{section-solution-strategy}}
+
+\textbf{Inhalt}
+
+Kurzer Überblick über die grundlegenden Entscheidungen und
+Lösungsansätze, die Entwurf und Implementierung des Systems prägen.
+Hierzu gehören:
+
+\begin{itemize}
+\item
+  Technologieentscheidungen
+\item
+  Entscheidungen über die Top-Level-Zerlegung des Systems,
+  beispielsweise die Verwendung gesamthaft prägender Entwurfs- oder
+  Architekturmuster,
+\item
+  Entscheidungen zur Erreichung der wichtigsten Qualitätsanforderungen
+  sowie
+\item
+  relevante organisatorische Entscheidungen, beispielsweise für
+  bestimmte Entwicklungsprozesse oder Delegation bestimmter Aufgaben an
+  andere Stakeholder.
+\end{itemize}
+
+\textbf{Motivation}
+
+Diese wichtigen Entscheidungen bilden wesentliche „Eckpfeiler`` der
+Architektur. Von ihnen hängen viele weitere Entscheidungen oder
+Implementierungsregeln ab.
+
+\textbf{Form}
+
+Fassen Sie die zentralen Entwurfsentscheidungen \textbf{kurz} zusammen.
+Motivieren Sie, ausgehend von Aufgabenstellung, Qualitätszielen und
+Randbedingungen, was Sie entschieden haben und warum Sie so entschieden
+haben. Vermeiden Sie redundante Beschreibungen und verweisen Sie eher
+auf weitere Ausführungen in Folgeabschnitten.
+
+Siehe \href{https://docs.arc42.org/section-4/}{Lösungsstrategie} in der
+online-Dokumentation (auf Englisch!).
+
+\hypertarget{section-building-block-view}{%
+\section{Bausteinsicht}\label{section-building-block-view}}
+
+\textbf{Inhalt}
+
+Die Bausteinsicht zeigt die statische Zerlegung des Systems in Bausteine
+(Module, Komponenten, Subsysteme, Klassen, Schnittstellen, Pakete,
+Bibliotheken, Frameworks, Schichten, Partitionen, Tiers, Funktionen,
+Makros, Operationen, Datenstrukturen, \ldots) sowie deren Abhängigkeiten
+(Beziehungen, Assoziationen, \ldots)
+
+Diese Sicht sollte in jeder Architekturdokumentation vorhanden sein. In
+der Analogie zum Hausbau bildet die Bausteinsicht den
+\emph{Grundrissplan}.
+
+\textbf{Motivation}
+
+Behalten Sie den Überblick über den Quellcode, indem Sie die statische
+Struktur des Systems durch Abstraktion verständlich machen.
+
+Damit ermöglichen Sie Kommunikation auf abstrakterer Ebene, ohne zu
+viele Implementierungsdetails offenlegen zu müssen.
+
+\textbf{Form}
+
+Die Bausteinsicht ist eine hierarchische Sammlung von Blackboxen und
+Whiteboxen (siehe Abbildung unten) und deren Beschreibungen.
+
+\includegraphics{images/05_building_blocks-DE.png}
+
+\textbf{Ebene 1} ist die Whitebox-Beschreibung des Gesamtsystems,
+zusammen mit Blackbox-Beschreibungen der darin enthaltenen Bausteine.
+
+\textbf{Ebene 2} zoomt in einige Bausteine der Ebene 1 hinein. Sie
+enthält somit die Whitebox-Beschreibungen ausgewählter Bausteine der
+Ebene 1, jeweils zusammen mit Blackbox-Beschreibungen darin enthaltener
+Bausteine.
+
+\textbf{Ebene 3} zoomt in einige Bausteine der Ebene 2 hinein, usw.
+
+Siehe \href{https://docs.arc42.org/section-5/}{Bausteinsicht} in der
+online-Dokumentation (auf Englisch!).
+
+\hypertarget{_whitebox_gesamtsystem}{%
+\subsection{Whitebox Gesamtsystem}\label{_whitebox_gesamtsystem}}
+
+An dieser Stelle beschreiben Sie die Zerlegung des Gesamtsystems anhand
+des nachfolgenden Whitebox-Templates. Dieses enthält:
+
+\begin{itemize}
+\item
+  Ein Übersichtsdiagramm
+\item
+  die Begründung dieser Zerlegung
+\item
+  Blackbox-Beschreibungen der hier enthaltenen Bausteine. Dafür haben
+  Sie verschiedene Optionen:
+
+  \begin{itemize}
+  \item
+    in \emph{einer} Tabelle, gibt einen kurzen und pragmatischen
+    Überblick über die enthaltenen Bausteine sowie deren Schnittstellen.
+  \item
+    als Liste von Blackbox-Beschreibungen der Bausteine, gemäß dem
+    Blackbox-Template (siehe unten). Diese Liste können Sie, je nach
+    Werkzeug, etwa in Form von Unterkapiteln (Text), Unter-Seiten (Wiki)
+    oder geschachtelten Elementen (Modellierungswerkzeug) darstellen.
+  \end{itemize}
+\item
+  (optional:) wichtige Schnittstellen, die nicht bereits im
+  Blackbox-Template eines der Bausteine erläutert werden, aber für das
+  Verständnis der Whitebox von zentraler Bedeutung sind. Aufgrund der
+  vielfältigen Möglichkeiten oder Ausprägungen von Schnittstellen geben
+  wir hierzu kein weiteres Template vor. Im schlimmsten Fall müssen Sie
+  Syntax, Semantik, Protokolle, Fehlerverhalten, Restriktionen,
+  Versionen, Qualitätseigenschaften, notwendige Kompatibilitäten und
+  vieles mehr spezifizieren oder beschreiben. Im besten Fall kommen Sie
+  mit Beispielen oder einfachen Signaturen zurecht.
+\end{itemize}
+
+\emph{\textbf{\textless Übersichtsdiagramm\textgreater{}}}
+
+\begin{description}
+\item[Begründung]
+\emph{\textless Erläuternder Text\textgreater{}}
+\item[Enthaltene Bausteine]
+\emph{\textless Beschreibung der enthaltenen Bausteine
+(Blackboxen)\textgreater{}}
+\item[Wichtige Schnittstellen]
+\emph{\textless Beschreibung wichtiger Schnittstellen\textgreater{}}
+\end{description}
+
+Hier folgen jetzt Erläuterungen zu Blackboxen der Ebene 1.
+
+Falls Sie die tabellarische Beschreibung wählen, so werden Blackboxen
+darin nur mit Name und Verantwortung nach folgendem Muster beschrieben:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.6667}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Name}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{Verantwortung}
+\end{minipage} \\
+\midrule
+\endhead
+\emph{\textless Blackbox 1\textgreater{}} &
+~\emph{\textless Text\textgreater{}} \\
+\emph{\textless Blackbox 2\textgreater{}} &
+~\emph{\textless Text\textgreater{}} \\
+\bottomrule
+\end{longtable}
+
+Falls Sie die ausführliche Liste von Blackbox-Beschreibungen wählen,
+beschreiben Sie jede wichtige Blackbox in einem eigenen
+Blackbox-Template. Dessen Überschrift ist jeweils der Namen dieser
+Blackbox.
+
+\hypertarget{__name_blackbox_1}{%
+\subsubsection{\textless Name Blackbox
+1\textgreater{}}\label{__name_blackbox_1}}
+
+Beschreiben Sie die \textless Blackbox 1\textgreater{} anhand des
+folgenden Blackbox-Templates:
+
+\begin{itemize}
+\item
+  Zweck/Verantwortung
+\item
+  Schnittstelle(n), sofern diese nicht als eigenständige Beschreibungen
+  herausgezogen sind. Hierzu gehören eventuell auch Qualitäts- und
+  Leistungsmerkmale dieser Schnittstelle.
+\item
+  (Optional) Qualitäts-/Leistungsmerkmale der Blackbox, beispielsweise
+  Verfügbarkeit, Laufzeitverhalten o. Ä.
+\item
+  (Optional) Ablageort/Datei(en)
+\item
+  (Optional) Erfüllte Anforderungen, falls Sie Traceability zu
+  Anforderungen benötigen.
+\item
+  (Optional) Offene Punkte/Probleme/Risiken
+\end{itemize}
+
+\emph{\textless Zweck/Verantwortung\textgreater{}}
+
+\emph{\textless Schnittstelle(n)\textgreater{}}
+
+\emph{\textless(Optional) Qualitäts-/Leistungsmerkmale\textgreater{}}
+
+\emph{\textless(Optional) Ablageort/Datei(en)\textgreater{}}
+
+\emph{\textless(Optional) Erfüllte Anforderungen\textgreater{}}
+
+\emph{\textless(optional) Offene Punkte/Probleme/Risiken\textgreater{}}
+
+\hypertarget{__name_blackbox_2}{%
+\subsubsection{\textless Name Blackbox
+2\textgreater{}}\label{__name_blackbox_2}}
+
+\emph{\textless Blackbox-Template\textgreater{}}
+
+\hypertarget{__name_blackbox_n}{%
+\subsubsection{\textless Name Blackbox
+n\textgreater{}}\label{__name_blackbox_n}}
+
+\emph{\textless Blackbox-Template\textgreater{}}
+
+\hypertarget{__name_schnittstelle_1}{%
+\subsubsection{\textless Name Schnittstelle
+1\textgreater{}}\label{__name_schnittstelle_1}}
+
+\ldots{}
+
+\hypertarget{__name_schnittstelle_m}{%
+\subsubsection{\textless Name Schnittstelle
+m\textgreater{}}\label{__name_schnittstelle_m}}
+
+\hypertarget{_ebene_2}{%
+\subsection{Ebene 2}\label{_ebene_2}}
+
+Beschreiben Sie den inneren Aufbau (einiger) Bausteine aus Ebene 1 als
+Whitebox.
+
+Welche Bausteine Ihres Systems Sie hier beschreiben, müssen Sie selbst
+entscheiden. Bitte stellen Sie dabei Relevanz vor Vollständigkeit.
+Skizzieren Sie wichtige, überraschende, riskante, komplexe oder
+besonders volatile Bausteine. Normale, einfache oder standardisierte
+Teile sollten Sie weglassen.
+
+\hypertarget{_whitebox_emphasis_baustein_1_emphasis}{%
+\subsubsection{\texorpdfstring{Whitebox \emph{\textless Baustein
+1\textgreater{}}}{Whitebox \textless Baustein 1\textgreater{}}}\label{_whitebox_emphasis_baustein_1_emphasis}}
+
+\ldots zeigt das Innenleben von \emph{Baustein 1}.
+
+\emph{\textless Whitebox-Template\textgreater{}}
+
+\hypertarget{_whitebox_emphasis_baustein_2_emphasis}{%
+\subsubsection{\texorpdfstring{Whitebox \emph{\textless Baustein
+2\textgreater{}}}{Whitebox \textless Baustein 2\textgreater{}}}\label{_whitebox_emphasis_baustein_2_emphasis}}
+
+\emph{\textless Whitebox-Template\textgreater{}}
+
+\ldots{}
+
+\hypertarget{_whitebox_emphasis_baustein_m_emphasis}{%
+\subsubsection{\texorpdfstring{Whitebox \emph{\textless Baustein
+m\textgreater{}}}{Whitebox \textless Baustein m\textgreater{}}}\label{_whitebox_emphasis_baustein_m_emphasis}}
+
+\emph{\textless Whitebox-Template\textgreater{}}
+
+\hypertarget{_ebene_3}{%
+\subsection{Ebene 3}\label{_ebene_3}}
+
+Beschreiben Sie den inneren Aufbau (einiger) Bausteine aus Ebene 2 als
+Whitebox.
+
+Bei tieferen Gliederungen der Architektur kopieren Sie diesen Teil von
+arc42 für die weiteren Ebenen.
+
+\hypertarget{_whitebox_baustein_x_1}{%
+\subsubsection{Whitebox \textless\_Baustein
+x.1\_\textgreater{}}\label{_whitebox_baustein_x_1}}
+
+\ldots zeigt das Innenleben von \emph{Baustein x.1}.
+
+\emph{\textless Whitebox-Template\textgreater{}}
+
+\hypertarget{_whitebox_baustein_x_2}{%
+\subsubsection{Whitebox \textless\_Baustein
+x.2\_\textgreater{}}\label{_whitebox_baustein_x_2}}
+
+\emph{\textless Whitebox-Template\textgreater{}}
+
+\hypertarget{_whitebox_baustein_y_1}{%
+\subsubsection{Whitebox \textless\_Baustein
+y.1\_\textgreater{}}\label{_whitebox_baustein_y_1}}
+
+\emph{\textless Whitebox-Template\textgreater{}}
+
+\hypertarget{section-runtime-view}{%
+\section{Laufzeitsicht}\label{section-runtime-view}}
+
+\textbf{Inhalt}
+
+Diese Sicht erklärt konkrete Abläufe und Beziehungen zwischen Bausteinen
+in Form von Szenarien aus den folgenden Bereichen:
+
+\begin{itemize}
+\item
+  Wichtige Abläufe oder \emph{Features}: Wie führen die Bausteine der
+  Architektur die wichtigsten Abläufe durch?
+\item
+  Interaktionen an kritischen externen Schnittstellen: Wie arbeiten
+  Bausteine mit Nutzern und Nachbarsystemen zusammen?
+\item
+  Betrieb und Administration: Inbetriebnahme, Start, Stop.
+\item
+  Fehler- und Ausnahmeszenarien
+\end{itemize}
+
+Anmerkung: Das Kriterium für die Auswahl der möglichen Szenarien (d.h.
+Abläufe) des Systems ist deren Architekturrelevanz. Es geht nicht darum,
+möglichst viele Abläufe darzustellen, sondern eine angemessene Auswahl
+zu dokumentieren.
+
+\textbf{Motivation}
+
+Sie sollten verstehen, wie (Instanzen von) Bausteine(n) Ihres Systems
+ihre jeweiligen Aufgaben erfüllen und zur Laufzeit miteinander
+kommunizieren.
+
+Nutzen Sie diese Szenarien in der Dokumentation hauptsächlich für eine
+verständlichere Kommunikation mit denjenigen Stakeholdern, die die
+statischen Modelle (z.B. Bausteinsicht, Verteilungssicht) weniger
+verständlich finden.
+
+\textbf{Form}
+
+Für die Beschreibung von Szenarien gibt es zahlreiche
+Ausdrucksmöglichkeiten. Nutzen Sie beispielsweise:
+
+\begin{itemize}
+\item
+  Nummerierte Schrittfolgen oder Aufzählungen in Umgangssprache
+\item
+  Aktivitäts- oder Flussdiagramme
+\item
+  Sequenzdiagramme
+\item
+  BPMN (Geschäftsprozessmodell und -notation) oder EPKs
+  (Ereignis-Prozessketten)
+\item
+  Zustandsautomaten
+\item
+  \ldots{}
+\end{itemize}
+
+Siehe \href{https://docs.arc42.org/section-6/}{Laufzeitsicht} in der
+online-Dokumentation (auf Englisch!).
+
+\hypertarget{__emphasis_bezeichnung_laufzeitszenario_1_emphasis}{%
+\subsection{\texorpdfstring{\emph{\textless Bezeichnung Laufzeitszenario
+1\textgreater{}}}{\textless Bezeichnung Laufzeitszenario 1\textgreater{}}}\label{__emphasis_bezeichnung_laufzeitszenario_1_emphasis}}
+
+\begin{itemize}
+\item
+  \textless hier Laufzeitdiagramm oder Ablaufbeschreibung
+  einfügen\textgreater{}
+\item
+  \textless hier Besonderheiten bei dem Zusammenspiel der Bausteine in
+  diesem Szenario erläutern\textgreater{}
+\end{itemize}
+
+\hypertarget{__emphasis_bezeichnung_laufzeitszenario_2_emphasis}{%
+\subsection{\texorpdfstring{\emph{\textless Bezeichnung Laufzeitszenario
+2\textgreater{}}}{\textless Bezeichnung Laufzeitszenario 2\textgreater{}}}\label{__emphasis_bezeichnung_laufzeitszenario_2_emphasis}}
+
+\ldots{}
+
+\hypertarget{__emphasis_bezeichnung_laufzeitszenario_n_emphasis}{%
+\subsection{\texorpdfstring{\emph{\textless Bezeichnung Laufzeitszenario
+n\textgreater{}}}{\textless Bezeichnung Laufzeitszenario n\textgreater{}}}\label{__emphasis_bezeichnung_laufzeitszenario_n_emphasis}}
+
+\ldots{}
+
+\hypertarget{section-deployment-view}{%
+\section{Verteilungssicht}\label{section-deployment-view}}
+
+\textbf{Inhalt}
+
+Die Verteilungssicht beschreibt:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  die technische Infrastruktur, auf der Ihr System ausgeführt wird, mit
+  Infrastrukturelementen wie Standorten, Umgebungen, Rechnern,
+  Prozessoren, Kanälen und Netztopologien sowie sonstigen Bestandteilen,
+  und
+\item
+  die Abbildung von (Software-)Bausteinen auf diese Infrastruktur.
+\end{enumerate}
+
+Häufig laufen Systeme in unterschiedlichen Umgebungen, beispielsweise
+Entwicklung-/Test- oder Produktionsumgebungen. In solchen Fällen sollten
+Sie alle relevanten Umgebungen aufzeigen.
+
+Nutzen Sie die Verteilungssicht insbesondere dann, wenn Ihre Software
+auf mehr als einem Rechner, Prozessor, Server oder Container abläuft
+oder Sie Ihre Hardware sogar selbst konstruieren.
+
+Aus Softwaresicht genügt es, auf die Aspekte zu achten, die für die
+Softwareverteilung relevant sind. Insbesondere bei der
+Hardwareentwicklung kann es notwendig sein, die Infrastruktur mit
+beliebigen Details zu beschreiben.
+
+\textbf{Motivation}
+
+Software läuft nicht ohne Infrastruktur. Diese zugrundeliegende
+Infrastruktur beeinflusst Ihr System und/oder querschnittliche
+Lösungskonzepte, daher müssen Sie diese Infrastruktur kennen.
+
+\textbf{Form}
+
+Das oberste Verteilungsdiagramm könnte bereits in Ihrem technischen
+Kontext enthalten sein, mit Ihrer Infrastruktur als EINE Blackbox. Jetzt
+zoomen Sie in diese Infrastruktur mit weiteren Verteilungsdiagrammen
+hinein:
+
+\begin{itemize}
+\item
+  Die UML stellt mit Verteilungsdiagrammen (Deployment diagrams) eine
+  Diagrammart zur Verfügung, um diese Sicht auszudrücken. Nutzen Sie
+  diese, evtl. auch geschachtelt, wenn Ihre Verteilungsstruktur es
+  verlangt.
+\item
+  Falls Ihre Infrastruktur-Stakeholder andere Diagrammarten bevorzugen,
+  die beispielsweise Prozessoren und Kanäle zeigen, sind diese hier
+  ebenfalls einsetzbar.
+\end{itemize}
+
+Siehe \href{https://docs.arc42.org/section-7/}{Verteilungssicht} in der
+online-Dokumentation (auf Englisch!).
+
+\hypertarget{_infrastruktur_ebene_1}{%
+\subsection{Infrastruktur Ebene 1}\label{_infrastruktur_ebene_1}}
+
+An dieser Stelle beschreiben Sie (als Kombination von Diagrammen mit
+Tabellen oder Texten):
+
+\begin{itemize}
+\item
+  die Verteilung des Gesamtsystems auf mehrere Standorte, Umgebungen,
+  Rechner, Prozessoren o. Ä., sowie die physischen Verbindungskanäle
+  zwischen diesen,
+\item
+  wichtige Begründungen für diese Verteilungsstruktur,
+\item
+  Qualitäts- und/oder Leistungsmerkmale dieser Infrastruktur,
+\item
+  Zuordnung von Softwareartefakten zu Bestandteilen der Infrastruktur
+\end{itemize}
+
+Für mehrere Umgebungen oder alternative Deployments kopieren Sie diesen
+Teil von arc42 für alle wichtigen Umgebungen/Varianten.
+
+\emph{\textbf{\textless Übersichtsdiagramm\textgreater{}}}
+
+\begin{description}
+\item[Begründung]
+\emph{\textless Erläuternder Text\textgreater{}}
+\item[Qualitäts- und/oder Leistungsmerkmale]
+\emph{\textless Erläuternder Text\textgreater{}}
+\item[Zuordnung von Bausteinen zu Infrastruktur]
+\emph{\textless Beschreibung der Zuordnung\textgreater{}}
+\end{description}
+
+\hypertarget{_infrastruktur_ebene_2}{%
+\subsection{Infrastruktur Ebene 2}\label{_infrastruktur_ebene_2}}
+
+An dieser Stelle können Sie den inneren Aufbau (einiger)
+Infrastrukturelemente aus Ebene 1 beschreiben.
+
+Für jedes Infrastrukturelement kopieren Sie die Struktur aus Ebene 1.
+
+\hypertarget{__emphasis_infrastrukturelement_1_emphasis}{%
+\subsubsection{\texorpdfstring{\emph{\textless Infrastrukturelement
+1\textgreater{}}}{\textless Infrastrukturelement 1\textgreater{}}}\label{__emphasis_infrastrukturelement_1_emphasis}}
+
+\emph{\textless Diagramm + Erläuterungen\textgreater{}}
+
+\hypertarget{__emphasis_infrastrukturelement_2_emphasis}{%
+\subsubsection{\texorpdfstring{\emph{\textless Infrastrukturelement
+2\textgreater{}}}{\textless Infrastrukturelement 2\textgreater{}}}\label{__emphasis_infrastrukturelement_2_emphasis}}
+
+\emph{\textless Diagramm + Erläuterungen\textgreater{}}
+
+\ldots{}
+
+\hypertarget{__emphasis_infrastrukturelement_n_emphasis}{%
+\subsubsection{\texorpdfstring{\emph{\textless Infrastrukturelement
+n\textgreater{}}}{\textless Infrastrukturelement n\textgreater{}}}\label{__emphasis_infrastrukturelement_n_emphasis}}
+
+\emph{\textless Diagramm + Erläuterungen\textgreater{}}
+
+\hypertarget{section-concepts}{%
+\section{Querschnittliche Konzepte}\label{section-concepts}}
+
+\textbf{Inhalt}
+
+Dieser Abschnitt beschreibt übergreifende, prinzipielle Regelungen und
+Lösungsansätze, die an mehreren Stellen (=\emph{querschnittlich})
+relevant sind.
+
+Solche Konzepte betreffen oft mehrere Bausteine. Dazu können vielerlei
+Themen gehören, beispielsweise:
+
+\begin{itemize}
+\item
+  Modelle, insbesondere fachliche Modelle
+\item
+  Architektur- oder Entwurfsmuster
+\item
+  Regeln für den konkreten Einsatz von Technologien
+\item
+  prinzipielle --- meist technische --- Festlegungen übergreifender Art
+\item
+  Implementierungsregeln
+\end{itemize}
+
+\textbf{Motivation}
+
+Konzepte bilden die Grundlage für \emph{konzeptionelle Integrität}
+(Konsistenz, Homogenität) der Architektur und damit eine wesentliche
+Grundlage für die innere Qualität Ihrer Systeme.
+
+Manche dieser Themen lassen sich nur schwer als Baustein in der
+Architektur unterbringen (z.B. das Thema „Sicherheit``).
+
+\textbf{Form}
+
+Kann vielfältig sein:
+
+\begin{itemize}
+\item
+  Konzeptpapiere mit beliebiger Gliederung,
+\item
+  übergreifende Modelle/Szenarien mit Notationen, die Sie auch in den
+  Architektursichten nutzen,
+\item
+  beispielhafte Implementierung speziell für technische Konzepte,
+\item
+  Verweise auf „übliche`` Nutzung von Standard-Frameworks
+  (beispielsweise die Nutzung von Hibernate als Object/Relational
+  Mapper).
+\end{itemize}
+
+\textbf{Struktur}
+
+Eine mögliche (nicht aber notwendige!) Untergliederung dieses
+Abschnittes könnte wie folgt aussehen (wobei die Zuordnung von Themen zu
+den Gruppen nicht immer eindeutig ist):
+
+\begin{itemize}
+\item
+  Fachliche Konzepte
+\item
+  User Experience (UX)
+\item
+  Sicherheitskonzepte (Safety und Security)
+\item
+  Architektur- und Entwurfsmuster
+\item
+  Unter-der-Haube
+\item
+  Entwicklungskonzepte
+\item
+  Betriebskonzepte
+\end{itemize}
+
+\includegraphics{images/08-Crosscutting-Concepts-Structure-DE.png}
+
+Siehe \href{https://docs.arc42.org/section-8/}{Querschnittliche
+Konzepte} in der online-Dokumentation (auf Englisch).
+
+\hypertarget{__emphasis_konzept_1_emphasis}{%
+\subsection{\texorpdfstring{\emph{\textless Konzept
+1\textgreater{}}}{\textless Konzept 1\textgreater{}}}\label{__emphasis_konzept_1_emphasis}}
+
+\emph{\textless Erklärung\textgreater{}}
+
+\hypertarget{__emphasis_konzept_2_emphasis}{%
+\subsection{\texorpdfstring{\emph{\textless Konzept
+2\textgreater{}}}{\textless Konzept 2\textgreater{}}}\label{__emphasis_konzept_2_emphasis}}
+
+\emph{\textless Erklärung\textgreater{}}
+
+\ldots{}
+
+\hypertarget{__emphasis_konzept_n_emphasis}{%
+\subsection{\texorpdfstring{\emph{\textless Konzept
+n\textgreater{}}}{\textless Konzept n\textgreater{}}}\label{__emphasis_konzept_n_emphasis}}
+
+\emph{\textless Erklärung\textgreater{}}
+
+\hypertarget{section-design-decisions}{%
+\section{Architekturentscheidungen}\label{section-design-decisions}}
+
+\textbf{Inhalt}
+
+Wichtige, teure, große oder riskante Architektur- oder
+Entwurfsentscheidungen inklusive der jeweiligen Begründungen. Mit
+"Entscheidungen" meinen wir hier die Auswahl einer von mehreren
+Alternativen unter vorgegebenen Kriterien.
+
+Wägen Sie ab, inwiefern Sie Entscheidungen hier zentral beschreiben,
+oder wo eine lokale Beschreibung (z.B. in der Whitebox-Sicht von
+Bausteinen) sinnvoller ist. Vermeiden Sie Redundanz. Verweisen Sie evtl.
+auf Abschnitt 4, wo schon grundlegende strategische Entscheidungen
+beschrieben wurden.
+
+\textbf{Motivation}
+
+Stakeholder des Systems sollten wichtige Entscheidungen verstehen und
+nachvollziehen können.
+
+\textbf{Form}
+
+Verschiedene Möglichkeiten:
+
+\begin{itemize}
+\item
+  ADR
+  (\href{https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions}{Documenting
+  Architecture Decisions}) für jede wichtige Entscheidung
+\item
+  Liste oder Tabelle, nach Wichtigkeit und Tragweite der Entscheidungen
+  geordnet
+\item
+  ausführlicher in Form einzelner Unterkapitel je Entscheidung
+\end{itemize}
+
+Siehe
+\href{https://docs.arc42.org/section-9/}{Architekturentscheidungen} in
+der arc42 Dokumentation (auf Englisch!). Dort finden Sie Links und
+Beispiele zum Thema ADR.
+
+\hypertarget{section-quality-scenarios}{%
+\section{Qualitätsanforderungen}\label{section-quality-scenarios}}
+
+\textbf{Inhalt}
+
+Dieser Abschnitt enthält möglichst alle Qualitätsanforderungen als
+Qualitätsbaum mit Szenarien. Die wichtigsten davon haben Sie bereits in
+Abschnitt 1.2 (Qualitätsziele) hervorgehoben.
+
+Nehmen Sie hier auch Qualitätsanforderungen geringerer Priorität auf,
+deren Nichteinhaltung oder -erreichung geringe Risiken birgt.
+
+\textbf{Motivation}
+
+Weil Qualitätsanforderungen die Architekturentscheidungen oft maßgeblich
+beeinflussen, sollten Sie die für Ihre Stakeholder relevanten
+Qualitätsanforderungen kennen, möglichst konkret und operationalisiert.
+
+\textbf{Weiterführende Informationen}
+
+Siehe \href{https://docs.arc42.org/section-10/}{Qualitätsanforderungen}
+in der online-Dokumentation (auf Englisch!).
+
+\hypertarget{_qualit_tsbaum}{%
+\subsection{Qualitätsbaum}\label{_qualit_tsbaum}}
+
+\textbf{Inhalt}
+
+Der Qualitätsbaum (à la ATAM) mit Qualitätsszenarien an den Blättern.
+
+\textbf{Motivation}
+
+Die mit Prioritäten versehene Baumstruktur gibt Überblick über
+die --- oftmals zahlreichen --- Qualitätsanforderungen.
+
+\begin{itemize}
+\item
+  Baumartige Verfeinerung des Begriffes „Qualität``, mit „Qualität``
+  oder „Nützlichkeit`` als Wurzel.
+\item
+  Mindmap mit Qualitätsoberbegriffen als Hauptzweige
+\end{itemize}
+
+In jedem Fall sollten Sie hier Verweise auf die Qualitätsszenarien des
+folgenden Abschnittes aufnehmen.
+
+\hypertarget{_qualit_tsszenarien}{%
+\subsection{Qualitätsszenarien}\label{_qualit_tsszenarien}}
+
+\textbf{Inhalt}
+
+Konkretisierung der (in der Praxis oftmals vagen oder impliziten)
+Qualitätsanforderungen durch (Qualitäts-)Szenarien.
+
+Diese Szenarien beschreiben, was beim Eintreffen eines Stimulus auf ein
+System in bestimmten Situationen geschieht.
+
+Wesentlich sind zwei Arten von Szenarien:
+
+\begin{itemize}
+\item
+  Nutzungsszenarien (auch bekannt als Anwendungs- oder
+  Anwendungsfallszenarien) beschreiben, wie das System zur Laufzeit auf
+  einen bestimmten Auslöser reagieren soll. Hierunter fallen auch
+  Szenarien zur Beschreibung von Effizienz oder Performance. Beispiel:
+  Das System beantwortet eine Benutzeranfrage innerhalb einer Sekunde.
+\item
+  Änderungsszenarien beschreiben eine Modifikation des Systems oder
+  seiner unmittelbaren Umgebung. Beispiel: Eine zusätzliche
+  Funktionalität wird implementiert oder die Anforderung an ein
+  Qualitätsmerkmal ändert sich.
+\end{itemize}
+
+\textbf{Motivation}
+
+Szenarien operationalisieren Qualitätsanforderungen und machen deren
+Erfüllung mess- oder entscheidbar.
+
+Insbesondere wenn Sie die Qualität Ihrer Architektur mit Methoden wie
+ATAM überprüfen wollen, bedürfen die in Abschnitt 1.2 genannten
+Qualitätsziele einer weiteren Präzisierung bis auf die Ebene von
+diskutierbaren und nachprüfbaren Szenarien.
+
+\textbf{Form}
+
+Entweder tabellarisch oder als Freitext.
+
+\hypertarget{section-technical-risks}{%
+\section{Risiken und technische
+Schulden}\label{section-technical-risks}}
+
+\textbf{Inhalt}
+
+Eine nach Prioritäten geordnete Liste der erkannten Architekturrisiken
+und/oder technischen Schulden.
+
+\begin{quote}
+Risikomanagement ist Projektmanagement für Erwachsene.
+
+---  Tim Lister Atlantic Systems Guild
+\end{quote}
+
+Unter diesem Motto sollten Sie Architekturrisiken und/oder technische
+Schulden gezielt ermitteln, bewerten und Ihren Management-Stakeholdern
+(z.B. Projektleitung, Product-Owner) transparent machen.
+
+\textbf{Form}
+
+Liste oder Tabelle von Risiken und/oder technischen Schulden, eventuell
+mit vorgeschlagenen Maßnahmen zur Risikovermeidung, Risikominimierung
+oder dem Abbau der technischen Schulden.
+
+Siehe \href{https://docs.arc42.org/section-11/}{Risiken und technische
+Schulden} in der online-Dokumentation (auf Englisch!).
+
+\hypertarget{section-glossary}{%
+\section{Glossar}\label{section-glossary}}
+
+\textbf{Inhalt}
+
+Die wesentlichen fachlichen und technischen Begriffe, die Stakeholder im
+Zusammenhang mit dem System verwenden.
+
+Nutzen Sie das Glossar ebenfalls als Übersetzungsreferenz, falls Sie in
+mehrsprachigen Teams arbeiten.
+
+\textbf{Motivation}
+
+Sie sollten relevante Begriffe klar definieren, so dass alle Beteiligten
+
+\begin{itemize}
+\item
+  diese Begriffe identisch verstehen, und
+\item
+  vermeiden, mehrere Begriffe für die gleiche Sache zu haben.
+\end{itemize}
+
+Zweispaltige Tabelle mit \textless Begriff\textgreater{} und
+\textless Definition\textgreater.
+
+Eventuell weitere Spalten mit Übersetzungen, falls notwendig.
+
+Siehe \href{https://docs.arc42.org/section-12/}{Glossar} in der
+online-Dokumentation (auf Englisch!).
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.6667}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Begriff
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} \\
+\midrule
+\endhead
+\emph{\textless Begriff-1\textgreater{}} &
+\emph{\textless Definition-1\textgreater{}} \\
+\emph{\textless Begriff-2} &
+\emph{\textless Definition-2\textgreater{}} \\
+\bottomrule
+\end{longtable}
+
+\end{document}
