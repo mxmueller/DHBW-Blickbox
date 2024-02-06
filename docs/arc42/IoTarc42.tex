@@ -97,6 +97,63 @@ Die nachfolgende Analyse zeigt alle Stakeholder gebündelt in ihren Gewichtungen
   \label{fig:deine_label}
 \end{figure}
 
+\section{Anforderungskonzept}
+Die Anforderungen an die Umsetzung des Blickbox-Projekts werden in die Kategorien funktionale, nicht funktionale und hypothetische Anforderungen unterteilt.
+Diese Differenzierung ermöglicht eine umfassende Abdeckung aller Aufgabenstellungen im
+Zusammenhang mit der Umsetzung des Blickbox-Projekts.
 
+\subsection{Funktionale Anforderungen (FA)}
+  Funktionale Anforderungen beschreiben spezifisch die konkreten Zwecke, die das zu entwickelnde Produkt erfüllen soll.
+
+\subsection{Nicht funktionale Anforderungen (NFA)}
+Im Gegensatz zu funktionalen Anforderungen sind nicht-funktionale Anforderungen eher allgemein gehalten und betreen die gesamte Architektur und das Design des Produkts.
+Sie können auf verschiedene Projekte angewendet werden.
+
+\subsection{Hyptohetische Anforderungen (HFA)}
+Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorherigen Abhängigkeiten definiert. Ihr Zweck besteht darin, mögliche Entscheidungen und Eventualitäten abzudecken, die eintreten können oder auch nicht.
+
+\\
+\\
+\begin{center}
+  \begin{tabular}{|p{\linewidth}|}
+    \hline
+    \textbf{Datenerfassung und -übertragung (FA1)} \\
+    Beschreibung: Das IOT-System muss in der Lage sein, kontinuierlich Sensordaten zu erfassen.
+    Diese Daten sollen im Raspberry PI gespeichert und verarbeitet werden.
+    Die Datenübertragung auf den Server erfolgt Event-gesteuert und drahtlos.
+    Die Daten werden nicht in Echtzeit, sondern in festgelegten Intervallen übertragen und festgehalten. \\ \\
+    \hline
+    \textbf{Bereitstellung eines Dashboard (FA2)} \\
+    Beschreibung: Die Daten der Datenbank sollen mit Grafana grafisch dargestellt werden.\\ \\
+    \hline
+    \textbf{Interaktivität zu Dritten (FA3)} \\
+    Beschreibung: Der Ausstellungscontainer soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
+    Das soll in Form eines Displays oder Ton und Licht geschehen. \\ \\
+    \hline
+    \textbf{Präventive Lösung für Datenverlust (FA4)} \\
+    Beschreibung: Ein default-Programm auf dem Raspberry Pi sichert, eine ungestörte Funktionalität der Ausstellungsbox.
+    Die Daten puffern wir auf dem Pi, damit die Datenbank nur zur Darstellung in Grafana existiert.\\ \\
+    \hline
+    \textbf{Bereitstellung einer geeigneten Umgebung für die Hardware (FA3)} \\
+    Beschreibung: Die Hardware soll sich im Ausstellungscontainer an einem trockenen, sicheren Platz befinden.\\ \\
+    \hline
+    \textbf{Containerisierung (FA6)} \\
+    Beschreibung: Die Anwendungen sollen in Containern gekapselt werden. \\ \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{|p{\linewidth}|}
+    \hline
+    \textbf{Erweiterbarkeit und Wartung (NF1)} \\
+    Beschreibung: Die Architektur und Dokumentation soll möglichst zugänglich gehalten werden. \\
+    Erweiterungen und Verbesserungen der Features sollen durch die Dokumentation und einen vereinfachten Hardwareaufbau erleichtert werden. \\ \\
+    \hline
+    \textbf{Sicherheit (NF2)} \\
+    Beschreibung: Die Verbindung zum Server soll verschlüsselt sein. \\ \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \end{document}
