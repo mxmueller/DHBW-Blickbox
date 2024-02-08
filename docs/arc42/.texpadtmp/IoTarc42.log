@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.10.26)  5 FEB 2024 13:58
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.10.26)  8 FEB 2024 15:27
  restricted system commands enabled.
  file:line:error style messages enabled.
 **IoTarc42.tex
@@ -465,7 +465,11 @@ Package: ctablestack 2015/10/01 v1.0 Catcode table stable support
 \CatcodeTableOther=\catcodetable12
 \CatcodeTableExpl=\catcodetable13
 )
-Inserting `Suppress ligatures selectively' in `ligaturing'.) (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux)
+Inserting `Suppress ligatures selectively' in `ligaturing'.) (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux
+
+LaTeX Warning: Label `fig:deine_label' multiply defined.
+
+)
 \openout1 = IoTarc42.aux
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 80.
@@ -838,22 +842,42 @@ Package luatex.def Info: ./resources/stakeholderanalyse.drawio.png  used on inpu
 (luatex.def)             Requested size: 344.95197pt x 383.5585pt.
  [1
 
-{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}<./header.jpg>] [2<./resources/stakeholderanalyse.drawio.png>] (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux))
+{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}<./header.jpg>] [2<./resources/stakeholderanalyse.drawio.png>]
+Overfull \hbox (12.79999pt too wide) in paragraph at lines 117--143
+ [] 
+ []
+
+[3]
+Overfull \hbox (12.79999pt too wide) in paragraph at lines 146--156
+ [] 
+ []
+
+[4]
+<./resources/techevaluationfe.png, id=41, 874.26625pt x 225.84375pt>
+File: ./resources/techevaluationfe.png Graphic file (type png)
+<use ./resources/techevaluationfe.png>
+Package luatex.def Info: ./resources/techevaluationfe.png  used on input line 165.
+(luatex.def)             Requested size: 345.00455pt x 89.12286pt.
+ [5<./resources/techevaluationfe.png>] (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+)
 
 Here is how much of LuaTeX's memory you used:
- 20100 strings out of 478285
+ 20150 strings out of 478285
  125086,1977958 words of node,token memory allocated
- 546 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 8 attribute, 62 glue_spec, 8 attribute_list, 1 write, 1 user_defined nodes
-   avail lists: 2:206,3:129,4:44,5:244,6:20,7:3193,8:1,9:193,10:12,11:216
- 39598 multiletter control sequences out of 65536+600000
- 60 fonts using 18787739 bytes
- 86i,7n,121p,1004b,349s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman17-regular.otf>
-Output written on IoTarc42.pdf (2 pages, 848494 bytes).
+ 547 words of node memory still in use:
+   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 7 attribute, 63 glue_spec, 7 attribute_list, 1 write, 1 user_defined nodes
+   avail lists: 2:450,3:151,4:48,5:339,6:60,7:4582,8:1,9:626,10:12,11:290
+ 39632 multiletter control sequences out of 65536+600000
+ 61 fonts using 18919351 bytes
+ 86i,8n,121p,1004b,414s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman17-regular.otf>
+Output written on IoTarc42.pdf (5 pages, 938874 bytes).
 
-PDF statistics: 60 PDF objects out of 1000 (max. 8388607)
- 40 compressed objects within 1 object stream
- 8 named destinations out of 1000 (max. 131072)
- 17 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 113 PDF objects out of 1000 (max. 8388607)
+ 82 compressed objects within 1 object stream
+ 18 named destinations out of 1000 (max. 131072)
+ 65 words of extra memory for PDF output out of 10000 (max. 100000000)
 
