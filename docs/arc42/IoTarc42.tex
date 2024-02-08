@@ -112,8 +112,7 @@ Sie können auf verschiedene Projekte angewendet werden.
 \subsection{Hyptohetische Anforderungen (HFA)}
 Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorherigen Abhängigkeiten definiert. Ihr Zweck besteht darin, mögliche Entscheidungen und Eventualitäten abzudecken, die eintreten können oder auch nicht.
 
-\\
-\\
+
 \begin{center}
   \begin{tabular}{|p{\linewidth}|}
     \hline
@@ -155,5 +154,20 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
     \hline
   \end{tabular}
 \end{center}
+
+\section{Entscheidungen zur Architektur}
+\subsection{Evaluation zur Wahl des Frontend-Frameworks des Clients}
+
+Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitstitel \textit{Valentin} (Komposita aus \textit{Value} und \textit{Notification}) geführt. Vor der Initialisierung von \textit{Valentin} muss ein geeignetes Framework gewählt werden. Die nachfolgende Nutzwertanalyse dient dafür als Entscheidungsgrundlage. 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{./resources/techevaluationfe.png}
+  \caption{Nutzwertanalyse zur Entscheidung eines geeigneten Frameworks gemessen an der Popularität, der Entwickler Awarness (Welches Framework enthält welchen Support), den Vorkenntnissen des Entwicklungsteams und der Rendergeschwindigkeit auf den Systemen der Clients.}
+  \label{fig:deine_label}
+\end{figure}
+
+Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
+
 
 \end{document}
