@@ -49,6 +49,8 @@ def pingthis():
 def insert_temperature():
     try:
         data = request.json
+        if 'temperature' not in data:
+            return jsonify({"message": "Falscher Input!"}), 400
         temperature = data['temperature']
         json_body = [
             {
