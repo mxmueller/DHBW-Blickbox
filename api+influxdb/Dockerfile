@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install Flask influxdb
+RUN pip install Flask influxdb gunicorn
 
-# Befehl, der beim Starten des Containers ausgeführt wird
-CMD ["python", "DataBaseAPI.py"]
+#CMD ["python", "DataBaseAPI.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "DataBaseAPI:app"]
