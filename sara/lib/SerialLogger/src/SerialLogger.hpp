@@ -2,6 +2,24 @@
 #define SerialLogger_HPP
 
 #include <Arduino.h>
+namespace SerialCommunication{
+
+  /**
+   * Adds structure for switching between commands and arguments 
+   */
+
+  enum RequestPattern{
+    COMMAND,
+    ARGUMENT
+  };
+  
+  extern RequestPattern CurrentPattern;
+  extern String command;
+  extern String inputString;      // a String to hold incoming data
+  extern bool stringComplete;  // whether the string is complete
+
+  void Handle_Serial_Request();
+}
 
 namespace Debugger{
 
@@ -24,7 +42,7 @@ public:
   void set_debug_level(Debugger::DebugLevels level);
   Debugger::DebugLevels get_debug_level();
   void log(String message, Debugger::DebugLevels level);  
-  void SerialLogger::begin();
+  void begin();
   static void serialHandler(int argCnt, char **args);
   static SerialLogger *p_serial_logger;
 private:
