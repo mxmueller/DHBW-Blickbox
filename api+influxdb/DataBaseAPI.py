@@ -51,7 +51,7 @@ def insert_temperature():
         data = request.json
         if 'temperature' not in data:
             return jsonify({"message": "Falscher Input!"}), 400
-        temperature = data['temperature']
+        temperature = float(data['temperature'])
         json_body = [
             {
                 "measurement": "temperature",
