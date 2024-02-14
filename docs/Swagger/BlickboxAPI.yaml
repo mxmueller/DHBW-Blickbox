@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: DHBW-Blickbox API 
+  description: |-
+  
+    Die API stellt eine Schnittstelle zwischen der DHBW-Blickbox und dem Externen Server bereit. Mit ihr ist es möglich Messdaten in die Datenbank zu schreiben, sowie zu checken ob die Systeme miterinander Verbunden sind und funktionieren.
+      Der Code ist im [DHBW-Blickbox Repo](https://github.com/mxmueller/DHBW-Blickbox) zu finden.
+
+
+  contact:
+    email: aronseidl17@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://maytastix.de:5000/iot/api
+tags:
+  - name: pingDB
+    description: Verbindung zur Datenbank
+  - name: pingGF
+    description: Verbindung zum Grafana Server.
+  - name: pingBB
+    description: Verbindung zur Blickbox.
+  - name: insert
+    description: Daten wrden in die Datanbank geschrieben
+paths:
+  /pingDB:
+    get:
+      tags:
+        - pingDB
+      summary: Checkt ob die Datenbank läuft.
+      responses:
+        '200':
+          description: 'Verbindung steht'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Verbindung zur Datenbank steht'
+        '500':
+          description: Fehler bei der Verbindung
+  /pingGF:
+    get:
+      tags:
+        - pingGF
+      summary: Checkt ob der Grafana Server läuft.
+      responses:
+        '200':
+          description: 'Verbindung steht'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Verbindung zu Grafana steht'         
+        '503':
+          description: Fehler bei der Verbindung
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Fehler:
+                    type: string
+                    example: 'Keine Verbindung zum Grafana Server' 
+  /pingBB:
+    get:
+      tags:
+        - pingBB
+      summary: Checkt ob die Blickbox mit dem Internet verbunden ist.
+      responses:
+        '200':
+          description: 'Verbindung steht'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'BlickBox ist erreichbar'            
+            
+        '503':
+          description: Fehler bei der Verbindung
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Fehler:
+                    type: string
+                    example: 'Keine Verbindung zur Blickbox' 
+  /insert/temperature:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Temperatur Wert hinzufügen
+      description: Füg einen neuen Temperatur Wert hinzu.
+      requestBody:
+        description: Erstekke einen neuen Temperatur Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Temperature'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '500':
+          description: Interner Fehler
+
+components:
+  schemas:
+    Temperature:
+      required:
+        - temperature
+      type: object
+      properties:
+        temperature:
+          type: number
+          example: 27.8
