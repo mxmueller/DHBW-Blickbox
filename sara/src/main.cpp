@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <SerialLogger.hpp>
-#include <cmdArduino.h>
 #include <DHT.h>
 
 const int PIN_DHT = 2;
@@ -10,42 +9,54 @@ DHT dht(PIN_DHT, DHTTYPE);
 
 SerialLogger logger;
 
-void arg_display(int argCnt, char **args);
-void print_temperature(int argCnt, char **args);
-void print_humidity(int argCnt, char **args);
+void print_temperature();
+void print_humidity();
+
+using namespace SerialCommunication;
+
+
 
 void setup() {
   Serial.begin(115200);
-  cmd.begin(115200);
-
+  Serial.println("Ello Sara here :D");
   dht.begin();
 
-  cmd.add("t", print_temperature);
-  cmd.add("h", print_humidity);
-  cmd.add("args", arg_display);
-
   logger.begin();
+  Serial.println(F("I am initialized!"));
+  Serial.println(F("Commands: t - temp, h - humidity"));
 }
 
 void loop() {
-  cmd.poll();
+  // print the string when a newline arrives:
+  if (stringComplete) {
+    Serial.println(inputString);
+    if(command == "t"){
+      print_temperature();
+    }else if(command == "h"){
+      print_humidity();
+    }
+    // clear the string:
+    stringComplete = false;
+    command = "";
+    inputString = "";
+}
 }
 
-void print_temperature(int argCnt, char **args){
+void print_temperature(){
+  Serial.print("t:");
   Serial.println(dht.readTemperature());
 }
 
-void print_humidity(int argCnt, char **args){
+void print_humidity(){
+  Serial.print("h:");
   Serial.println(dht.readHumidity());
 }
 
-void arg_display(int argCnt, char **args)
-{
-  for (int i=0; i<argCnt; i++)
-  {
-    Serial.print("Arg ");
-    Serial.print(i);
-    Serial.print(": ");
-    Serial.println(args[i]);
-  }
+/*
+  SerialEvent occurs whenever a new data comes in the hardware serial RX. This
+  routine is run between each time loop() runs, so using delay inside loop can
+  delay response. Multiple bytes of data may be available.
+*/
+void serialEvent() {
+  Handle_Serial_Request();
 }
