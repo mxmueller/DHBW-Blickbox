@@ -1,6 +1,26 @@
 ## Board
 https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog
 
+## Git Workflow
+1. **Sprint-basierte Entwicklung:**
+   - Für jeden Sprint wird eine eigene Sprint-Branch erstellt.
+   - Am Ende jedes Sprints wird der Sprint-Branch in den Master-Branch gemerged.
+
+2. **Story-Branches:**
+   - Jede Story erhält einen eigenen Branch, abgeleitet vom Sprint-Branch.
+   - Die Benennung erfolgt nach dem Schema: `#id-name`.
+
+3. **Commits:**
+   - Innerhalb der Story-Branches werden für jeden Task oder mehrere Tasks separate Commits durchgeführt.
+   - Die Commit-Nachricht enthält die IDs der zugehörigen Tasks und den Namen der Änderung im Format: `#id_#id2_#id3-name`.
+
+4. **Abschluss einer Story:**
+   - Nach Abschluss einer Story wird der entsprechende Branch sowohl lokal als auch remote vom Entwickler gelöscht.
+
+5. **Merge und Approvals:**
+   - Vor dem Merge einer Story in den Sprint-Branch muss mindestens ein Approver die Änderungen genehmigen.
+
+
 ## Definition of done (Dod)
 
 Im Team wurden die folgenden Kriterien definiert, damit eine Aufgabe oder ein Produkt als abgeschlossen gilt:
@@ -49,7 +69,7 @@ Die DoD wird regelmäßig überprüft und bei Bedarf aktualisiert, um sicherzust
 - Server (Webserver für Client) (Max)
 - WLAN 
 - Sensordaten (May)
-----
+
 
 ## Releases
 Die Releases erfolgen innerhalb der Sprintwechsel. Als Dokumentation dienen die Releasnotes innerhalb der Git-Releases.
