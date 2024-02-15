@@ -51,3 +51,7 @@ Die DoD wird regelmäßig überprüft und bei Bedarf aktualisiert, um sicherzust
 - Sensordaten (May)
 ----
 
+## Releases
+Die Releases erfolgen innerhalb der Sprintwechsel. Als Dokumentation dienen die Releasnotes innerhalb der Git-Releases.
+
+
