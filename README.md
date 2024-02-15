@@ -11,13 +11,14 @@ https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog
    - Die Benennung erfolgt nach dem Schema: `#id-name`.
 
 3. **Commits:**
+   - Sprache: Deutsch
    - Innerhalb der Story-Branches werden für jeden Task oder mehrere Tasks separate Commits durchgeführt.
    - Die Commit-Nachricht enthält die IDs der zugehörigen Tasks und den Namen der Änderung im Format: `#id_#id2_#id3-name`.
 
-4. **Abschluss einer Story:**
+5. **Abschluss einer Story:**
    - Nach Abschluss einer Story wird der entsprechende Branch sowohl lokal als auch remote vom Entwickler gelöscht.
 
-5. **Merge und Approvals:**
+6. **Merge und Approvals:**
    - Vor dem Merge einer Story in den Sprint-Branch muss mindestens ein Approver die Änderungen genehmigen.
 
 
