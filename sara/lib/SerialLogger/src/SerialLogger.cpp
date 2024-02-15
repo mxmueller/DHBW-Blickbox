@@ -96,14 +96,14 @@ namespace Debugger {
     }
 }
 
-namespace SerialCommunication{
+namespace serial_communication{
     RequestPattern CurrentPattern = COMMAND;
     String command = "";
 
     String inputString = "";      // a String to hold incoming data
     bool stringComplete = false;  // whether the string is complete
 
-    void Handle_Serial_Request(){
+    void on_serial_message_recieved(){
         while (Serial.available()) {
             // get the new byte:
             char inChar = (char)Serial.read();

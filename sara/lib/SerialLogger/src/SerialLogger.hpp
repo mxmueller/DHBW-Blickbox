@@ -2,7 +2,7 @@
 #define SerialLogger_HPP
 
 #include <Arduino.h>
-namespace SerialCommunication{
+namespace serial_communication{
 
   /**
    * Adds structure for switching between commands and arguments 
@@ -15,10 +15,22 @@ namespace SerialCommunication{
   
   extern RequestPattern CurrentPattern;
   extern String command;
-  extern String inputString;      // a String to hold incoming data
+
+
+  extern String inputString;
+
+  /**
+   * @brief Speichert ob der String fertig verarbeitet wurde
+   * 
+   */
   extern bool stringComplete;  // whether the string is complete
 
-  void Handle_Serial_Request();
+  /**
+   * Eventhandler für Daten die über die Serielle Schnittstelle empfangen wurden
+  */
+  void on_serial_message_recieved();
+
+
 }
 
 namespace Debugger{
