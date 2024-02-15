@@ -10,7 +10,7 @@ Im Team wurden die folgenden Kriterien definiert, damit eine Aufgabe oder ein Pr
 
 3. **Integrationstests:** Der Code wurde erfolgreich in den Hauptentwicklungszweig integriert, und alle Integrationstests sind bestanden.
 
-4. **Dokumentation:** Alle relevanten Code-Änderungen wurden in der Projektdokumentation aktualisiert.
+4. **Dokumentation:** Alle relevanten Code-Änderungen wurden in der Projektdokumentation aktualisiert. Ergo sollten spezielle Diagramme erstellt worden sein, müssen diese auch von dem jeweiligen Entwickelnden im Arc42 erläutert und implementiert werden.
 
 5. **Benutzerdokumentation:** Falls erforderlich, wurde die Benutzerdokumentation aktualisiert.
 
