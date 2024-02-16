@@ -76,3 +76,7 @@ Die DoD wird regelmäßig überprüft und bei Bedarf aktualisiert, um sicherzust
 Die Releases erfolgen innerhalb der Sprintwechsel. Als Dokumentation dienen die Releasnotes innerhalb der Git-Releases.
 
 
+## Releases
+Die Releases erfolgen innerhalb der Sprintwechsel. Als Dokumentation dienen die Releasnotes innerhalb der Git-Releases.
+
+
