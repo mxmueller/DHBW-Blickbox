@@ -1,9 +1,9 @@
 FROM node:17-alpine as builder
 WORKDIR /app
-COPY ./src/package*.json .
-COPY ./src/yarn*.lock .
+COPY ./valentin/package*.json .
+COPY ./valentin/yarn*.lock .
 RUN npm install
-COPY ./src . ./
+COPY ./valentin . ./
 RUN npm run build
 
 FROM nginx:latest
