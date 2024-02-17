@@ -1,25 +1,129 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChakraProvider, Box, Text, Code, SimpleGrid } from "@chakra-ui/react";
 import { GoContainer } from "react-icons/go";
-import { GoServer } from "react-icons/go";
+import { GoDatabase } from "react-icons/go";
+import { SiGrafana } from "react-icons/si";
 import { Fade } from "react-awesome-reveal";
-import { IoUnlink } from "react-icons/io5";
-import { CgBlock } from "react-icons/cg";
-import { FaDocker } from "react-icons/fa";
 import DescDetail from './descDetail';
-import DescSkeleton from './descSkeleton';
+
+const apis = [
+    { 
+        url: 'https://dhbwapi.maytastix.de:5000/iot/api/pingDB', 
+        header: 'Blickbox Hardware',
+        success: 'Connected',
+        error: 'Disconnected',
+        delay: 150,
+        duration: 200,
+        interval: 60000, 
+        icon: GoContainer
+    },
+    { 
+        url: 'http://maytastix.de:5000/iot/api/pingDB', 
+        header: 'Blickbox Datenbank',
+        success: 'Connected',
+        error: 'Disconnected',
+        delay: 150,
+        duration: 200,
+        interval: 60000, 
+        icon: GoDatabase
+    },
+    { 
+        url: 'http://maytastix.de:5000/iot/api/pingDB', 
+        header: 'Grafana',
+        success: 'Connected',
+        error: 'Disconnected',
+        delay: 150,
+        duration: 200,
+        interval: 60000, 
+        icon: SiGrafana
+    },
+];
 
 function Desc() {
+    const [loading, setLoading] = useState({});
+    const [success, setSuccess] = useState({});
+    const [error, setError] = useState({});
+
+    useEffect(() => {
+        const fetchData = async (apiUrl, interval) => {
+            setLoading(prevState => ({
+                ...prevState,
+                [apiUrl]: true
+            }));
+            try {
+                const response = await Promise.race([
+                    fetch(apiUrl),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
+                ]);
+                if (response.status === 200) {
+                    setSuccess(prevState => ({
+                        ...prevState,
+                        [apiUrl]: true
+                    }));
+                    setError(prevState => ({
+                        ...prevState,
+                        [apiUrl]: false
+                    }));
+                } else {
+                    setError(prevState => ({
+                        ...prevState,
+                        [apiUrl]: true
+                    }));
+                    setSuccess(prevState => ({
+                        ...prevState,
+                        [apiUrl]: false
+                    }));
+                }
+            } catch (error) {
+                setError(prevState => ({
+                    ...prevState,
+                    [apiUrl]: true
+                }));
+                setSuccess(prevState => ({
+                    ...prevState,
+                    [apiUrl]: false
+                }));
+            } finally {
+                setLoading(prevState => ({
+                    ...prevState,
+                    [apiUrl]: false
+                }));
+            }
+        };
+
+        const fetchDataWithInterval = ({ url, interval }) => {
+            fetchData(url);
+            const intervalId = setInterval(() => {
+                fetchData(url);
+            }, interval);
+            return () => clearInterval(intervalId);
+        };
+
+        apis.forEach(api => {
+            fetchDataWithInterval(api);
+        });
+    }, []);
+
     return (
         <ChakraProvider>
             <Box boxShadow='xl' bg='#EDF2F7' borderRadius={25} padding={4}>
                 <SimpleGrid columns={[2, null, 3]} spacing={5}>
-                    <DescDetail detailDelay={200} detailDuration={330} icon={GoContainer} text1="Blickbox Container" text2="Connected" isConnected />
-                    <DescDetail detailDelay={200} detailDuration={330} icon={GoServer} text1="Data Server" text2="Disconnected" />
-                    <DescDetail detailDelay={200} detailDuration={330} icon={FaDocker} text1="Auslastung Data Server" percentage="56%" />
-                    <DescSkeleton skeletonDelay={200} skeletonDuration={125} />
+                    {apis.map(({ url, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
+                        <DescDetail
+                            key={url}
+                            loading={loading[url]}
+                            success={success[url]}
+                            error={error[url]}
+                            header={header}
+                            successText={successText}
+                            errorText={errorText}
+                            delay={delay}
+                            duration={duration}
+                            icon={icon}
+                            interval={interval}
+                        />
+                    ))}
                 </SimpleGrid>
-
                 <Text mt={5} fontSize='md'>Letzte Aktualisierung:
                     <Code ml={2} mr={2}>11.02.24 19:59:03</Code>
                 </Text>
