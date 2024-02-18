@@ -3,6 +3,8 @@ echo ------------------------
 echo VALENTIN LOCAL DEV SETUP
 echo ------------------------
 
+cd ./valentin
+
 npm test -- --watchAll=false
 
 echo ------------------------
