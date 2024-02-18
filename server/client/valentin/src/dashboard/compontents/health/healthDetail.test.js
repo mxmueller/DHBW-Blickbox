@@ -10,7 +10,7 @@ global.IntersectionObserver = IntersectionObserver;
   
 import React from 'react';
 import { render } from '@testing-library/react';
-import DescDetail from './DescDetail';
+import DescDetail from './healthDetail';
 
 // Eine einfache Komponente, die das Test-Icon rendert
 const TestIconComponent = () => {

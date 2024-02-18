@@ -27,6 +27,7 @@ function DescDetail({ loading, success, error, icon, successText, errorText, hea
                                     <SimpleGrid ml={4} columns={1} spacing={0}>
                                     <Text fontSize='m' color='blackAlpha.500'>{header}</Text>
                                         <HStack spacing='5px'>
+                                            <Circle size='10px' bg='green.300' color='white'> </Circle>
                                             <Text fontSize='lg' as='b'>{successText}</Text>
                                         </HStack>
                                     </SimpleGrid>
@@ -41,6 +42,7 @@ function DescDetail({ loading, success, error, icon, successText, errorText, hea
                                     <SimpleGrid ml={4} columns={1} spacing={0}>
                                     <Text fontSize='m' color='blackAlpha.500'>{header}</Text>
                                         <HStack spacing='5px'>
+                                            <Circle size='10px' bg='red.300' color='white'> </Circle>
                                             <Text fontSize='lg' as='b'>{errorText}</Text>
                                         </HStack>
                                     </SimpleGrid>

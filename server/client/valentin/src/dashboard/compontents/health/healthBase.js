@@ -4,7 +4,7 @@ import { GoContainer } from "react-icons/go";
 import { GoDatabase } from "react-icons/go";
 import { SiGrafana } from "react-icons/si";
 import { Fade } from "react-awesome-reveal";
-import DescDetail from './descDetail';
+import HealthDetail from './healthDetail';
 
 const apis = [
     { 
@@ -107,9 +107,9 @@ function Desc() {
     return (
         <ChakraProvider>
             <Box boxShadow='xl' bg='#EDF2F7' borderRadius={25} padding={4}>
-                <SimpleGrid columns={[2, null, 4]} spacing={4}>
+                <SimpleGrid columns={{sm: 1, md: 2, lg: 4}} minChildWidth='250px'  spacing={4}>
                     {apis.map(({ url, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
-                        <DescDetail
+                        <HealthDetail
                             key={url}
                             loading={loading[url]}
                             success={success[url]}
