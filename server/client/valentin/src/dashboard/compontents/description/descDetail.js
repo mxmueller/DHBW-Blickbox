@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Circle, Flex, Icon, SimpleGrid, Text, HStack, SkeletonCircle, SkeletonText} from "@chakra-ui/react";
 import { Fade } from "react-awesome-reveal";
 
-function DescDetail({ loading, success, error, icon, successText, errorText, header, detailDelay, detailDuration}) {
+function DescDetail({ loading, success, error, icon, successText, errorText, header, delay, duration}) {
 
     return (
-        <Fade direction="up" duration={detailDuration} delay={detailDelay}>
+        <Fade direction="up" duration={duration} delay={delay}>
             <Box boxShadow='xl' borderRadius={25} bg='white' minHeight='90px' width='100%' padding={5} >
                 <Flex>
                     {loading ? (

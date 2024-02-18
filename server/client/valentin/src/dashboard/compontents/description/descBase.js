@@ -8,32 +8,32 @@ import DescDetail from './descDetail';
 
 const apis = [
     { 
-        url: 'https://dhbwapi.maytastix.de:5000/iot/api/pingDB', 
+        url: 'https://dhbwapi.maytastix.de/iot/api/pingBB', 
         header: 'Blickbox Hardware',
         success: 'Connected',
         error: 'Disconnected',
-        delay: 150,
-        duration: 200,
+        delay: 100,
+        duration: 300,
         interval: 60000, 
         icon: GoContainer
     },
     { 
-        url: 'http://maytastix.de:5000/iot/api/pingDB', 
+        url: 'https://dhbwapi.maytastix.de/iot/api/pingDB', 
         header: 'Blickbox Datenbank',
         success: 'Connected',
         error: 'Disconnected',
-        delay: 150,
+        delay: 250,
         duration: 200,
         interval: 60000, 
         icon: GoDatabase
     },
     { 
-        url: 'http://maytastix.de:5000/iot/api/pingDB', 
+        url: 'https://dhbwapi.maytastix.de/iot/api/pingGF', 
         header: 'Grafana',
         success: 'Connected',
         error: 'Disconnected',
-        delay: 150,
-        duration: 200,
+        delay: 400,
+        duration: 100,
         interval: 60000, 
         icon: SiGrafana
     },
@@ -107,7 +107,7 @@ function Desc() {
     return (
         <ChakraProvider>
             <Box boxShadow='xl' bg='#EDF2F7' borderRadius={25} padding={4}>
-                <SimpleGrid columns={[2, null, 3]} spacing={5}>
+                <SimpleGrid columns={[2, null, 4]} spacing={4}>
                     {apis.map(({ url, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
                         <DescDetail
                             key={url}
