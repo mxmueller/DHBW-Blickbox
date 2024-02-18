@@ -135,20 +135,16 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
     Die Daten werden nicht in Echtzeit, sondern in festgelegten Intervallen übertragen und festgehalten. \\ \\
     \hline
     \textbf{Bereitstellung eines Dashboard (FA2)} \\
-    Beschreibung: Die Daten der Datenbank sollen mit Grafana grafisch dargestellt werden.\\ \\
+    Beschreibung: Die Daten der Datenbank sollen mit Grafana grafisch dargestellt werden.
+    \\ \\
     \hline
     \textbf{Interaktivität zu Dritten (FA3)} \\
-    Beschreibung: Der Ausstellungscontainer soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
-    Das soll in Form eines Displays oder Ton und Licht geschehen. \\ \\
+    Beschreibung: Der Blickbox soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
+    Das soll in Form eines Displays oder Ton und Licht geschehen.
+    Ein Display ist in der Lage, Dritten aktuelle Daten aus der Datenbank wie etwa das Wetter anzuzeigen.
+    Bei Dunkelheit sollen Bewegungsmelder Lichter aktivieren.\\ \\
     \hline
-    \textbf{Präventive Lösung für Datenverlust (FA4)} \\
-    Beschreibung: Ein default-Programm auf dem Raspberry Pi sichert, eine ungestörte Funktionalität der Ausstellungsbox.
-    Die Daten puffern wir auf dem Pi, damit die Datenbank nur zur Darstellung in Grafana existiert.\\ \\
-    \hline
-    \textbf{Bereitstellung einer geeigneten Umgebung für die Hardware (FA3)} \\
-    Beschreibung: Die Hardware soll sich im Ausstellungscontainer an einem trockenen, sicheren Platz befinden.\\ \\
-    \hline
-    \textbf{Containerisierung (FA6)} \\
+    \textbf{Containerisierung (FA4)} \\
     Beschreibung: Die Anwendungen sollen in Containern gekapselt werden. \\ \\
     \hline
   \end{tabular}
@@ -163,6 +159,15 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
     \hline
     \textbf{Sicherheit (NF2)} \\
     Beschreibung: Die Verbindung zum Server soll verschlüsselt sein. \\ \\
+    \hline
+    \textbf{Datenwiederherstellung und -erhaltung (NF3)} \\
+    Beschreibung: Ein default-Programm auf dem Raspberry Pi sichert, eine ungestörte Funktionalität der Blickbox.
+    Die Daten puffern wir auf dem Pi, damit die Datenbank nur zur Darstellung in Grafana existiert.
+    Das Risiko des Verlierens der Daten soll so minimiert werden.\\ \\
+    \hline
+    \textbf{Bereitstellung einer geeigneten Umgebung für die Hardware (NF4)} \\
+    Beschreibung: Die Hardware soll sich im und außerhalb der Blickbox an einem trockenen, sicheren Platz befinden.
+    Dafür sollen wetterfeste und isolierte Boxen genutzt werden.\\ \\
     \hline
   \end{tabular}
 \end{center}
