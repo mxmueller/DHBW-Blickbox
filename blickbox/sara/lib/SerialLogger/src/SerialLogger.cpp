@@ -103,34 +103,29 @@ namespace serial_communication{
     String inputString = "";      // a String to hold incoming data
     bool stringComplete = false;  // whether the string is complete
 
-    void on_serial_message_recieved(){
-        while (Serial.available()) {
-            // get the new byte:
-            char inChar = (char)Serial.read();
+void on_serial_message_recieved(){
+    while (Serial.available()) {
+        char inChar = (char)Serial.read();
+        
+        if (inChar == '\n' || inChar == '\r') {
             
-            if (inChar == '\n' || inChar == '\r') {
-                
-                stringComplete = true;
-                CurrentPattern = COMMAND;
-                return;
+            stringComplete = true;
+            CurrentPattern = COMMAND;
+            return;
+        }
+
+        inputString += inChar;
+
+        switch (CurrentPattern)
+        {
+            case COMMAND:
+            command += inChar;
+            if(inChar == ' '){
+            CurrentPattern = ARGUMENT;
             }
-
-            // add it to the inputString:
-            inputString += inChar;
-
-            // if the incoming character is a newline, set a flag so the main loop can
-            // do something about it:
-            switch (CurrentPattern)
-            {
-                case COMMAND:
-                command += inChar;
-                if(inChar == ' '){
-                CurrentPattern = ARGUMENT;
-                }
-                break;
-            }
-
-            
+            break;
         }
     }
+}
+
 }
