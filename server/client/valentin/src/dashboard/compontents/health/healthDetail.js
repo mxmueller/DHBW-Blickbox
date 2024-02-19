@@ -6,7 +6,7 @@ function DescDetail({ loading, success, error, icon, successText, errorText, hea
 
     return (
         <Fade direction="up" duration={duration} delay={delay}>
-            <Box boxShadow='xl' borderRadius={25} bg='white' minHeight='90px' width='100%' padding={5} >
+            <Box boxShadow='lg' borderRadius={25} bg='white' minHeight='90px' width='100%' padding={5} >
                 <Flex>
                     {loading ? (
                         <>

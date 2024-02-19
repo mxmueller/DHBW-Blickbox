@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider, Box, Text, Code, SimpleGrid } from "@chakra-ui/react";
+import { ChakraProvider, Box, Text, Button, HStack, Code, SimpleGrid,
+    Accordion,
+    AccordionItem,
+    AccordionButton,
+    AccordionPanel,
+    AccordionIcon, } from "@chakra-ui/react";
 import { GoContainer } from "react-icons/go";
 import { GoDatabase } from "react-icons/go";
 import { SiGrafana } from "react-icons/si";
@@ -12,8 +17,8 @@ const apis = [
         header: 'Blickbox Hardware',
         success: 'Connected',
         error: 'Disconnected',
-        delay: 100,
-        duration: 300,
+        delay: 300,
+        duration: 500,
         interval: 60000, 
         icon: GoContainer
     },
@@ -22,8 +27,8 @@ const apis = [
         header: 'Blickbox Datenbank',
         success: 'Connected',
         error: 'Disconnected',
-        delay: 250,
-        duration: 200,
+        delay: 450,
+        duration: 600,
         interval: 60000, 
         icon: GoDatabase
     },
@@ -32,8 +37,8 @@ const apis = [
         header: 'Grafana',
         success: 'Connected',
         error: 'Disconnected',
-        delay: 400,
-        duration: 100,
+        delay: 500,
+        duration: 700,
         interval: 60000, 
         icon: SiGrafana
     },
@@ -43,6 +48,7 @@ function Desc() {
     const [loading, setLoading] = useState({});
     const [success, setSuccess] = useState({});
     const [error, setError] = useState({});
+    const [lastUpdated, setLastUpdated] = useState(new Date());
 
     useEffect(() => {
         const fetchData = async (apiUrl, interval) => {
@@ -88,6 +94,7 @@ function Desc() {
                     ...prevState,
                     [apiUrl]: false
                 }));
+                setLastUpdated(new Date()); // Aktualisierung der letzten Aktualisierungszeit
             }
         };
 
@@ -106,7 +113,26 @@ function Desc() {
 
     return (
         <ChakraProvider>
-            <Box boxShadow='xl' bg='#EDF2F7' borderRadius={25} padding={4}>
+
+        <Box boxShadow='xl' bg='blackAlpha.100' borderRadius={25} padding={4}>
+            <Accordion allowToggle defaultIndex={[0]}>
+                <AccordionItem border='0px' >
+                    <h2>
+                    <AccordionButton>
+                        <Box as="span" flex='1' textAlign='left'>
+                        <Text fontSize='xl' color='blackAlpha.700' as='b'>Health monitoring</Text>
+                        <HStack>
+                        <Text mt={0} color='blackAlpha.600' fontSize='md'>Letzte Aktualisierung:</Text>
+                            <Code colorScheme='blackAlpha'>{lastUpdated.toLocaleString()}</Code>
+                        </HStack>
+               
+                        </Box>
+                        <AccordionIcon />
+                    </AccordionButton>
+                    </h2>
+                    <AccordionPanel mb={0}>
+              
+
                 <SimpleGrid columns={{sm: 1, md: 2, lg: 4}} minChildWidth='250px'  spacing={4}>
                     {apis.map(({ url, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
                         <HealthDetail
@@ -124,10 +150,12 @@ function Desc() {
                         />
                     ))}
                 </SimpleGrid>
-                <Text mt={5} fontSize='md'>Letzte Aktualisierung:
-                    <Code ml={2} mr={2}>11.02.24 19:59:03</Code>
-                </Text>
+                    </AccordionPanel>
+                </AccordionItem>
+            </Accordion>
             </Box>
+
+           
         </ChakraProvider>
     );
 }
