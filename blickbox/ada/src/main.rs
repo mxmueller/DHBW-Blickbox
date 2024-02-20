@@ -1,11 +1,19 @@
+mod sensor_modules;
+
 use std::{io, thread};
-use std::fs::{File, OpenOptions};
+use std::fs::OpenOptions;
 
 use std::io::{Read, Write};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, SystemTime};
 use chrono::{DateTime, Utc};
+use chrono_tz::Europe::Berlin;
+use tokio::time;
 
-fn main() {
+//use crate::sensor_modules;
+
+
+#[tokio::main]
+async fn main() {
     // Opens file in append mode (and creating it if it doesn't exist)
     let mut file = OpenOptions::new()
         .write(true)
@@ -21,15 +29,26 @@ fn main() {
         .timeout(Duration::from_millis(1000))
         .open().expect("Failed to open port");
 
-    thread::sleep(Duration::from_millis(5000));
+    // Initial delay before sending the first command
+    tokio::time::sleep(Duration::from_secs(5)).await;
+
+    tokio::time::sleep(Duration::from_millis(5000)).await;
 
     let mut serial_buf: Vec<u8> = vec![0; 100];
 
-    // here data is requested
-    let temperature_command = "t\n";
-    port.write_all(temperature_command.as_ref()).expect("Failed to send command");
+
+    //handle_dht_sensor_data();
+
+    // Timer interval for sending commands (every 30 minutes)
+    let mut interval = time::interval(Duration::from_secs(120));
 
     loop {
+        interval.tick().await;
+
+        // here data is requested
+        let temperature_command = "t\n";
+        port.write_all(temperature_command.as_ref()).expect("Failed to send command");
+
         match port.read(serial_buf.as_mut_slice()) {
             Ok(t) => {
                 let received_data = &serial_buf[..t];
@@ -37,14 +56,14 @@ fn main() {
 
                 // writing the received data to file system
                 // data to be written should be a struct sooner or later... :/
-                if interpreted_data != "" {
+                if !interpreted_data.is_empty() {
                     let date_time_format: DateTime<Utc> = SystemTime::now().into();
-                    let time = date_time_format.format("%Y-%m-%d %H:%M:%S").to_string();
+                    let time = date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string();
                     let data = format!("{:?}, {:?}\n", time, interpreted_data);
                     file.write_all(data.as_bytes()).unwrap();
                 }
 
-                thread::sleep(Duration::from_millis(1000));
+                tokio::time::sleep(Duration::from_millis(1000)).await;
                 continue;
             }
             Err(ref e) if e.kind() == io::ErrorKind::TimedOut => {
@@ -57,6 +76,10 @@ fn main() {
             }
         };
     }
+
+    println!("why");
+    tokio::time::sleep(Duration::from_millis(8000)).await;
+    print!("is is is");
 }
 
 pub fn interpret_data(data: &[u8]) -> String {
