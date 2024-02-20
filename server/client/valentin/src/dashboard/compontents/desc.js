@@ -18,7 +18,10 @@ import {
     Image,
     Flex,
     Icon,
-    HStack
+    HStack,
+    Skeleton,
+    SkeletonCircle,
+    SkeletonText
   } from "@chakra-ui/react";
 
 import { GoContainer } from "react-icons/go";
@@ -108,9 +111,9 @@ function Desc({ children }) {
                     <Fade direction="up" duration={500} delay={430}>
                         <Box boxShadow='xl' borderRadius={25} bg='white' minHeight='80px' width='100%' padding={5}>
                         <Flex>
-                                <Circle size='50px' bg='#e2001a' color='white'>
+                                <SkeletonCircle size='50px' bg='#e2001a' color='white'>
                                     <Icon boxSize={27} as={FaRegChartBar} />
-                                </Circle>
+                                </SkeletonCircle>
                                 <SimpleGrid ml={4} columns={1} spacing={0}>
                                     <Box><Text fontSize='m' color='blackAlpha.500' float='left'>Data #X</Text></Box>
                                     <Box> <HStack spacing='2px'><Text fontSize='lg' as='b'>87493</Text></HStack>
