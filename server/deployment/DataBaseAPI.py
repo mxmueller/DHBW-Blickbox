@@ -1,10 +1,20 @@
 from flask import Flask, request, jsonify, make_response
+from flask_sock import Sock
 from influxdb import InfluxDBClient
 import requests
 import socket
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
+sock = Sock(app)
+sock.init_app(app)
+
+
+@sock.route('/log-stream')
+def logstream(ws):
+    while True:
+        data = ws.receive()
+        ws.send(data)
 
 def return_response(message, value, status_code):
     data = {message: value}
