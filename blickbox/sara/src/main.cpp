@@ -39,6 +39,7 @@ void print_humidity();
 void print_rainfall_messurement();
 void print_wind_direction();
 void print_wind_speed();
+void print_help();
 void handle_serial_request();
 
 
@@ -52,6 +53,11 @@ void setup() {
   // Initalisierung der Seriellen Kommunikation
   Serial.begin(115200);
   
+  //Blockiert solange die Serielle Schnittstelle nicht Initalisiert ist
+  while(!Serial);
+
+  Serial.println("i: waiting");
+
   logger.begin();
 
   // Initalisierung des DHT22
@@ -65,6 +71,9 @@ void setup() {
 
   // Initialisieung der Wetterstation
   weather_station.begin();
+
+  Serial.println(F("i: ready"));
+  print_help();
 }
 
 /**
@@ -91,6 +100,8 @@ void handle_serial_request(){
       print_rainfall_messurement();
     }else if(command == F("ws")){
       print_wind_speed();
+    }else {
+      print_help();
     }
     
     stringComplete = false;
@@ -134,4 +145,9 @@ void print_wind_speed(){
 void print_rainfall_messurement(){
   Serial.print(F("rfm:"));
   Serial.println(weather_station.getTotalRainfall());
+}
+
+void print_help(){
+  Serial.println(F("c: h - humidity | t - temperature | wd - wind direction "));
+  Serial.println(F("c: ws - windspeed | rfm - rainfall measurement"));
 }
