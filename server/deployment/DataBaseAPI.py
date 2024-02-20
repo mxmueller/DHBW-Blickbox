@@ -72,5 +72,29 @@ def insert_temperature():
     except Exception as e:
         return return_response("error", str(e), 500)
 
+
+@app.route('/iot/api/insert/air-humidity', methods=['POST'])
+def insert_air_humidity():
+    try:
+        data = request.json
+        if 'air-humidity' not in data:
+            return return_response("message", "Falscher Input!", 400)
+        air_humidity = float(data['air-humidity'])
+        if(air_humidity < 0.0 or air_humidity > 100.0):
+            return return_response("message", "Falscher Input! Luftfeuchtigkeit nicht in Range", 400)
+        json_body = [
+            {
+                "measurement": "air-humidity",
+                "fields": {
+                    "value": air_humidity
+                }
+            }
+        ]
+        influx_client.write_points(json_body)
+        return return_response("message", "Daten erfolgreich eingefügt!", 200)
+
+    except Exception as e:
+        return return_response("error", str(e), 500)
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
