@@ -11,10 +11,11 @@ sock.init_app(app)
 
 
 @sock.route('/log-stream')
-def logstream(ws):
-    while True:
-        data = ws.receive()
-        ws.send(data)
+def logstream(sock):
+    try:
+        sock.send("Hello world")
+    except Exception as e:
+        print(e)
 
 def return_response(message, value, status_code):
     data = {message: value}
