@@ -104,7 +104,7 @@ namespace serial_communication{
     bool stringComplete = false;  // whether the string is complete
 
 void on_serial_message_recieved(){
-    while (Serial.available()) {
+    if (Serial.available()) {
         char inChar = (char)Serial.read();
         
         if (inChar == '\n' || inChar == '\r') {

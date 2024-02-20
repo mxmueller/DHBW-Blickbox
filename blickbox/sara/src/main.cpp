@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <SerialLogger.hpp>
+#include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
 
 /**
@@ -9,9 +10,22 @@ const int PIN_DHT = 2;
 const int DHTTYPE = DHT22;
 
 /**
+ * Pin Definitionen für Weather Station
+*/
+const int PIN_WIND_DIRECTION = A5;
+const int PIN_WIND_SPEED = A6;
+const int PIN_RAINFALL_SENSOR = A7;
+
+/**
  * Initalisierung der DHT Library
 */
 DHT dht(PIN_DHT, DHTTYPE);
+
+/**
+ * @brief Initialisieung Wetterstation Library
+ * 
+ */
+SFEWeatherMeterKit weather_station(PIN_WIND_DIRECTION, PIN_WIND_SPEED, PIN_RAINFALL_SENSOR);
 
 /**
  * Generierung eines Seriellen loggers
@@ -22,6 +36,9 @@ SerialLogger logger;
 /**Funktionsdefinitionen für main.cpp*/
 void print_temperature();
 void print_humidity();
+void print_rainfall_messurement();
+void print_wind_direction();
+void print_wind_speed();
 void handle_serial_request();
 
 
@@ -31,20 +48,30 @@ void handle_serial_request();
 using namespace serial_communication;
 
 void setup() {
-  Serial.begin(115200);
-  Serial.println(F("Ello Sara here :D"));
 
-  dht.begin();
+  // Initalisierung der Seriellen Kommunikation
+  Serial.begin(115200);
+  
   logger.begin();
 
-  Serial.println(F("I am initialized!"));
-  Serial.println(F("Commands: t - temp, h - humidity"));
+  // Initalisierung des DHT22
+  // Temperatur Sensors
+  dht.begin();
+
+  //Setzt die ADC Resulution auf 12 Bit
+  // Da Arduino BLE 22, welcher mit nRF52840 chip 
+  // ausgestattet ist über einen 12 Bit ADC verfügt.
+  weather_station.setADCResolutionBits(10);
+
+  // Initialisieung der Wetterstation
+  weather_station.begin();
 }
 
 /**
  * Main program loop
 */
 void loop() {
+  on_serial_message_recieved();
   handle_serial_request();
 }
 
@@ -53,10 +80,17 @@ void loop() {
 */
 void handle_serial_request(){
   if (stringComplete) {
+    Serial.println(inputString);
     if(command == F("t")){
       print_temperature();
     }else if(command == F("h")){
       print_humidity();
+    }else if(command == F("wd")){
+      print_wind_direction();
+    }else if(command == F("rfm")){
+      print_rainfall_messurement();
+    }else if(command == F("ws")){
+      print_wind_speed();
     }
     
     stringComplete = false;
@@ -85,10 +119,19 @@ void print_humidity(){
   Serial.println(dht.readHumidity());
 }
 
-/**
- * Sobald daten über in den Buffer eintreffen wird ein Serial Event ausglöst
- * welches die Daten verarbeitet
-*/
-void serialEvent() {
-  on_serial_message_recieved();
+void print_wind_direction(){
+  Serial.print(F("wd:"));
+  Serial.println(weather_station.getWindDirection());
+}
+
+
+void print_wind_speed(){
+  Serial.print(F("ws:"));
+  Serial.println(weather_station.getWindSpeed());
+}
+
+
+void print_rainfall_messurement(){
+  Serial.print(F("rfm:"));
+  Serial.println(weather_station.getTotalRainfall());
 }

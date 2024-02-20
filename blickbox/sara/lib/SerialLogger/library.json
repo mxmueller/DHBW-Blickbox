@@ -29,8 +29,5 @@
     "type": "git",
     "url": "https://github.com/mxmueller/DHBW-Blickbox"
   },
-  "license": "MIT",
-  "dependencies": {
-    "dfrobot/DFRobotDFPlayerMini": "1.0.5"
-  }
+  "license": "MIT"
 } 
