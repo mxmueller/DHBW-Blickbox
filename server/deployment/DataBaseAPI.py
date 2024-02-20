@@ -92,7 +92,7 @@ def insert_air_humidity():
         ]
         influx_client.write_points(json_body)
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
-
+    
     except Exception as e:
         return return_response("error", str(e), 500)
 
