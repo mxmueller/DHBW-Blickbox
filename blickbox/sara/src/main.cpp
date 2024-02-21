@@ -2,6 +2,8 @@
 #include <SerialLogger.hpp>
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
+#include <SaraBLE.hpp>
+
 
 /**
  * Pin Definitionen für DHT22 Sensor
@@ -30,7 +32,6 @@ SFEWeatherMeterKit weather_station(PIN_WIND_DIRECTION, PIN_WIND_SPEED, PIN_RAINF
 /**
  * Generierung eines Seriellen loggers
 */
-SerialLogger logger;
 
 
 /**Funktionsdefinitionen für main.cpp*/
@@ -47,6 +48,13 @@ void handle_serial_request();
 
 /**Namespaces*/
 using namespace serial_communication;
+using namespace serial_logger;
+using namespace debugger;
+using namespace sara_ble;
+
+/*BLE Definitionen*/
+SaraBLE sara_bluetooth;
+
 
 void setup() {
 
@@ -56,9 +64,7 @@ void setup() {
   //Blockiert solange die Serielle Schnittstelle nicht Initalisiert ist
   while(!Serial);
 
-  Serial.println("i: waiting");
-
-  logger.begin();
+  log(F("initializing"), INFO);
 
   // Initalisierung des DHT22
   // Temperatur Sensors
@@ -72,7 +78,9 @@ void setup() {
   // Initialisieung der Wetterstation
   weather_station.begin();
 
-  Serial.println(F("i: ready"));
+  sara_bluetooth.begin();
+
+  log(F("Ready"), INFO);
   print_help();
 }
 
@@ -80,8 +88,10 @@ void setup() {
  * Main program loop
 */
 void loop() {
-  on_serial_message_recieved();
+  handle_serial_message_recieved();
   handle_serial_request();
+  
+  sara_bluetooth.loop(dht.readTemperature());
 }
 
 /**
@@ -148,6 +158,6 @@ void print_rainfall_messurement(){
 }
 
 void print_help(){
-  Serial.println(F("c: h - humidity | t - temperature | wd - wind direction "));
-  Serial.println(F("c: ws - windspeed | rfm - rainfall measurement"));
+  Serial.println(F("h: h - humidity | t - temperature | wd - wind direction "));
+  Serial.println(F("h: ws - windspeed | rfm - rainfall measurement"));
 }
