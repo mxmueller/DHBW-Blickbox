@@ -14,3 +14,38 @@ Deine Subdomain kannst du selber wählen in unserem Setup nutzen wir
        - http://server-reverse-proxy-1:81
 4. Beachte, dass du eventuell eine Weiterleitung in deinen Subdomain Einstellung deines Hosters treffen musst.
 Eventuell muss ein A und AAAA Record mit der IP Adresse deines Servers gesetzt werden.
+
+# Ausführen
+
+Mit Build:
+``docker compose up --build``
+
+Einzelne Container starten:
+```bash
+sudo docker compose start python_app  
+sudo docker compose start valentin  
+sudo docker compose start influxdb  
+sudo docker compose start grafana  
+sudo docker compose start reverse-proxy
+```
+
+Einzelne Container stoppen:
+```bash
+sudo docker compose stop python_app  
+sudo docker compose stop valentin  
+sudo docker compose stop influxdb  
+sudo docker compose stop grafana  
+sudo docker compose stop reverse-proxy
+```
+
+Image Cache löschen wenn sich was gändert hat:
+```bash
+sudo docker system prune
+```
+
+Einzelne Container starten und bauen:
+```bash
+sudo docker compose start python_app --build
+```
+
+Ein
