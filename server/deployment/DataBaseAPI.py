@@ -36,7 +36,7 @@ def logstream(sock):
 def pingBlickBox():
     ip_address = '172.19.80.1'
     port = 22
-    log(title='GET', message=(url_for('pingBlickbox') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingBlickBox') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung zur Blickbox herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
