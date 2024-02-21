@@ -34,7 +34,7 @@ def logstream(sock):
 def pingBlickBox():
     ip_address = '172.19.80.1'
     port = 22
-    log(title='Called', message=url_for('pingBlickBox'), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingBlickbox') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung zur Blickbox herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -51,7 +51,7 @@ def pingBlickBox():
 @app.route('/iot/api/pingGF', methods=['GET'])
 def pingGrafana():
     url = "http://grafana-server:3000/api/health"
-    log(title='Called', message=url_for('pingGrafana'), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingGrafana') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung mit Grafana herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         response = requests.get(url)
@@ -69,7 +69,7 @@ def pingGrafana():
 
 @app.route('/iot/api/pingDB', methods=['GET'])
 def pingthis():
-    log(title='Called', message=url_for('pingthis'), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingthis') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung zur Datenbank herzusetellen', type='info', ringbuffer=ringBuffer)
 
     try:
@@ -84,7 +84,7 @@ def pingthis():
 
 @app.route('/iot/api/insert/temperature', methods=['POST'])
 def insert_temperature():
-    log(title='Called', message=url_for('pingthis'), type='info', ringbuffer=ringBuffer)
+    log(title='POST', message=(url_for('insert_temperature') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Temperatur-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
