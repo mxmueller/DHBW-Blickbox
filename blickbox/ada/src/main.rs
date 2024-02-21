@@ -1,6 +1,5 @@
 mod sensor_modules;
 
-use std::{io, thread};
 use std::fs::{File, OpenOptions};
 
 use std::io::{Read, Write};
@@ -53,13 +52,8 @@ async fn execute() -> Result<()> {
         .open()
         .map_err(|error| format!("Failed to open port: {:?}", error))?;
 
-    // Initial delay before sending the first command
-    tokio::time::sleep(Duration::from_secs(5)).await;
-
-    tokio::time::sleep(Duration::from_millis(5000)).await;
-
     // Timer interval for sending commands (every 30 minutes)
-    let mut interval = time::interval(Duration::from_secs(20));
+    let mut interval = time::interval(Duration::from_secs(30 * 60));
 
     let time = get_time();
 
@@ -95,17 +89,15 @@ pub fn get_time() -> String {
     return time;
 }
 pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
-    // writing the received data to file system
-    // data to be written should be a struct sooner or later... :/
+        // writing the received data to file system
         let data = format!("{:?}\n", sensor_data);
         file.write_all(data.as_bytes()).unwrap();
 }
 
 pub fn interpret_data(data: &[u8]) -> String {
     /// no error handling lol, no risk no fun
-    // here i am interpreting the received string before storing it into the buffer :)
-    // : als Seperator zwischen Key und Value der Werte und String wird mit \n beendet
-    // println!(" data: {:?}", data);
+    // here i am interpreting the received string before returning it :)
+    // : als Seperator zwischen Key und Value der Werte und String wird mit \n beendet und weitere cases werden abgedeckt
     let mut  string = String::from_utf8_lossy(data).to_string();
 
     println!("received data to be interpreted: {:?}", string);

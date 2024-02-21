@@ -1,5 +1,5 @@
 pub mod dht_sensor {
-    use std::{io, thread};
+    use std::io;
     use std::time::Duration;
     use serialport::SerialPort;
     use crate::interpret_data;
