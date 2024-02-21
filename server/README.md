@@ -47,5 +47,3 @@ Einzelne Container starten und bauen:
 ```bash
 sudo docker compose start python_app --build
 ```
-
-Ein
