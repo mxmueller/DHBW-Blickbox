@@ -5,13 +5,14 @@ import requests
 import socket
 from datetime import datetime
 from RingBuffer import *
+import time 
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
-ringBuffer = RingBuffer(100)
+ringBuffer = RingBuffer(30)
 
 def return_response(message, value, status_code):
     data = {message: value}
@@ -26,6 +27,7 @@ def logstream(sock):
     while True:
         try:
             check_and_send_new_entries(ringBuffer, sock)
+            time.sleep(60)
         except Exception as e:
             print(e)
 
