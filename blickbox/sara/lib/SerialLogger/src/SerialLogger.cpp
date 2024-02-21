@@ -80,7 +80,7 @@ namespace serial_communication{
     bool stringComplete = false;  // whether the string is complete
 
     void handle_serial_message_recieved(){
-        if (Serial.available()) {
+        if (Serial.available() > 0) {
             char inChar = (char)Serial.read();
             
             if (inChar == '\n' || inChar == '\r') {

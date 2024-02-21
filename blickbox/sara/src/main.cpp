@@ -3,6 +3,8 @@
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
 #include <SaraBLE.hpp>
+#include <sara_definitions.hpp>
+#include <FireTimer.h>
 
 
 /**
@@ -56,13 +58,16 @@ using namespace sara_ble;
 SaraBLE sara_bluetooth;
 
 
+
+FireTimer poll_timer;
+
 void setup() {
 
   // Initalisierung der Seriellen Kommunikation
   Serial.begin(115200);
   
   //Blockiert solange die Serielle Schnittstelle nicht Initalisiert ist
-  while(!Serial);
+  //while(!Serial);
 
   log(F("initializing"), INFO);
 
@@ -82,16 +87,29 @@ void setup() {
 
   log(F("Ready"), INFO);
   print_help();
+
+  poll_timer.begin(500);
 }
 
 /**
  * Main program loop
 */
 void loop() {
+
+  sara_definitions::weather_data.humidity = dht.readHumidity();
+  sara_definitions::weather_data.temperature = dht.readTemperature();
+  sara_definitions::weather_data.winddirection = weather_station.getWindDirection();
+  sara_definitions::weather_data.rainfall = weather_station.getTotalRainfall();
+  sara_definitions::weather_data.windspeed = weather_station.getWindSpeed();
+  
+
+  sara_bluetooth.loop();
+
   handle_serial_message_recieved();
   handle_serial_request();
   
-  sara_bluetooth.loop(dht.readTemperature());
+  
+    
 }
 
 /**
