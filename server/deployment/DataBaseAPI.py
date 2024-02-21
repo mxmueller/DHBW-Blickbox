@@ -97,7 +97,7 @@ def insert_air_humidity():
         return return_response("error", str(e), 500)
 
 @app.route("/iot/api/insert/rain", methods=['POST'])
-def insert_air_humidity():
+def insert_rain_data():
     try:
         data = request.json
         if 'rain' not in data:
@@ -118,5 +118,30 @@ def insert_air_humidity():
     
     except Exception as e:
         return return_response("error", str(e), 500)
+    
+@app.route("/iot/api/insert/light", methods=['POST'])
+def insert_light_data():
+    try:
+        data = request.json
+        if 'light' not in data:
+            return return_response("message", "Falscher Input!", 400)
+        light = data['light']
+        if(light < 0 or light > 1023):
+            return return_response("message", "Falscher Input! Lichtmenge nicht in Range", 400)
+        json_body = [
+            {
+                "measurement": "rain",
+                "fields": {
+                    "value": light
+                }
+            }
+        ]
+        influx_client.write_points(json_body)
+        return return_response("message", "Daten erfolgreich eingefügt!", 200)
+    
+    except Exception as e:
+        return return_response("error", str(e), 500)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
