@@ -3,16 +3,16 @@ from flask_sock import Sock
 from influxdb import InfluxDBClient
 import requests
 import socket
-from datetime import datetime
+import time
 from RingBuffer import *
-import time 
+from threading import Lock
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
-ringBuffer = RingBuffer(30)
+ringBuffer = RingBuffer(10)
 
 def return_response(message, value, status_code):
     data = {message: value}
@@ -20,16 +20,17 @@ def return_response(message, value, status_code):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+thread_lock = Lock()
 
 @sock.route('/log-stream')
 def logstream(sock):
-    global last_sent_log
-    while True:
-        try:
-            check_and_send_new_entries(ringBuffer, sock)
-            time.sleep(60)
-        except Exception as e:
-            print(e)
+    try:
+        while True:
+            with thread_lock:
+                check_and_send_new_entries(ringBuffer, sock)
+    except Exception as e:
+        print('Socket-Verbindung unterbrochen:', e)
+        sock.close()
 
 
 @app.route('/iot/api/pingBB', methods=['GET'])
@@ -113,4 +114,4 @@ def insert_temperature():
         return return_response("error", str(e), 500)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
