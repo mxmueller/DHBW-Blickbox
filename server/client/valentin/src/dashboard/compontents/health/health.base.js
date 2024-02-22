@@ -44,6 +44,7 @@ function Desc() {
     const [success, setSuccess] = useState({});
     const [error, setError] = useState({});
     const [lastUpdated, setLastUpdated] = useState(new Date());
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
         const fetchData = async (apiUrl, interval) => {
@@ -58,7 +59,7 @@ function Desc() {
                     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
                 ]);
 
-                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Versuch', style: 'blackAlpha' });
+                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Versuch', style: 'blackAlpha', date: Date.now() });
 
                 if (response.status === 200) {
                     setSuccess(prevSuccess => ({
@@ -70,7 +71,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Erreichbar', style: 'green' });
+                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Erreichbar', style: 'green', date: Date.now() });
                 
                 } else {
                     setError(prevError => ({
@@ -82,7 +83,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + 'hergestellt werden.', type: 'Keine Verbindung', style: 'red' });
+                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung', style: 'red', date: Date.now() });
                 }
             } catch (error) {
                 setError(prevError => ({
@@ -93,6 +94,8 @@ function Desc() {
                     ...prevSuccess,
                     [apiUrl]: false
                 }));
+
+                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Fehlgeschlagen', style: 'red', date: Date.now() });
             } finally {
                 setLoading(prevLoading => ({
                     ...prevLoading,
@@ -113,21 +116,41 @@ function Desc() {
         apis.forEach(api => {
             fetchDataWithInterval(api);
         });
+
+       
+
+          const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+          };
+      
+          window.addEventListener('resize', handleResize);
+      
+          return () => {
+            window.removeEventListener('resize', handleResize);
+          };
     }, []);
 
     return (
         <ChakraProvider>
-            <Box boxShadow='xl' bg='blackAlpha.100' borderRadius={25} padding={4}>
+            <Box boxShadow='xl' bg='blackAlpha.100' borderRadius={25} padding={3}>
                 <Accordion allowToggle defaultIndex={[0]}>
                     <AccordionItem border='0px'>
                         <h2>
                             <AccordionButton>
                                 <Box as="span" flex='1' textAlign='left'>
                                     <Text fontSize='md' color='blackAlpha.700' as='b'>Health monitoring</Text>
-                                    <HStack>
-                                        <Text mt={0} color='blackAlpha.600' fontSize='sm'>Letzte Aktualisierung:</Text>
-                                        <Code colorScheme='blackAlpha'>{lastUpdated.toLocaleString()}</Code>
-                                    </HStack>
+                                    {windowWidth < 768 ? 
+                                        <Box>
+                                            <Text mt={0} color='blackAlpha.600' fontSize='sm' w={["100%"]}>Letzte Aktualisierung:</Text>
+                                            <Code colorScheme='blackAlpha'>{lastUpdated.toLocaleString()}</Code>
+                                        </Box>
+                                    : 
+                                        <HStack>
+                                            <Text mt={0} color='blackAlpha.600' fontSize='sm'>Letzte Aktualisierung:</Text>
+                                            <Code colorScheme='blackAlpha'>{lastUpdated.toLocaleString()}</Code>
+                                        </HStack>
+                                    }
+                                    
                                 </Box>
                                 <AccordionIcon />
                             </AccordionButton>
@@ -157,5 +180,6 @@ function Desc() {
         </ChakraProvider>
     );
 }
+
 
 export default Desc;
