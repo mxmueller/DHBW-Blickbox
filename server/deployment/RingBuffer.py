@@ -37,7 +37,5 @@ def check_and_send_new_entries(ring_buffer, socket):
 
 
 
-def send_entires(ring_buffer, socket):
-    for logs in ring_buffer.buffer:
-        socket.send(json.loads(logs))
+
     
