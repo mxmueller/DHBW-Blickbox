@@ -3,15 +3,16 @@ from flask_sock import Sock
 from influxdb import InfluxDBClient
 import requests
 import socket
-from datetime import datetime
+import time
 from RingBuffer import *
+from threading import Lock
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
-ringBuffer = RingBuffer(100)
+ringBuffer = RingBuffer(10)
 
 def return_response(message, value, status_code):
     data = {message: value}
@@ -19,22 +20,24 @@ def return_response(message, value, status_code):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+thread_lock = Lock()
 
 @sock.route('/log-stream')
 def logstream(sock):
-    global last_sent_log
-    while True:
-        try:
-            check_and_send_new_entries(ringBuffer, sock)
-        except Exception as e:
-            print(e)
+    try:
+        while True:
+            with thread_lock:
+                check_and_send_new_entries(ringBuffer, sock)
+    except Exception as e:
+        print('Socket-Verbindung unterbrochen:', e)
+        sock.close()
 
 
 @app.route('/iot/api/pingBB', methods=['GET'])
 def pingBlickBox():
     ip_address = '172.19.80.1'
     port = 22
-    log(title='Called', message=url_for('pingBlickBox'), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingBlickBox') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung zur Blickbox herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -51,7 +54,7 @@ def pingBlickBox():
 @app.route('/iot/api/pingGF', methods=['GET'])
 def pingGrafana():
     url = "http://grafana-server:3000/api/health"
-    log(title='Called', message=url_for('pingGrafana'), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingGrafana') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung mit Grafana herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         response = requests.get(url)
@@ -69,7 +72,7 @@ def pingGrafana():
 
 @app.route('/iot/api/pingDB', methods=['GET'])
 def pingthis():
-    log(title='Called', message=url_for('pingthis'), type='info', ringbuffer=ringBuffer)
+    log(title='GET', message=(url_for('pingthis') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Verbindung zur Datenbank herzusetellen', type='info', ringbuffer=ringBuffer)
 
     try:
@@ -84,7 +87,7 @@ def pingthis():
 
 @app.route('/iot/api/insert/temperature', methods=['POST'])
 def insert_temperature():
-    log(title='Called', message=url_for('pingthis'), type='info', ringbuffer=ringBuffer)
+    log(title='POST', message=(url_for('insert_temperature') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Versuch', message='Versuche Temperatur-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
@@ -111,4 +114,4 @@ def insert_temperature():
         return return_response("error", str(e), 500)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
