@@ -19,6 +19,8 @@ tags:
     description: Verbindung zum Grafana Server.
   - name: pingBB
     description: Verbindung zur Blickbox.
+  - name: getBBIP
+    description: IP-Adresse der Blickbox.
   - name: insert
     description: Daten wrden in die Datanbank geschrieben
 paths:
@@ -93,6 +95,23 @@ paths:
                   Fehler:
                     type: string
                     example: 'Keine Verbindung zur Blickbox' 
+
+  /getBBIP:
+    get:
+      tags:
+        - getBBIP
+      summary: Ändert die IP Adresse der Blickbox in der API ab
+      responses:
+        '200':
+          description: 'Änderung erfolgreich'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'IP-Adresse der BlickBox geupdatet. Neue IP: {ip_adress}'        
   /insert/temperature:
     post:
       tags:
@@ -134,7 +153,7 @@ paths:
     post:
       tags:
         - insert
-      summary: Ein neuer Luftfeuchtigkeits Wert hinzufügen
+      summary: Ein neuen Luftfeuchtigkeits Wert hinzufügen
       description: Füg einen neuen Luftfeuchtigkeits Wert hinzu.
       requestBody:
         description: Erstelle einen neuen Luftfeuchtigkeits Wert
@@ -167,6 +186,46 @@ paths:
                     example: 'Falscher Input'
         '500':
           description: Interner Fehler
+  /insert/wind-speed:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Windgeschwindigkeits Wert hinzufügen
+      description: Füg einen neuen Windgeschwindigkeits Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Windgeschwindigkeits Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Windgeschwindigkeit'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '500':
+          description: Interner Fehler
+          
+          
+          
 components:
   schemas:
     Temperature:
@@ -185,3 +244,11 @@ components:
         air-humidity:
           type: number
           example: 13.2
+    Windgeschwindigkeit:
+      required:
+        - wind-speed
+      type: object
+      properties:
+        wind-speed:
+          type: number
+          example: 120

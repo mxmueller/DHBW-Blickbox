@@ -12,14 +12,23 @@ def return_response(message, value, status_code):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+@app.route('/iot/api/getBBIP', methods=['GET'])
+def getBBIP():
+    global ip_adress
+    ip_adress = request.remote_addr
+    return return_response('message', f'IP-Adresse der BlickBox geupdatet. Neue IP: {ip_adress}', 200)
+
+
 @app.route('/iot/api/pingBB', methods=['GET'])
 def pingBlickBox():
-    ip_address = '172.19.80.1'
+    #global ip_adress
+    if(not ip_adress):
+        return return_response("message", "IP-Adresse der Blickbox nicht gefunden!", 503)
     port = 22
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(1)  
-        s.connect((ip_address, port))
+        s.connect((ip_adress, port))
         s.close() 
         return return_response("message", "BlickBox ist erreichbar", 200)
     except Exception as e:
@@ -96,20 +105,19 @@ def insert_air_humidity():
     except Exception as e:
         return return_response("error", str(e), 500)
 
-@app.route("/iot/api/insert/rain", methods=['POST'])
-def insert_rain_data():
+
+@app.route('/iot/api/insert/wind-direction', methods=['POST'])
+def insert_wind_direction():
     try:
         data = request.json
-        if 'rain' not in data:
+        if 'wind-direction' not in data:
             return return_response("message", "Falscher Input!", 400)
-        rain = data['rain']
-        if(rain < 0 or rain > 3000):
-            return return_response("message", "Falscher Input! Regenmenge nicht in Range", 400)
+        wind_direction = data['wind-direction']
         json_body = [
             {
-                "measurement": "rain",
+                "measurement": "wind-direction",
                 "fields": {
-                    "value": rain
+                    "value": wind_direction
                 }
             }
         ]
@@ -118,21 +126,22 @@ def insert_rain_data():
     
     except Exception as e:
         return return_response("error", str(e), 500)
-    
-@app.route("/iot/api/insert/light", methods=['POST'])
-def insert_light_data():
+
+
+@app.route('/iot/api/insert/wind-speed', methods=['POST'])
+def insert_wind_speed():
     try:
         data = request.json
-        if 'light' not in data:
+        if 'wind-speed' not in data:
             return return_response("message", "Falscher Input!", 400)
-        light = data['light']
-        if(light < 0 or light > 1023):
-            return return_response("message", "Falscher Input! Lichtmenge nicht in Range", 400)
+        wind_speed = float(data['wind-speed'])
+        if(wind_speed < 0.0 or wind_speed > 500.0):
+            return return_response("message", "Falscher Input! Windgeschwindigkeit nicht in Range", 400)
         json_body = [
             {
-                "measurement": "rain",
+                "measurement": "wind-speed",
                 "fields": {
-                    "value": light
+                    "value": wind_speed
                 }
             }
         ]
@@ -141,6 +150,52 @@ def insert_light_data():
     
     except Exception as e:
         return return_response("error", str(e), 500)
+
+#@app.route("/iot/api/insert/rain", methods=['POST'])
+#def insert_rain_data():
+#    try:
+#        data = request.json
+#        if 'rain' not in data:
+#            return return_response("message", "Falscher Input!", 400)
+#        rain = data['rain']
+#        if(rain < 0 or rain > 3000):
+#            return return_response("message", "Falscher Input! Regenmenge nicht in Range", 400)
+#        json_body = [
+#            {
+#                "measurement": "rain",
+#                "fields": {
+#                    "value": rain
+#                }
+#            }
+#        ]
+#        influx_client.write_points(json_body)
+#        return return_response("message", "Daten erfolgreich eingefügt!", 200)
+#    
+#    except Exception as e:
+#        return return_response("error", str(e), 500)
+    
+#@app.route("/iot/api/insert/light", methods=['POST'])
+#def insert_light_data():
+#    try:
+#        data = request.json
+#        if 'light' not in data:
+#            return return_response("message", "Falscher Input!", 400)
+#        light = data['light']
+#        if(light < 0 or light > 1023):
+#            return return_response("message", "Falscher Input! Lichtmenge nicht in Range", 400)
+#        json_body = [
+#            {
+#                "measurement": "rain",
+#                "fields": {
+#                    "value": light
+#                }
+#            }
+#        ]
+#        influx_client.write_points(json_body)
+#        return return_response("message", "Daten erfolgreich eingefügt!", 200)
+#    
+#    except Exception as e:
+#        return return_response("error", str(e), 500)
 
 
 

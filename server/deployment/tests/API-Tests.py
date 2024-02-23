@@ -10,10 +10,14 @@ def getURL(path):
 def parseOption():
     global noping
     global notemp
-    global nohumid  
+    global nohumid
+    global nowindspeed
+    global nowinddir  
     noping = False
     notemp = False
     nohumid = False
+    nowindspeed = False
+    nowinddir = False
     if(len(sys.argv) < 2):
         return
     validoptions = 0
@@ -27,10 +31,17 @@ def parseOption():
         elif x == "nohumid":
             nohumid = True
             validoptions +=1
+        elif x == "nowindspeed":
+            nowindspeed = True
+            validoptions +=1
+        elif x == "nowinddir":
+            nowinddir = True
+            validoptions +=1
+
         else:
             continue
     if(validoptions == 0):
-        print("no valid option found! valid options are: noping, notemp, nohumid")
+        print("no valid option found! valid options are: noping, notemp, nohumid, nowindspeed, nowinddir")
         exit(0)
 
 
@@ -173,7 +184,7 @@ class TestDatabaseAPI(unittest.TestCase):
         response = requests.post(getURL("/insert/air-humidty"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
 
-    def test_temperature_WrongKey(self):
+    def test_airhumidity_WrongKey(self):
         if(nohumid):
             return
         payload = {"temperature": 18.1}
@@ -182,7 +193,69 @@ class TestDatabaseAPI(unittest.TestCase):
         response = requests.post(getURL("/insert/air-humidty"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
+
+
+    ################################################################################
+    #Wind-Speed Unit Tests
+    def test_wind_speed_edge_casesN1(self):
+        if(nowindspeed):
+            return
+        payload = {"wind-speed": -0.1}
+        expected_status_code = 400
+        expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
+        
+    def test_wind_speed_edge_casesN2(self):
+        if(nowindspeed):
+            return
+        payload = {"wind-speed": -1000}
+        expected_status_code = 400
+        expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
     
+    def test_wind_speed_edge_casesP1(self):
+        if(nowindspeed):
+            return
+        payload = {"wind-speed": 500.1}
+        expected_status_code = 400
+        expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
+    
+    def test_wind_speed_edge_casesP2(self):
+        if(nowindspeed):
+            return
+        payload = {"wind-speed": 44343532.1}
+        expected_status_code = 400
+        expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
+    
+    def test_wind_speed_edge_casesP2(self):
+        if(nowindspeed):
+            return
+        payload = {"wind-speed": "hello"}
+        expected_status_code = 500
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+
+
+    def test_wind_speed_edge_casesP1(self):
+        if(nowindspeed):
+            return
+        payload = {"hallo": 50}
+        expected_status_code = 400
+        expected_data = {"message": "Falscher Input!"}
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
+
 if __name__ == '__main__':
     parseOption()
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
