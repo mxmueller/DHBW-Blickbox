@@ -233,6 +233,9 @@ components:
         - temperature
       type: object
       properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
         temperature:
           type: number
           example: 27.8
@@ -241,6 +244,9 @@ components:
         - air-humidity
       type: object
       properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
         air-humidity:
           type: number
           example: 13.2
@@ -249,6 +255,9 @@ components:
         - wind-speed
       type: object
       properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
         wind-speed:
           type: number
           example: 120

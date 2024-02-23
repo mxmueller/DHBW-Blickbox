@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, make_response
 from influxdb import InfluxDBClient
 import requests
 import socket
+from datetime import datetime
+
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
@@ -63,6 +65,15 @@ def pingthis():
 def insert_temperature():
     try:
         data = request.json
+        if 'timestamp' in data:
+            timestamp = data['timestamp']
+            try:
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
+        else:
+            timestamp = datetime.utcnow()
+
         if 'temperature' not in data:
             return return_response("message", "Falscher Input!", 400)
         temperature = float(data['temperature'])
@@ -71,6 +82,7 @@ def insert_temperature():
         json_body = [
             {
                 "measurement": "temperature",
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": temperature
                 }
@@ -86,6 +98,15 @@ def insert_temperature():
 def insert_air_humidity():
     try:
         data = request.json
+        if 'timestamp' in data:
+            timestamp = data['timestamp']
+            try:
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
+        else:
+            timestamp = datetime.utcnow()
+
         if 'air-humidity' not in data:
             return return_response("message", "Falscher Input!", 400)
         air_humidity = float(data['air-humidity'])
@@ -94,6 +115,7 @@ def insert_air_humidity():
         json_body = [
             {
                 "measurement": "air-humidity",
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": air_humidity
                 }
@@ -110,12 +132,22 @@ def insert_air_humidity():
 def insert_wind_direction():
     try:
         data = request.json
+        if 'timestamp' in data:
+            timestamp = data['timestamp']
+            try:
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
+        else:
+            timestamp = datetime.utcnow()
+
         if 'wind-direction' not in data:
             return return_response("message", "Falscher Input!", 400)
         wind_direction = data['wind-direction']
         json_body = [
             {
                 "measurement": "wind-direction",
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": wind_direction
                 }
@@ -132,6 +164,15 @@ def insert_wind_direction():
 def insert_wind_speed():
     try:
         data = request.json
+        if 'timestamp' in data:
+            timestamp = data['timestamp']
+            try:
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
+        else:
+            timestamp = datetime.utcnow()
+
         if 'wind-speed' not in data:
             return return_response("message", "Falscher Input!", 400)
         wind_speed = float(data['wind-speed'])
@@ -140,6 +181,7 @@ def insert_wind_speed():
         json_body = [
             {
                 "measurement": "wind-speed",
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": wind_speed
                 }

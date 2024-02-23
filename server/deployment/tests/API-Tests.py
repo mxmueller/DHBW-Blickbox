@@ -6,7 +6,6 @@ import sys
 def getURL(path):
     return ("http://dhbwapi.maytastix.de/iot/api" + path)
 
-
 def parseOption():
     global noping
     global notemp
@@ -133,7 +132,16 @@ class TestDatabaseAPI(unittest.TestCase):
         response = requests.post(getURL("/insert/temperature"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
-    
+
+    def right_ts_temp(self):
+        if(notemp):
+            return
+        payload = {"timestamp": "19:32:23 2024-02-23", "temperature": 18.1}
+        expected_status_code = 400
+        expected_data = {"message": "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'"}
+        response = requests.post(getURL("/insert/temperature"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
     ##########################################################################
     # Luftfeuchtigkeits Unit-Tests
     def test_airhumidity_edge_casesN1(self):
@@ -194,6 +202,15 @@ class TestDatabaseAPI(unittest.TestCase):
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
 
+    def right_ts_humid(self):
+        if(nohumid):
+            return
+        payload = {"timestamp": "19:32:23 2024-02-23", "air-humidity": 18.1}
+        expected_status_code = 400
+        expected_data = {"message": "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'"}
+        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
 
     ################################################################################
     #Wind-Speed Unit Tests
@@ -252,6 +269,16 @@ class TestDatabaseAPI(unittest.TestCase):
         payload = {"hallo": 50}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input!"}
+        response = requests.post(getURL("/insert/wind-speed"), json=payload)
+        self.assertEqual(response.status_code, expected_status_code)
+        self.assertEqual(response.json(), expected_data)
+
+    def right_ts_ws(self):
+        if(nowindspeed):
+            return
+        payload = {"timestamp": "19:32:23 2024-02-23", "wind-speed": 18.1}
+        expected_status_code = 400
+        expected_data = {"message": "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'"}
         response = requests.post(getURL("/insert/wind-speed"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
