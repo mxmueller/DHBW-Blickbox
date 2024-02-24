@@ -46,5 +46,6 @@ sudo docker system prune
 Einzelne Container starten und bauen:
 ```bash
 docker-compose build valentin
+docker-compose up -d valentin
 docker-compose restart valentin
 ```
