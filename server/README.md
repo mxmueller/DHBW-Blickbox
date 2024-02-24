@@ -45,5 +45,6 @@ sudo docker system prune
 
 Einzelne Container starten und bauen:
 ```bash
-sudo docker compose start python_app --build
+docker-compose build valentin
+docker-compose restart valentin
 ```
