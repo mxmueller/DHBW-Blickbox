@@ -47,6 +47,18 @@ function Desc() {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
+        const currentDate = new Date();
+
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+        
+        const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
         const fetchData = async (apiUrl, interval) => {
             try {
                 setLoading(prevLoading => ({
@@ -59,7 +71,7 @@ function Desc() {
                     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
                 ]);
 
-                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Versuch', style: 'blackAlpha', date: Date.now() });
+                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Client Verbindungsversuch', style: 'blackAlpha', date: formattedDateTime });
 
                 if (response.status === 200) {
                     setSuccess(prevSuccess => ({
@@ -71,7 +83,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Erreichbar', style: 'green', date: Date.now() });
+                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Server Erreichbar', style: 'green', date: formattedDateTime });
                 
                 } else {
                     setError(prevError => ({
@@ -83,7 +95,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung', style: 'red', date: Date.now() });
+                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung zum Server', style: 'red', date: formattedDateTime });
                 }
             } catch (error) {
                 setError(prevError => ({
@@ -95,7 +107,7 @@ function Desc() {
                     [apiUrl]: false
                 }));
 
-                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Fehlgeschlagen', style: 'red', date: Date.now() });
+                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Client Verbindungsversuch Fehlgeschlagen', style: 'red', date: formattedDateTime });
             } finally {
                 setLoading(prevLoading => ({
                     ...prevLoading,

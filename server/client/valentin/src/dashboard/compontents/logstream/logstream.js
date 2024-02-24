@@ -1,13 +1,13 @@
 // logstream.js
 import React, { useState, useEffect, useRef } from "react";
 import LogstreamItem from "./logstream.item.js";
-import { ChakraProvider, Box, Table, Tbody, AccordionPanel, TableContainer, Accordion, AccordionItem, AccordionButton, Text, AccordionIcon} from "@chakra-ui/react";
+import { ChakraProvider, Box, Table, Tbody, AccordionPanel, TableContainer, Accordion, AccordionItem, AccordionButton, Text, AccordionIcon } from "@chakra-ui/react";
 
 const Logstream = () => {
   const [logstreamItems, setLogstreamItems] = useState([]);
 
   Logstream.addItemToLogstream = (message) => {
-    setLogstreamItems(prevItems => [message, ...prevItems]); 
+    setLogstreamItems(prevItems => [message, ...prevItems]);
   };
 
   const [messages, setMessages] = useState([]);
@@ -15,28 +15,39 @@ const Logstream = () => {
 
   useEffect(() => {
 
-    const ws = new WebSocket('ws://dhbwapi.maytastix.de/log-stream');
+    const ws = new WebSocket('wss://dhbwapi.maytastix.de/log-stream');
 
     ws.onopen = () => {
       console.log('WebSocket connection established.');
     };
 
     ws.onmessage = (event) => {
-      console.log(event.data)
-      const jsonString = event.data.replace(/'/g, '"');
-      const wsjson = JSON.parse(jsonString);
-      
-      let wsmessagestate = 'blackAlpha';
-      if (wsjson.type == "info")
+      try {
+
+        let correctedJsonString = event.data.replace(/'/g, '"');
+
+
+        console.log(correctedJsonString);
+        let wsjson = JSON.parse(correctedJsonString);
+
+        console.log(wsjson);
+
+        let wsmessagestate = 'blackAlpha';
+        if (wsjson.type == "info")
           wsmessagestate = "yellow"
 
-      if (wsjson.type == "error")
-        wsmessagestate = "red"
+        if (wsjson.type == "error")
+          wsmessagestate = "red"
 
-      if (wsjson.type == "success")
-        wsmessagestate = "green"
+        if (wsjson.type == "success")
+          wsmessagestate = "green"
 
-      Logstream.addItemToLogstream({ message: wsjson.message, type: wsjson.title, style: wsmessagestate, date: wsjson.timestamp});        
+        Logstream.addItemToLogstream({ message: wsjson.message, type: "Websocket " + wsjson.title, style: wsmessagestate, date: wsjson.timestamp });
+
+      } catch (error) {
+        const currentDate = new Date();
+        Logstream.addItemToLogstream({ message: 'Fehler beim Parsen der empfangenen Daten:', error, type: "Websocket Error", style: "red", date: currentDate.toISOString()});
+      }
     };
 
     ws.onclose = () => {
@@ -59,35 +70,35 @@ const Logstream = () => {
   return (
     <ChakraProvider>
       <Box mt={10} boxShadow='xl' bg='blackAlpha.100' borderRadius={25} pt={3} pl={3} pr={3} pb={3}>
-          <Accordion allowToggle defaultIndex={[0]}>
-            <AccordionItem border='0px'>
-              <h2>
-                <AccordionButton>
-                    <Box as="span" flex='1' textAlign='left'>
-                        <Text fontSize='md' color='blackAlpha.700' as='b'>Loggin</Text>
-                    </Box>
-                    <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionPanel mb={0}>
-                <TableContainer>
-                <Box 
-                    maxHeight={'700px'} 
-                    sx={
-                      { 
-                      '::-webkit-scrollbar':{
-                            display:'none'
-                        }
+        <Accordion allowToggle defaultIndex={[0]}>
+          <AccordionItem border='0px'>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex='1' textAlign='left'>
+                  <Text fontSize='md' color='blackAlpha.700' as='b'>Logging Panel</Text>
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel mb={0}>
+              <TableContainer>
+                <Box
+                  maxHeight={'700px'}
+                  sx={
+                    {
+                      '::-webkit-scrollbar': {
+                        display: 'none'
                       }
                     }
-                    display='block' 
-                    overflowY='scroll'
-                    overflowX='scroll'  
-                    borderRadius={25} 
-                    bg='white' 
-                    minHeight='90px' 
-                    width='100%'
-                    padding={5} >
+                  }
+                  display='block'
+                  overflowY='scroll'
+                  overflowX='scroll'
+                  borderRadius={25}
+                  bg='white'
+                  minHeight='90px'
+                  width='100%'
+                  padding={5} >
                   <Table variant="simple" size="sm">
                     <Tbody>
                       {logstreamItems.map((item, index) => (
@@ -101,12 +112,12 @@ const Logstream = () => {
                       ))}
                     </Tbody>
                   </Table>
-                  </Box>
+                </Box>
               </TableContainer>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-          
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+
       </Box>
     </ChakraProvider>
   );
