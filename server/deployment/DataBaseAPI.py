@@ -12,7 +12,7 @@ influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
-ringBuffer = RingBuffer(10)
+ringBuffer = RingBuffer(30)
 
 def return_response(message, value, status_code):
     data = {message: value}
@@ -38,7 +38,7 @@ def pingBlickBox():
     ip_address = '172.19.80.1'
     port = 22
     log(title='GET', message=(url_for('pingBlickBox') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
-    log(title='Versuch', message='Versuche Verbindung zur Blickbox herzusetellen', type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Verbindung zur Blickbox herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(1)  
@@ -55,7 +55,7 @@ def pingBlickBox():
 def pingGrafana():
     url = "http://grafana-server:3000/api/health"
     log(title='GET', message=(url_for('pingGrafana') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
-    log(title='Versuch', message='Versuche Verbindung mit Grafana herzusetellen', type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Verbindung mit Grafana herzusetellen', type='info', ringbuffer=ringBuffer)
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -73,7 +73,7 @@ def pingGrafana():
 @app.route('/iot/api/pingDB', methods=['GET'])
 def pingthis():
     log(title='GET', message=(url_for('pingthis') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
-    log(title='Versuch', message='Versuche Verbindung zur Datenbank herzusetellen', type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Verbindung zur Datenbank herzusetellen', type='info', ringbuffer=ringBuffer)
 
     try:
         influx_client.ping()
@@ -88,7 +88,7 @@ def pingthis():
 @app.route('/iot/api/insert/temperature', methods=['POST'])
 def insert_temperature():
     log(title='POST', message=(url_for('insert_temperature') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
-    log(title='Versuch', message='Versuche Temperatur-Wert einzufügen', type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Temperatur-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
         if 'temperature' not in data:
