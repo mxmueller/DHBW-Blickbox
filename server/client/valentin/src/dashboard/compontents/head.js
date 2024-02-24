@@ -1,6 +1,5 @@
 
 import { ChakraProvider, Text, Box, Image, Flex } from "@chakra-ui/react"
-import dhbw from "../icons/dhbw.png"
 
 function Head({ children }) {
   return <ChakraProvider>{children}
