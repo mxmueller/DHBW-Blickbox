@@ -4,8 +4,7 @@
 #include <Arduino.h>
 #include <ArduinoBLE.h>
 #include <SerialLogger.hpp>
-#include <FireTimer.h>
-#include <sara_definitions.hpp>
+#include <sara_data.hpp>
 
 
 
@@ -13,31 +12,40 @@ namespace sara_ble{
 
   enum ble_state{
     NONE,
-    CONNECTED,
-    DISCONNECTED
+    DISCONNECTED,
+    CONNECTED
   };
 
+  String ble_state_to_String(ble_state state);
 
   class SaraBLE {
     public:
       SaraBLE();
       void begin();
+      ble_state get_connection_state();
+      String get_connected_device();
+      void print_bluetooth_state();
       void loop();
     private:
 
-    FireTimer sensor_poll_timer;
-    ble_state state = NONE; 
+      void update_connection_state(BLEDevice *ble_device);
 
-    BLEService airService; 
+      // Verbinungs infos
+      ble_state connection_state = NONE;
+      ble_state last_connection_state = NONE;
+      String connected_device;
 
-    BLECharacteristic temperatureCharacteristic;
-    BLECharacteristic humidityCharacteristic;
+      // BLE Services
+      BLEService airService; 
 
-    BLEService weatherStationService; 
+      BLECharacteristic temperatureCharacteristic;
+      BLECharacteristic humidityCharacteristic;
 
-    BLECharacteristic rainfallCharacteristic;
-    BLECharacteristic winddirectionCharacteristic;
-    BLECharacteristic windspeedCharacteristic;
+      BLEService weatherStationService; 
+
+      BLECharacteristic rainfallCharacteristic;
+      BLECharacteristic winddirectionCharacteristic;
+      BLECharacteristic windspeedCharacteristic;
   };
 }
 

@@ -2,9 +2,12 @@
 #include <SerialLogger.hpp>
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
-#include <SaraBLE.hpp>
-#include <sara_definitions.hpp>
+#include <sara_data.hpp>
 #include <FireTimer.h>
+
+#if defined(__arm__)
+#include <SaraBLE.hpp>
+#endif
 
 
 /**
@@ -31,10 +34,6 @@ DHT dht(PIN_DHT, DHTTYPE);
  */
 SFEWeatherMeterKit weather_station(PIN_WIND_DIRECTION, PIN_WIND_SPEED, PIN_RAINFALL_SENSOR);
 
-/**
- * Generierung eines Seriellen loggers
-*/
-
 
 /**Funktionsdefinitionen für main.cpp*/
 void print_temperature();
@@ -44,6 +43,8 @@ void print_wind_direction();
 void print_wind_speed();
 void print_help();
 void handle_serial_request();
+void print_ble_state();
+void update_sensor_data();
 
 
 
@@ -52,12 +53,14 @@ void handle_serial_request();
 using namespace serial_communication;
 using namespace serial_logger;
 using namespace debugger;
-using namespace sara_ble;
+
+using namespace sara_data;
 
 /*BLE Definitionen*/
+#if defined(__arm__)
+using namespace sara_ble;
 SaraBLE sara_bluetooth;
-
-
+#endif
 
 FireTimer poll_timer;
 
@@ -66,25 +69,27 @@ void setup() {
   // Initalisierung der Seriellen Kommunikation
   Serial.begin(115200);
   
-  //Blockiert solange die Serielle Schnittstelle nicht Initalisiert ist
-  //while(!Serial);
-
+  // Rückgabe für 
   log(F("initializing"), INFO);
 
   // Initalisierung des DHT22
   // Temperatur Sensors
   dht.begin();
 
-  //Setzt die ADC Resulution auf 12 Bit
+  //Setzt die ADC Resulution auf 10 Bit
   // Da Arduino BLE 22, welcher mit nRF52840 chip 
-  // ausgestattet ist über einen 12 Bit ADC verfügt.
+  // ausgestattet ist über einen 10 Bit ADC verfügt.
   weather_station.setADCResolutionBits(10);
 
   // Initialisieung der Wetterstation
   weather_station.begin();
 
+  // Initialisieung der Bluetooth Integration
+  #if defined(__arm__)
   sara_bluetooth.begin();
+  #endif
 
+  // Rückgabe eines Ready Signals für den Benutzer der Seriellen Konsole
   log(F("Ready"), INFO);
   print_help();
 
@@ -95,22 +100,25 @@ void setup() {
  * Main program loop
 */
 void loop() {
-
-  sara_definitions::weather_data.humidity = dht.readHumidity();
-  sara_definitions::weather_data.temperature = dht.readTemperature();
-  sara_definitions::weather_data.winddirection = weather_station.getWindDirection();
-  sara_definitions::weather_data.rainfall = weather_station.getTotalRainfall();
-  sara_definitions::weather_data.windspeed = weather_station.getWindSpeed();
   
+  // Aktualisiert die Sensor Daten und speichert diese in eine
+  // Datenstruktur auf die die BLE Integration zugreifen kann
+  update_sensor_data(&dht, &weather_station);
 
+  // Verwaltet die BLE Integration
+  #if defined(__arm__)
   sara_bluetooth.loop();
+  #endif
 
+  // Verwaltet eingehende Serielle Anfragen und Kommandos
   handle_serial_message_recieved();
   handle_serial_request();
   
   
     
 }
+
+
 
 /**
  * Verarbeitet die Kommandos, die über das Serielle Protokoll übertragen wurden
@@ -128,7 +136,9 @@ void handle_serial_request(){
       print_rainfall_messurement();
     }else if(command == F("ws")){
       print_wind_speed();
-    }else {
+    }else if(command == F("ble")){
+      print_ble_state();
+    }else if(command == F("help")){
       print_help();
     }
     
@@ -158,24 +168,56 @@ void print_humidity(){
   Serial.println(dht.readHumidity());
 }
 
+/**
+ * @brief Gibt die aktuelle windrichtung in der Konsole zurück
+ * 
+ */
 void print_wind_direction(){
   Serial.print(F("wd:"));
   Serial.println(weather_station.getWindDirection());
 }
 
-
+/**
+ * @brief Gibt die die aktuelle Wind Geschwindigkeit zurück
+ * 
+ */
 void print_wind_speed(){
   Serial.print(F("ws:"));
   Serial.println(weather_station.getWindSpeed());
 }
 
-
+/**
+ * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
+ * 
+ */
 void print_rainfall_messurement(){
   Serial.print(F("rfm:"));
   Serial.println(weather_station.getTotalRainfall());
 }
 
+/**
+ * @brief Gibt eine Hilfe für Benutzer des Seriellen Kosole aus
+ * 
+ */
 void print_help(){
   Serial.println(F("h: h - humidity | t - temperature | wd - wind direction "));
   Serial.println(F("h: ws - windspeed | rfm - rainfall measurement"));
+}
+
+
+
+/**
+ * @brief Ließt den aktuellen Status der Verbindung mit dem zentralen Bluetooth Gerät aus
+ * 
+ */
+void print_ble_state(){
+  #if defined(__arm__)
+    Serial.print(F("ble_connection:"));
+    Serial.println(ble_state_to_String(sara_bluetooth.get_connection_state()));
+    Serial.print(F("ble_device:"));
+    Serial.println(sara_bluetooth.get_connected_device());
+  #endif
+  #if defined(__AVR__)
+    Serial.print(F("ble_device:No BLE Device available"));
+  #endif
 }

@@ -2,8 +2,34 @@
 
 namespace sara_ble{
     using namespace serial_logger;
-    using namespace sara_definitions;
+    using namespace sara_data;
 
+    /**
+     * @brief Gibt die String repräsentation vom Enum zurück
+     * 
+     * @param state 
+     * @return String 
+     */
+    String ble_state_to_String(ble_state state){
+        switch (state)
+        {
+        case NONE:
+            return F("NONE");
+            break;
+        case DISCONNECTED:
+            return F("DISCONNECTED");
+            break;
+        case CONNECTED:
+            return F("CONNECTED");
+            break;
+        }
+    }
+
+    /**
+     * @brief Deklariert die SARA Bluetooth Initation mit allen Services
+     * und Charakteristiken
+     * 
+     */
     SaraBLE::SaraBLE() : 
     airService("1101"), 
     temperatureCharacteristic("2101", BLERead | BLENotify, 16) ,
@@ -15,11 +41,16 @@ namespace sara_ble{
     {
     }
 
+    /**
+     * @brief Initialisert und versucht eine Verbindung mit dem Bluetooth Modul
+     * herzustellen.
+     * 
+     */
     void SaraBLE::begin(){
         
         //Setting up Bluetooth Services
         if (!BLE.begin()) {
-            log(F("r:ble_failed:Starting BLE failed!"), ERROR);
+            log(F("ble_failed:Starting BLE failed!"), ERROR);
             while (1);
         }
         BLE.setLocalName("SARA Weather Station");
@@ -37,12 +68,72 @@ namespace sara_ble{
 
     }
 
+    /**
+     * @brief Speichert und schreibt den aktuellen Status der Bluetooth integation
+     * auf der Konsole aus
+     * 
+     * @param ble_device Benötigt ein BLEDevice Objekt welches im Loop erstellt wird
+     */
+    void SaraBLE::update_connection_state(BLEDevice *ble_device){
+        if(ble_device->connected()==true){
+            connection_state = CONNECTED;
+            if(last_connection_state <= DISCONNECTED){
+                last_connection_state = CONNECTED;
+                log(F("BLE Device Connected"), INFO);
+            }
+            connected_device = ble_device->address();
+            
+
+        }else{
+            if(last_connection_state == CONNECTED){
+                last_connection_state = DISCONNECTED;
+                log(F("BLE Device disconnect"), INFO);
+            }
+            connection_state = DISCONNECTED;
+            connected_device = "";
+        }
+    }
+
+    /**
+     * @brief Schreibt fürs Debugging die aktuellen Bluetooth Status auf der Konsole aus
+     * 
+     */
+    void SaraBLE::print_bluetooth_state(){
+        Serial.print(F("ble_connection:"));
+        Serial.println(ble_state_to_String(this->get_connection_state()));
+        Serial.print(F("ble_device:"));
+        Serial.println(this->get_connected_device());
+    }
+
+    /**
+     * @brief Getter für den aktuellen Verbindungsstatus
+     * 
+     * @return ble_state 
+     */
+    ble_state SaraBLE::get_connection_state(){
+        return connection_state;
+    }
+
+    /**
+     * @brief Gibt die MAC Adresse des Verbundenen Geräts zurück
+     * 
+     * @return String 
+     */
+    String SaraBLE::get_connected_device(){
+        return connected_device;
+    }
+
+    /**
+     * @brief Prozess für den Hauptprogramm loop
+     * 
+     */
     void SaraBLE::loop(){
        BLEDevice central = BLE.central();
 
+       update_connection_state(&central);
+
         if (central) 
         {
-            digitalWrite(LED_BUILTIN, HIGH);
             if(central.connected()){
                 temperatureCharacteristic.writeValue(weather_data.temperature);
                 humidityCharacteristic.writeValue(weather_data.humidity);
@@ -50,7 +141,6 @@ namespace sara_ble{
                 windspeedCharacteristic.writeValue(weather_data.windspeed);
                 rainfallCharacteristic.writeValue(weather_data.rainfall);
             }
-            digitalWrite(LED_BUILTIN, LOW);
         }
     }
 }
