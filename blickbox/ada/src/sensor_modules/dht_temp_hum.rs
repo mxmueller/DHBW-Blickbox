@@ -12,7 +12,7 @@ pub mod dht_sensor {
         if command == "h\n" || command == "t\n" {
             port.write_all(command.as_ref()).expect("Failed to send command");
         }
-        tokio::time::sleep(Duration::from_millis(1000)).await;
+        tokio::time::sleep(Duration::from_millis(5000)).await;
 
         match port.read(serial_buf.as_mut_slice()) {
             Ok(t) => {
