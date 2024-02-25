@@ -1,8 +1,20 @@
 #!/bin/bash
+echo ------------------------
+echo VALENTIN BUILD SETUP
+echo ------------------------
 
-sudo chown -R $(whoami) ~/.docker
+cd ./valentin
+npm install 
 
-docker build -t valentin .
-docker run -d -p 4000:80 --name valentin valentin
+echo ------------------------
+echo TESTING VALENTIN BEFORE DEPLYOMENT
+echo ------------------------
 
+npm test -- --watchAll=false
+
+echo ------------------------
+echo DEPLOYING DOCKER
+echo ------------------------
+
+docker-compose up --build
 
