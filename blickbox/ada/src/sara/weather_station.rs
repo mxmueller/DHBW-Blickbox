@@ -1,15 +1,15 @@
-pub mod dht_sensor {
+pub mod weather_station {
     use std::io;
     use std::time::Duration;
     use serialport::SerialPort;
     use crate::interpret_data;
 
-    pub async fn get_dht_data(command: &str, mut port: &mut Box<dyn SerialPort>) -> crate::Result<String> {
+    pub async fn get_weather_station_data(command: &str, mut port: &mut Box<dyn SerialPort>) -> crate::Result<String> {
 
         let mut serial_buf: Vec<u8> = vec![0; 100];
 
         // here data is requested
-        if command == "h\n" || command == "t\n" {
+        if command == "h\n" || command == "t\n" || command == "ws\n" || command == "wd\n" || command == "rfm\n" {
             port.write_all(command.as_ref()).expect("Failed to send command");
         }
         tokio::time::sleep(Duration::from_millis(5000)).await;

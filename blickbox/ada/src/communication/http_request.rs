@@ -1,5 +1,4 @@
 pub mod http_request {
-    use std::time::Duration;
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
@@ -38,13 +37,16 @@ pub mod http_request {
 
         let temp_json = get_temp_json(&sensor_data);
         let hum_json = get_humidity_json(&sensor_data);
+        let ws_json = get_wind_speed_json(&sensor_data);
+        let wd_json = get_wind_direction_json(&sensor_data);
+        let precip_json = get_precipitation_amount_json(&sensor_data);
 
         let data_types = vec![
             (String::from("temperature"), temp_json),
             (String::from("air-humidity"), hum_json),
-            // ("wind-direction"),
-            // ("wind-speed"),
-            // ("precipitation-amount"),
+            (String::from("wind-speed"), ws_json),
+            (String::from("wind-direction"), wd_json),
+            (String::from("precipitation-amount"), precip_json),
         ];
 
         // Create a reqwest HTTP client
@@ -95,7 +97,7 @@ pub mod http_request {
         let json = serde_json::to_string(&data).unwrap();
         return json
     }
-/*
+
     fn get_wind_speed_json(sensor_data: &SensorData) -> String {
         let data = WindSpeedData {
             timestamp: sensor_data.clone().timestamp,
@@ -121,6 +123,4 @@ pub mod http_request {
         let json = serde_json::to_string(&data).unwrap();
         return json
     }
- */
-
 }

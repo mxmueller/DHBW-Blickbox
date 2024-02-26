@@ -1,8 +1,7 @@
-mod sensor_modules;
+mod sara;
 mod communication;
 
 use std::fs::{File, OpenOptions};
-use std::io;
 
 use std::io::{Read, Write};
 use std::str::FromStr;
@@ -12,7 +11,8 @@ use chrono_tz::Europe::Berlin;
 use serialport::SerialPort;
 use tokio::time;
 use crate::communication::http_request::http_request::send_data;
-use crate::sensor_modules::dht_temp_hum::dht_sensor::get_dht_data;
+use crate::sara::weather_station;
+use crate::sara::weather_station::weather_station::get_weather_station_data;
 
 type Error = String;
 type Result<T> = std::result::Result<T, Error>;
@@ -22,9 +22,9 @@ pub struct SensorData {
     timestamp: String,
     temperature: f32,
     humidity: f32,
-    // wind_speed: String,
-    // wind_direction: String,
-    // precipitation_amount: String,
+    wind_speed: f32,
+    wind_direction: f32,
+    precipitation_amount: f32,
 }
 
 #[tokio::main]
@@ -66,16 +66,16 @@ async fn execute() -> Result<()> {
         timestamp: time,
         temperature: 0.0,
         humidity: 0.0,
-        // wind_speed: String::new(),
-        // wind_direction: String::new(),
-        // precipitation_amount: String::new(),
+        wind_speed: 0.0,
+        wind_direction: 0.0,
+        precipitation_amount: 0.0,
     };
 
     // here the programm is waiting for an initial message before further data is requested
     let mut serial_buf: Vec<u8> = vec![0; 100];
     let mut initial_message_received = false;
     let mut initial_message = String::new();
-
+/*
     while initial_message_received == false {
         match port.read(serial_buf.as_mut_slice()) {
             Ok(t) => {
@@ -95,22 +95,31 @@ async fn execute() -> Result<()> {
         }
     }
 
+ */
+
     // the main loop to get data every 30 minutes
     loop {
         interval.tick().await;
 
         let mut port = port.try_clone().map_err(|error| format!("{:?}", error))?;
 
-        let temperature = get_dht_data("t\n", &mut port).await?;
+        let temperature = get_weather_station_data("t\n", &mut port).await?;
         println!("send t command, got: {}", temperature);
-        let humidity = get_dht_data("h\n", &mut port).await?;
+        let humidity = get_weather_station_data("h\n", &mut port).await?;
         println!("send h command, got: {}", humidity);
+        let wind_speed = get_weather_station_data("ws\n", &mut port).await?;
+
+        let wind_direction = get_weather_station_data("wd\n", &mut port).await?;
+
+        let precipitation_amount = get_weather_station_data("rfm\n", &mut port).await?;
 
         sensor_data.temperature = f32::from_str(&*temperature).unwrap();
         sensor_data.humidity = f32::from_str(&*humidity).unwrap();
+        sensor_data.wind_speed = f32::from_str(&*wind_speed).unwrap();
+        sensor_data.wind_direction = f32::from_str(&*wind_direction).unwrap();
+        sensor_data.precipitation_amount = f32::from_str(&*precipitation_amount).unwrap();
 
         write_to_file(&file, &sensor_data);
-        // handle_weather_station_data();
 
         send_data(&sensor_data).await?;
     }
