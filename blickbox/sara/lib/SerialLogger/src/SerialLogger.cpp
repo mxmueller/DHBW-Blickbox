@@ -1,99 +1,75 @@
 #include <SerialLogger.hpp>
+namespace serial_logger{
 
-SerialLogger *SerialLogger::p_serial_logger = nullptr;
+    using namespace debugger;
 
+    DebugLevels level = DebugLevels::DEBUG;
 
-void SerialLogger::serialHandler(int argCnt, char **args){
-  if(p_serial_logger != nullptr){
-    if(strcmp(args[1], "g") == 0){
-        Serial.print(Debugger::state_to_string(p_serial_logger->get_debug_level()));
-    }else if (strcmp(args[1], "d") == 0){
-        p_serial_logger->set_debug_level(Debugger::DEBUG);
-        Serial.println(F("Debug"));
-    }else if (strcmp(args[1], "n") == 0){
-        p_serial_logger->set_debug_level(Debugger::NONE);
-        Serial.println(F("None"));
-    }else if (strcmp(args[1], "e") == 0){
-        p_serial_logger->set_debug_level(Debugger::ERROR);
-        Serial.println(F("Error"));
-    }else if (strcmp(args[1], "w") == 0){
-        p_serial_logger->set_debug_level(Debugger::WARNING);
-        Serial.println(F("Warning"));
-    }else if (strcmp(args[1], "i") == 0){
-        p_serial_logger->set_debug_level(Debugger::INFO);
-        Serial.println(F("Info"));
-    }
-  }else{
-    Serial.println(F("SerialLogger not initialized"));
-  }
-}
-
-void SerialLogger::begin(){
-    p_serial_logger = this;
-}
-
-void SerialLogger::log(String message, Debugger::DebugLevels level){
-    if(debug_level > Debugger::NONE){
-        switch (level)
-        {
-        case Debugger::DEBUG:
-            Serial.print(F("[DEBUG] "));
-            Serial.println(message);
-            break;
-        case Debugger::ERROR:
-            Serial.print(F("[Error] "));
-            Serial.println(message);
-            break;
-        case Debugger::WARNING:
-            Serial.print(F("[Warning] "));
-            Serial.println(message);
-            break;
-        case Debugger::INFO:
-            Serial.print(F("[INFO] "));
-            Serial.println(message);
-            break;
-        
-        default:
-            break;
+    void log(String message,DebugLevels level){
+        if(level > NONE){
+            switch (level)
+            {
+            case DEBUG:
+                Serial.print(state_to_string(DEBUG));
+                Serial.print(F(":"));
+                Serial.println(message);
+                break;
+            case ERROR:
+                Serial.print(state_to_string(ERROR));
+                Serial.print(F(":"));
+                Serial.println(message);
+                break;
+            case WARNING:
+                Serial.print(state_to_string(WARNING));
+                Serial.print(F(":"));
+                Serial.println(message);
+                break;
+            case INFO:
+                Serial.print(state_to_string(INFO));
+                Serial.print(F(":"));
+                Serial.println(message);
+                break;
+            
+            default:
+                break;
+            }
         }
     }
+
+    DebugLevels get_debug_level(){
+        return level;
+    }
+
+    void set_debug_level(DebugLevels level){
+        level = level;
+    }
+
 }
 
-Debugger::DebugLevels SerialLogger::get_debug_level(){
-    return debug_level;
-}
 
-void SerialLogger::set_debug_level(Debugger::DebugLevels level){
-    debug_level = level;
-}
 
-namespace Debugger {
+namespace debugger {
     String state_to_string(DebugLevels state){
         switch (state) {
         case NONE:
-            return F("NONE");
+            return F("none");
             break;
         case ERROR:
-            return F("ERROR");
+            return F("error");
             break;
         case WARNING:
-            return F("WARNING");
+            return F("warning");
             break;
         case INFO:
-            return F("INFO");
+            return F("info");
             break;
         case DEBUG:
-            return F("DEBUG");
+            return F("debug");
             break;
         }
         return F("UNKNOWN");
     }
 
-    void log(String message, DebugLevels level){
-        if(SerialLogger::p_serial_logger != nullptr){
-            SerialLogger::p_serial_logger->log(message, level);
-        }
-    }
 }
 
 namespace serial_communication{
@@ -103,29 +79,29 @@ namespace serial_communication{
     String inputString = "";      // a String to hold incoming data
     bool stringComplete = false;  // whether the string is complete
 
-void on_serial_message_recieved(){
-    while (Serial.available()) {
-        char inChar = (char)Serial.read();
-        
-        if (inChar == '\n' || inChar == '\r') {
+    void handle_serial_message_recieved(){
+        if (Serial.available() > 0) {
+            char inChar = (char)Serial.read();
             
-            stringComplete = true;
-            CurrentPattern = COMMAND;
-            return;
-        }
-
-        inputString += inChar;
-
-        switch (CurrentPattern)
-        {
-            case COMMAND:
-            command += inChar;
-            if(inChar == ' '){
-            CurrentPattern = ARGUMENT;
+            if (inChar == '\n' || inChar == '\r') {
+                
+                stringComplete = true;
+                CurrentPattern = COMMAND;
+                return;
             }
-            break;
+
+            inputString += inChar;
+
+            switch (CurrentPattern)
+            {
+                case COMMAND:
+                command += inChar;
+                if(inChar == ' '){
+                CurrentPattern = ARGUMENT;
+                }
+                break;
+            }
         }
-    }
-}
+    }   
 
 }

@@ -1,13 +1,15 @@
 {
-"name": "SerialLogger",
+"name": "SaraLIB",
 "version": "1.0.0",
-"description": "This library allows you to log messages to the serial port. It is useful for debugging purposes.",
+"description": "Contains Datastructure that stores information about the weather station system ",
 "keywords": [
     "ada",
     "debug",
     "dfplayer",
     "Blickbox",
-    "IoT"
+    "IoT",
+    "Data",
+    "Sara"
   ],
   "frameworks": {
     "arduino": {
@@ -15,8 +17,7 @@
     }
   },
   "platforms": [
-    "espressif8266",
-    "espressif32"
+    "nordicnrf52"
   ],
   "authors": [
     {
