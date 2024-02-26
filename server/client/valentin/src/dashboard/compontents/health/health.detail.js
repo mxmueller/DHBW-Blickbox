@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Circle, Flex, Icon, SimpleGrid, Text, HStack, SkeletonCircle, SkeletonText} from "@chakra-ui/react";
 import { Fade } from "react-awesome-reveal";
 
-function DescDetail({ loading, success, error, icon, successText, errorText, header, detailDelay, detailDuration}) {
+function DescDetail({ loading, success, error, icon, successText, errorText, header, delay, duration}) {
 
     return (
-        <Fade direction="up" duration={detailDuration} delay={detailDelay}>
-            <Box boxShadow='xl' borderRadius={25} bg='white' minHeight='90px' width='100%' padding={5} >
+        <Fade direction="up" duration={duration} delay={delay}>
+            <Box borderRadius={25} bg='white' minHeight='90px' width='100%' padding={5} >
                 <Flex>
                     {loading ? (
                         <>
@@ -27,6 +27,7 @@ function DescDetail({ loading, success, error, icon, successText, errorText, hea
                                     <SimpleGrid ml={4} columns={1} spacing={0}>
                                     <Text fontSize='m' color='blackAlpha.500'>{header}</Text>
                                         <HStack spacing='5px'>
+                                            <Circle size='10px' bg='green.300' color='white'> </Circle>
                                             <Text fontSize='lg' as='b'>{successText}</Text>
                                         </HStack>
                                     </SimpleGrid>
@@ -41,6 +42,7 @@ function DescDetail({ loading, success, error, icon, successText, errorText, hea
                                     <SimpleGrid ml={4} columns={1} spacing={0}>
                                     <Text fontSize='m' color='blackAlpha.500'>{header}</Text>
                                         <HStack spacing='5px'>
+                                            <Circle size='10px' bg='red.300' color='white'> </Circle>
                                             <Text fontSize='lg' as='b'>{errorText}</Text>
                                         </HStack>
                                     </SimpleGrid>
