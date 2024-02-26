@@ -107,14 +107,14 @@ def insert_air_humidity():
         else:
             timestamp = datetime.utcnow()
 
-        if 'air-humidity' not in data:
+        if 'air_humidity' not in data:
             return return_response("message", "Falscher Input!", 400)
-        air_humidity = float(data['air-humidity'])
+        air_humidity = float(data['air_humidity'])
         if(air_humidity < 0.0 or air_humidity > 100.0):
             return return_response("message", "Falscher Input! Luftfeuchtigkeit nicht in Range", 400)
         json_body = [
             {
-                "measurement": "air-humidity",
+                "measurement": "air_humidity",
                 "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": air_humidity
@@ -128,7 +128,7 @@ def insert_air_humidity():
         return return_response("error", str(e), 500)
 
 
-@app.route('/iot/api/insert/wind-direction', methods=['POST'])
+@app.route('/iot/api/insert/wind_direction', methods=['POST'])
 def insert_wind_direction():
     try:
         data = request.json
@@ -141,12 +141,12 @@ def insert_wind_direction():
         else:
             timestamp = datetime.utcnow()
 
-        if 'wind-direction' not in data:
+        if 'wind_direction' not in data:
             return return_response("message", "Falscher Input!", 400)
-        wind_direction = data['wind-direction']
+        wind_direction = data['wind_direction']
         json_body = [
             {
-                "measurement": "wind-direction",
+                "measurement": "wind_direction",
                 "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": wind_direction
