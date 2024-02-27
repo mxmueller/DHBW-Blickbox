@@ -114,7 +114,7 @@ def insert_temperature():
                 log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now()
 
         if 'temperature' not in data:
             log(title='Exception', message="Key der Eingabe war nicht 'temperature'", type='error', ringbuffer=ringBuffer)
@@ -154,7 +154,7 @@ def insert_air_humidity():
                 log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now()
 
         if 'air_humidity' not in data:
             log(title='Exception', message="Key der Eingabe war nicht 'air_humidity'", type='error', ringbuffer=ringBuffer)
@@ -195,7 +195,7 @@ def insert_wind_direction():
                 log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now()
 
         if 'wind_direction' not in data:
             log(title='Exception', message="Key der Eingabe war nicht 'wind_direction'", type='error', ringbuffer=ringBuffer)
@@ -233,7 +233,7 @@ def insert_wind_speed():
                 log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
-            timestamp = datetime.utcnow()
+            timestamp = datetime.now()
 
         if 'wind-speed' not in data:
             log(title='Exception', message="Key der Eingabe war nicht 'wind_speed'", type='error', ringbuffer=ringBuffer)
