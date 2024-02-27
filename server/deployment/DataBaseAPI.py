@@ -111,6 +111,7 @@ def insert_temperature():
             try:
                 timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
             except ValueError:
+                log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
             timestamp = datetime.utcnow()
@@ -141,6 +142,8 @@ def insert_temperature():
 
 @app.route('/iot/api/insert/air-humidity', methods=['POST'])
 def insert_air_humidity():
+    log(title='POST', message=(url_for('insert_air_humidity') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Luftfeuchtigkeits-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
         if 'timestamp' in data:
@@ -148,14 +151,17 @@ def insert_air_humidity():
             try:
                 timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
             except ValueError:
+                log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
             timestamp = datetime.utcnow()
 
         if 'air_humidity' not in data:
+            log(title='Exception', message="Key der Eingabe war nicht 'air_humidity'", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         air_humidity = float(data['air_humidity'])
         if(air_humidity < 0.0 or air_humidity > 100.0):
+            log(title='Exception', message=f'Wert der Luftfeuchtigkeit stimmt nicht. Wert: {air_humidity}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Luftfeuchtigkeit nicht in Range", 400)
         json_body = [
             {
@@ -167,14 +173,18 @@ def insert_air_humidity():
             }
         ]
         influx_client.write_points(json_body)
+        log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success', ringbuffer=ringBuffer)
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
     except Exception as e:
+        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 
 @app.route('/iot/api/insert/wind_direction', methods=['POST'])
 def insert_wind_direction():
+    log(title='POST', message=(url_for('insert_wind_direction') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Windrichtungs-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
         if 'timestamp' in data:
@@ -182,11 +192,13 @@ def insert_wind_direction():
             try:
                 timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
             except ValueError:
+                log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
             timestamp = datetime.utcnow()
 
         if 'wind_direction' not in data:
+            log(title='Exception', message="Key der Eingabe war nicht 'wind_direction'", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         wind_direction = data['wind_direction']
         json_body = [
@@ -199,14 +211,18 @@ def insert_wind_direction():
             }
         ]
         influx_client.write_points(json_body)
+        log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success', ringbuffer=ringBuffer)
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
     except Exception as e:
+        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 
 @app.route('/iot/api/insert/wind-speed', methods=['POST'])
 def insert_wind_speed():
+    log(title='POST', message=(url_for('insert_wind_speed') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Windgeschwindigkeits-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
         if 'timestamp' in data:
@@ -214,14 +230,17 @@ def insert_wind_speed():
             try:
                 timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
             except ValueError:
+                log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
             timestamp = datetime.utcnow()
 
         if 'wind-speed' not in data:
+            log(title='Exception', message="Key der Eingabe war nicht 'wind_speed'", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         wind_speed = float(data['wind-speed'])
         if(wind_speed < 0.0 or wind_speed > 500.0):
+            log(title='Exception', message=f'Wert der Windgeschwindigkeit stimmt nicht. Wert: {wind_speed}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Windgeschwindigkeit nicht in Range", 400)
         json_body = [
             {
@@ -233,9 +252,11 @@ def insert_wind_speed():
             }
         ]
         influx_client.write_points(json_body)
+        log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success', ringbuffer=ringBuffer)
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
     except Exception as e:
+        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 #@app.route("/iot/api/insert/rain", methods=['POST'])
