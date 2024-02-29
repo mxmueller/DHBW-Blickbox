@@ -147,49 +147,49 @@ class TestDatabaseAPI(unittest.TestCase):
     def test_airhumidity_edge_casesN1(self):
         if(nohumid):
             return
-        payload = {"air-humidity": -0.1}
+        payload = {"air_humidity": -0.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Luftfeuchtigkeit nicht in Range"}
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
     
     def test_airhumidity_edge_casesN2(self):
         if(nohumid):
             return
-        payload = {"air-humidity": -100}
+        payload = {"air_humidity": -100}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Luftfeuchtigkeit nicht in Range"}
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
 
     def test_airhumidity_edge_casesP1(self):
         if(nohumid):
             return
-        payload = {"air-humidity": 100.1}
+        payload = {"air_humidity": 100.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Luftfeuchtigkeit nicht in Range"}
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
     
     def test_airhumidity_edge_casesP2(self):
         if(nohumid):
             return
-        payload = {"air-humidity": 44343532.1}
+        payload = {"air_humidity": 44343532.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Luftfeuchtigkeit nicht in Range"}
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
 
     def test_airhumidity_edge_casesString(self):
         if(nohumid):
             return
-        payload = {"air-humidity": "hello"}
+        payload = {"air_humidity": "hello"}
         expected_status_code = 500
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
 
     def test_airhumidity_WrongKey(self):
@@ -198,17 +198,17 @@ class TestDatabaseAPI(unittest.TestCase):
         payload = {"temperature": 18.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input!"}
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
 
     def right_ts_humid(self):
         if(nohumid):
             return
-        payload = {"timestamp": "19:32:23 2024-02-23", "air-humidity": 18.1}
+        payload = {"timestamp": "19:32:23 2024-02-23", "air_humidityy": 18.1}
         expected_status_code = 400
         expected_data = {"message": "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'"}
-        response = requests.post(getURL("/insert/air-humidty"), json=payload)
+        response = requests.post(getURL("/insert/air-humidity"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
         self.assertEqual(response.json(), expected_data)
 
