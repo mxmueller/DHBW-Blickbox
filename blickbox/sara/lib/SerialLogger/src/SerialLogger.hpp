@@ -13,10 +13,22 @@ namespace serial_communication{
     ARGUMENT
   };
   
+  /**
+   * @brief Hält das aktuelle Pattern während der Verarbeitung
+   * 
+   */
   extern RequestPattern CurrentPattern;
+
+  /**
+   * @brief Enthält das Kommando
+   * 
+   */
   extern String command;
 
-
+  /**
+   * @brief Hällt den empfangenen String
+   * 
+   */
   extern String inputString;
 
   /**
@@ -26,40 +38,71 @@ namespace serial_communication{
   extern bool stringComplete;  // whether the string is complete
 
   /**
-   * Eventhandler für Daten die über die Serielle Schnittstelle empfangen wurden
-  */
-  void on_serial_message_recieved();
+   * @brief Verwaltet eingehende Bytes der Seriellen Schnittstelle
+   *  sollte im Hauptprogramm ausgeführt werden
+   * 
+   */
+  void handle_serial_message_recieved();
 
 
 }
 
-namespace Debugger{
+namespace debugger{
 
-  enum DebugLevels{
-    NONE,
-    ERROR,
-    WARNING,
-    INFO,
-    DEBUG,
-  };
+    /**
+     * @brief Definiert Debuglevel um ausgaben zu definieren
+     * 
+     */
+    enum DebugLevels{
+      NONE,
+      ERROR,
+      WARNING,
+      INFO,
+      DEBUG,
+    };
 
-  String state_to_string(DebugLevels state);
+    /**
+     * @brief Wandelt ein Debuglevel in einen String um
+     * 
+     * @param state 
+     * @return String 
+     */
+    String state_to_string(DebugLevels state);
 
-  void log(String message, DebugLevels level);
 }
 
-class SerialLogger {
-public:
-  SerialLogger(){};
-  void set_debug_level(Debugger::DebugLevels level);
-  Debugger::DebugLevels get_debug_level();
-  void log(String message, Debugger::DebugLevels level);  
-  void begin();
-  static void serialHandler(int argCnt, char **args);
-  static SerialLogger *p_serial_logger;
-private:
-    Debugger::DebugLevels debug_level = Debugger::NONE;
-};
+namespace serial_logger{
+    using namespace debugger;
+
+    /**
+     * @brief speichert das globale Loglevel
+     * 
+     */
+    extern DebugLevels level;
+
+    /**
+     * @brief Setzt das globale debuglevel
+     * 
+     * @param level 
+     */
+    void set_debug_level(DebugLevels level);
+
+    /**
+     * @brief Gibt das globale debuglevel zurück
+     * 
+     * @return DebugLevels 
+     */
+    DebugLevels get_debug_level();
+
+    /**
+     * @brief log die definierte message auf der Seriellen Konsole
+     * Mit dem Level definiert um welche Art von Nachricht es sich handelt.
+     * 
+     * @param message 
+     * @param level 
+     */
+    void log(String message, DebugLevels level);  
+}
 
 #endif  // SerialLogger_HPP
 

@@ -11,7 +11,7 @@ info:
     email: aronseidl17@gmail.com
   version: 1.0.0
 servers:
-  - url: http://maytastix.de:5000/iot/api
+  - url: https://dhbwapi.maytastix.de/iot/api
 tags:
   - name: pingDB
     description: Verbindung zur Datenbank
@@ -19,6 +19,8 @@ tags:
     description: Verbindung zum Grafana Server.
   - name: pingBB
     description: Verbindung zur Blickbox.
+  - name: getBBIP
+    description: IP-Adresse der Blickbox.
   - name: insert
     description: Daten wrden in die Datanbank geschrieben
 paths:
@@ -93,6 +95,23 @@ paths:
                   Fehler:
                     type: string
                     example: 'Keine Verbindung zur Blickbox' 
+
+  /getBBIP:
+    get:
+      tags:
+        - getBBIP
+      summary: Ändert die IP Adresse der Blickbox in der API ab
+      responses:
+        '200':
+          description: 'Änderung erfolgreich'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'IP-Adresse der BlickBox geupdatet. Neue IP: {ip_adress}'        
   /insert/temperature:
     post:
       tags:
@@ -100,7 +119,7 @@ paths:
       summary: Ein neuen Temperatur Wert hinzufügen
       description: Füg einen neuen Temperatur Wert hinzu.
       requestBody:
-        description: Erstekke einen neuen Temperatur Wert
+        description: Erstelle einen neuen Temperatur Wert
         content:
           application/json:
             schema:
@@ -130,7 +149,83 @@ paths:
                     example: 'Falscher Input'
         '500':
           description: Interner Fehler
+  /insert/air-humidity:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Luftfeuchtigkeits Wert hinzufügen
+      description: Füg einen neuen Luftfeuchtigkeits Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Luftfeuchtigkeits Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Luftfeuchtigkeit'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
 
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '500':
+          description: Interner Fehler
+  /insert/wind-speed:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Windgeschwindigkeits Wert hinzufügen
+      description: Füg einen neuen Windgeschwindigkeits Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Windgeschwindigkeits Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Windgeschwindigkeit'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '500':
+          description: Interner Fehler
+          
+          
+          
 components:
   schemas:
     Temperature:
@@ -138,6 +233,31 @@ components:
         - temperature
       type: object
       properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
         temperature:
           type: number
           example: 27.8
+    Luftfeuchtigkeit:
+      required:
+        - air-humidity
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
+        air-humidity:
+          type: number
+          example: 13.2
+    Windgeschwindigkeit:
+      required:
+        - wind-speed
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
+        wind-speed:
+          type: number
+          example: 120

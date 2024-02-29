@@ -1,0 +1,34 @@
+{
+"name": "SaraBLE",
+"version": "1.0.0",
+"description": "This library enables a bluetooth device to communicate with the weatherstation ",
+"keywords": [
+    "ada",
+    "debug",
+    "dfplayer",
+    "Blickbox",
+    "IoT",
+    "Sara",
+    "BLE"
+  ],
+  "frameworks": {
+    "arduino": {
+      "required": true
+    }
+  },
+  "platforms": [
+    "nordicnrf52"
+  ],
+  "authors": [
+    {
+      "name": "Maytastico",
+      "email": "maytastico@hotmail.com"
+    }
+  ],
+  "homepage": "https://github.com/mxmueller/DHBW-Blickbox",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxmueller/DHBW-Blickbox"
+  },
+  "license": "MIT"
+} 
