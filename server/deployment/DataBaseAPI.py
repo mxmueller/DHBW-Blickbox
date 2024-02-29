@@ -95,7 +95,8 @@ def pingthis():
         log(title='Connected', message='Verbindung zur Datenbank hergestellt', type='success', ringbuffer=ringBuffer)
         return return_response("message", "Verbingung zur Datenbank steht", 200)
     except Exception as e:
-        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 
@@ -117,7 +118,7 @@ def insert_temperature():
             timestamp = datetime.now()
 
         if 'temperature' not in data:
-            log(title='Exception', message="Key der Eingabe war nicht 'temperature'", type='error', ringbuffer=ringBuffer)
+            log(title='Exception', message="Key der Eingabe war nicht [temperature]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         temperature = float(data['temperature'])
         if(temperature < -60.0 or temperature > 100.0):
@@ -136,7 +137,8 @@ def insert_temperature():
         log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success', ringbuffer=ringBuffer)
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     except Exception as e:
-        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 
@@ -157,7 +159,7 @@ def insert_air_humidity():
             timestamp = datetime.now()
 
         if 'air_humidity' not in data:
-            log(title='Exception', message="Key der Eingabe war nicht 'air_humidity'", type='error', ringbuffer=ringBuffer)
+            log(title='Exception', message="Key der Eingabe war nicht [air_humidity]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         air_humidity = float(data['air_humidity'])
         if(air_humidity < 0.0 or air_humidity > 100.0):
@@ -177,7 +179,8 @@ def insert_air_humidity():
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
     except Exception as e:
-        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 
@@ -198,7 +201,7 @@ def insert_wind_direction():
             timestamp = datetime.now()
 
         if 'wind_direction' not in data:
-            log(title='Exception', message="Key der Eingabe war nicht 'wind_direction'", type='error', ringbuffer=ringBuffer)
+            log(title='Exception', message="Key der Eingabe war nicht [wind_direction]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         wind_direction = data['wind_direction']
         json_body = [
@@ -215,7 +218,8 @@ def insert_wind_direction():
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
     except Exception as e:
-        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 
@@ -236,7 +240,7 @@ def insert_wind_speed():
             timestamp = datetime.now()
 
         if 'wind-speed' not in data:
-            log(title='Exception', message="Key der Eingabe war nicht 'wind_speed'", type='error', ringbuffer=ringBuffer)
+            log(title='Exception', message="Key der Eingabe war nicht [wind_speed]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         wind_speed = float(data['wind-speed'])
         if(wind_speed < 0.0 or wind_speed > 500.0):
@@ -256,7 +260,8 @@ def insert_wind_speed():
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
     except Exception as e:
-        log(title='Exception', message=str(e), type='error', ringbuffer=ringBuffer)
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
 #@app.route("/iot/api/insert/rain", methods=['POST'])
