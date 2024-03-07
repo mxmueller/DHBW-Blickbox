@@ -39,8 +39,7 @@ const Logstream = () => {
         if (wsjson.type == "success")
           wsmessagestate = "green"
 
-        console.log(wsmessagestate)
-        Logstream.addItemToLogstream({ message: wsjson.message, type: "Websocket " + wsjson.title, code: wsmessagestate, date: wsjson.timestamp });
+        Logstream.addItemToLogstream({ message: wsjson.message, code: wsmessagestate, type: "Websocket " + wsjson.title, date: wsjson.timestamp });
 
       } catch (error) {
         const currentDate = new Date();
@@ -104,7 +103,7 @@ const Logstream = () => {
                           key={index}
                           message={item.message}
                           type={item.type}
-                          code={item.code}
+                          code={item.style}
                           date={item.date}
                         />
                       ))}

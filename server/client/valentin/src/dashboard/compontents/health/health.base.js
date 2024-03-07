@@ -71,7 +71,7 @@ function Desc() {
                     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
                 ]);
 
-                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Client Verbindungsversuch', code: 'blackAlpha', date: formattedDateTime });
+                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Client Verbindungsversuch', style: 'blackAlpha', date: formattedDateTime });
 
                 if (response.status === 200) {
                     setSuccess(prevSuccess => ({
@@ -83,7 +83,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Server Erreichbar', code: 'green', date: formattedDateTime });
+                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Server Erreichbar', style: 'green', date: formattedDateTime });
                 
                 } else {
                     setError(prevError => ({
@@ -95,7 +95,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung zum Server', code: 'red', date: formattedDateTime });
+                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung zum Server', style: 'red', date: formattedDateTime });
                 }
             } catch (error) {
                 setError(prevError => ({
@@ -107,7 +107,7 @@ function Desc() {
                     [apiUrl]: false
                 }));
 
-                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Client Verbindungsversuch Fehlgeschlagen', code: 'red', date: formattedDateTime });
+                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Client Verbindungsversuch Fehlgeschlagen', style: 'red', date: formattedDateTime });
             } finally {
                 setLoading(prevLoading => ({
                     ...prevLoading,
