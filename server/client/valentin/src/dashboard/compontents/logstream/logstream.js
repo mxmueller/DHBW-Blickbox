@@ -23,16 +23,13 @@ const Logstream = () => {
 
     ws.onmessage = (event) => {
       try {
-
         let correctedJsonString = event.data.replace(/'/g, '"');
-
-
-        console.log(correctedJsonString);
         let wsjson = JSON.parse(correctedJsonString);
 
         console.log(wsjson);
 
         let wsmessagestate = 'blackAlpha';
+
         if (wsjson.type == "info")
           wsmessagestate = "yellow"
 
@@ -42,11 +39,12 @@ const Logstream = () => {
         if (wsjson.type == "success")
           wsmessagestate = "green"
 
-        Logstream.addItemToLogstream({ message: wsjson.message, type: "Websocket " + wsjson.title, style: wsmessagestate, date: wsjson.timestamp });
+        console.log(wsmessagestate)
+        Logstream.addItemToLogstream({ message: wsjson.message, type: "Websocket " + wsjson.title, code: wsmessagestate, date: wsjson.timestamp });
 
       } catch (error) {
         const currentDate = new Date();
-        Logstream.addItemToLogstream({ message: 'Fehler beim Parsen der empfangenen Daten:', error, type: "Websocket Error", style: "red", date: currentDate.toISOString()});
+        Logstream.addItemToLogstream({ message: 'Fehler beim Parsen der empfangenen Daten:', error, type: "Websocket Error", code: "red", date: currentDate.toISOString()});
       }
     };
 
@@ -106,7 +104,7 @@ const Logstream = () => {
                           key={index}
                           message={item.message}
                           type={item.type}
-                          schema={item.style}
+                          code={item.code}
                           date={item.date}
                         />
                       ))}
