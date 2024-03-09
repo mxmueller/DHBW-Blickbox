@@ -206,7 +206,7 @@ def insert_wind_direction():
         
         wind_direction = float(data['wind_direction'])
 
-        if(wind_direction < -360.0 or wind_direction > 360.0):
+        if(wind_direction < 0.0 or wind_direction > 360.0):
             log(title='Exception', message=f'Wert der Windrichtung stimmt nicht. Wert: {wind_direction}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Luftfeuchtigkeit nicht in Range", 400)
         json_body = [
