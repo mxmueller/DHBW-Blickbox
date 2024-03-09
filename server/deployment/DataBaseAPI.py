@@ -184,7 +184,7 @@ def insert_air_humidity():
         return return_response("error", str(e), 500)
 
 
-@app.route('/iot/api/insert/wind_direction', methods=['POST'])
+@app.route('/iot/api/insert/wind-direction', methods=['POST'])
 def insert_wind_direction():
     log(title='POST', message=(url_for('insert_wind_direction') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
     log(title='Try', message='Versuche Windrichtungs-Wert einzufügen', type='info', ringbuffer=ringBuffer)
@@ -239,16 +239,16 @@ def insert_wind_speed():
         else:
             timestamp = datetime.now()
 
-        if 'wind-speed' not in data:
+        if 'wind_speed' not in data:
             log(title='Exception', message="Key der Eingabe war nicht [wind_speed]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
-        wind_speed = float(data['wind-speed'])
+        wind_speed = float(data['wind_speed'])
         if(wind_speed < 0.0 or wind_speed > 500.0):
             log(title='Exception', message=f'Wert der Windgeschwindigkeit stimmt nicht. Wert: {wind_speed}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Windgeschwindigkeit nicht in Range", 400)
         json_body = [
             {
-                "measurement": "wind-speed",
+                "measurement": "wind_speed",
                 "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": wind_speed
