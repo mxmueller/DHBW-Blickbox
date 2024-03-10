@@ -11,7 +11,7 @@ use chrono_tz::Europe::Berlin;
 use serialport::SerialPort;
 use tokio::time;
 use crate::communication::http_request::http_request::send_data;
-use crate::sara::weather_station;
+use crate::sara::ble_weather_station::ble_weather_station::get_data_ble;
 use crate::sara::weather_station::weather_station::get_weather_station_data;
 
 type Error = String;
@@ -103,6 +103,8 @@ async fn execute() -> Result<()> {
 
         let mut port = port.try_clone().map_err(|error| format!("{:?}", error))?;
 
+        get_data_ble().await?;
+        /*
         let temperature = get_weather_station_data("t\n", &mut port).await?;
         println!("send t command, got: {}", temperature);
         let humidity = get_weather_station_data("h\n", &mut port).await?;
@@ -122,6 +124,8 @@ async fn execute() -> Result<()> {
         write_to_file(&file, &sensor_data);
 
         send_data(&sensor_data).await?;
+
+         */
     }
 }
 
