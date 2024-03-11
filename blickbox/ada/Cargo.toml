@@ -17,3 +17,4 @@ serde_json = "1.0.114"
 url = "2.5.0"
 uuid = "1.7.0"
 serde = { version = "1.0.197", features = ["derive"] }
+futures-util = "0.3.30"

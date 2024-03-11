@@ -46,6 +46,7 @@ async fn execute() -> Result<()> {
         .create(true)
         .open("command_history.txt").unwrap();
 
+    /*
     // seeing available ports in terminal
     let ports = serialport::available_ports().expect("No ports found!");
     for p in ports {
@@ -56,9 +57,11 @@ async fn execute() -> Result<()> {
         .timeout(Duration::from_millis(3000))
         .open()
         .map_err(|error| format!("Failed to open port: {:?}", error))?;
+     */
 
     // Timer interval for sending commands (every 30 minutes)
     let mut interval = time::interval(Duration::from_secs(30 * 60));
+
 
     let time = get_time();
 
@@ -101,7 +104,7 @@ async fn execute() -> Result<()> {
     loop {
         interval.tick().await;
 
-        let mut port = port.try_clone().map_err(|error| format!("{:?}", error))?;
+        //let mut port = port.try_clone().map_err(|error| format!("{:?}", error))?;
 
         get_data_ble().await?;
         /*
