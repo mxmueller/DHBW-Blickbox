@@ -242,6 +242,7 @@ Entwickler folgen der DoD auf dem Git-Repository. \\
 	\caption{Kontextdiagramm Blickbox }
 	\label{fig:Kontextdiagramm}
 \end{figure}  
+
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7500}}@{}}
@@ -304,7 +305,40 @@ Visualisiert die Messdaten und Stellt Frontend bereit. \\
 
 
 \section{Lösungsstrategie}
-
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4000}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Ziel / Requirement
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Lösungsstrategie
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Details
+\end{minipage} \\
+\midrule
+\endhead
+Alle funktionalen Requirements &
+Eventgesteuerte Architektur &
+Sensorarchitektur sendet die Messdaten an dem PI. Der PI sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt diese im Frontend da.\\
+Erweitbarkeit \& Wartung  &
+Lösungsansatz-2 &
+Detail-2 \\
+Sicherheit  &
+Https-Verbindung, Containerisierung \& Reverse-Proxy &
+Über den Reverse-Proxy sind die Verschiedenen Server-Apps nicht direkt dem Internet Exposed. Durch die Containersierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
+Wiederherstellung und -erhaltung der Daten  &
+Lösungsansatz-4 &
+Detail-4 \\
+Bereitstellung einer geeigneten Umgebung für die Hardware  &
+Lösungsansatz-5 &
+Detail-5 \\
+Bereitstellung eines Dashboard  &
+Grafana als Open-Source Fertiglösung &
+Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
+\bottomrule
+\end{longtable}
 \section{Bausteinsicht}
 Erstmal nur bis hier
 
