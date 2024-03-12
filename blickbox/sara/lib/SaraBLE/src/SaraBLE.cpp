@@ -3,6 +3,8 @@
 namespace sara_ble{
     using namespace serial_logger;
     using namespace sara_data;
+    using namespace sara_battery;
+
 
     /**
      * @brief Gibt die String repräsentation vom Enum zurück
@@ -37,7 +39,10 @@ namespace sara_ble{
     weatherStationService("1102"), 
     rainfallCharacteristic("2203", BLERead | BLENotify, 16),
     winddirectionCharacteristic("2201", BLERead | BLENotify, 16) ,
-    windspeedCharacteristic("2202", BLERead | BLENotify, 16)
+    windspeedCharacteristic("2202", BLERead | BLENotify, 16),
+    powerService("1103"), 
+    batterLevelCharacteristic("2301", BLERead | BLENotify, 16) ,
+    batterRAWCharacteristic("2302", BLERead | BLENotify, 16)
     {
     }
 
@@ -61,8 +66,12 @@ namespace sara_ble{
         weatherStationService.addCharacteristic(winddirectionCharacteristic);
         weatherStationService.addCharacteristic(windspeedCharacteristic);
         weatherStationService.addCharacteristic(rainfallCharacteristic);
-        BLE.addService(weatherStationService);
+        BLE.setAdvertisedService(powerService);
+        powerService.addCharacteristic(batterLevelCharacteristic);
+        powerService.addCharacteristic(batterRAWCharacteristic);
         BLE.addService(airService);
+        BLE.addService(weatherStationService);
+        BLE.addService(powerService);
 
         BLE.advertise();
 
@@ -140,6 +149,8 @@ namespace sara_ble{
                 winddirectionCharacteristic.writeValue(weather_data.winddirection);
                 windspeedCharacteristic.writeValue(weather_data.windspeed);
                 rainfallCharacteristic.writeValue(weather_data.rainfall);
+                batterRAWCharacteristic.writeValue(battery.raw_adc);
+                batterLevelCharacteristic.writeValue(battery.level);
             }
         }
     }

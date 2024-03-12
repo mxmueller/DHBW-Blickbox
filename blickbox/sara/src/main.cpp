@@ -3,10 +3,11 @@
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
 #include <sara_data.hpp>
+#include <sara_battery.hpp>
 #include <FireTimer.h>
 
-#if defined(__arm__)
-#include <SaraBLE.hpp>
+#if defined(NRF52_SERIES)
+  #include <SaraBLE.hpp>
 #endif
 
 
@@ -41,6 +42,8 @@ void print_humidity();
 void print_rainfall_messurement();
 void print_wind_direction();
 void print_wind_speed();
+void print_battery_level();
+void print_battery_raw();
 void print_help();
 void handle_serial_request();
 void print_ble_state();
@@ -55,9 +58,10 @@ using namespace serial_logger;
 using namespace debugger;
 
 using namespace sara_data;
+using namespace sara_battery;
 
 /*BLE Definitionen*/
-#if defined(__arm__)
+#if defined(NRF52_SERIES)
 using namespace sara_ble;
 SaraBLE sara_bluetooth;
 #endif
@@ -65,6 +69,8 @@ SaraBLE sara_bluetooth;
 FireTimer poll_timer;
 
 void setup() {
+
+  pinMode(BATTERY_PIN, INPUT);
 
   // Initalisierung der Seriellen Kommunikation
   Serial.begin(115200);
@@ -85,7 +91,7 @@ void setup() {
   weather_station.begin();
 
   // Initialisieung der Bluetooth Integration
-  #if defined(__arm__)
+  #if defined(NRF52_SERIES)
   sara_bluetooth.begin();
   #endif
 
@@ -104,9 +110,10 @@ void loop() {
   // Aktualisiert die Sensor Daten und speichert diese in eine
   // Datenstruktur auf die die BLE Integration zugreifen kann
   update_sensor_data(&dht, &weather_station);
+  update_battery_data();
 
   // Verwaltet die BLE Integration
-  #if defined(__arm__)
+  #if defined(NRF52_SERIES)
   sara_bluetooth.loop();
   #endif
 
@@ -138,6 +145,10 @@ void handle_serial_request(){
       print_wind_speed();
     }else if(command == F("ble")){
       print_ble_state();
+    }else if(command == F("bl")){
+      print_battery_level();
+    }else if(command == F("br")){
+      print_battery_raw();
     }else if(command == F("help")){
       print_help();
     }
@@ -196,6 +207,24 @@ void print_rainfall_messurement(){
 }
 
 /**
+ * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
+ * 
+ */
+void print_battery_level(){
+  Serial.print(F("battery_level:"));
+  Serial.println(battery.level);
+}
+
+/**
+ * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
+ * 
+ */
+void print_battery_raw(){
+  Serial.print(F("battery_raw:"));
+  Serial.println(battery.raw_adc);
+}
+
+/**
  * @brief Gibt eine Hilfe für Benutzer des Seriellen Kosole aus
  * 
  */
@@ -211,7 +240,7 @@ void print_help(){
  * 
  */
 void print_ble_state(){
-  #if defined(__arm__)
+  #if defined(NRF52_SERIES)
     Serial.print(F("ble_connection:"));
     Serial.println(ble_state_to_String(sara_bluetooth.get_connection_state()));
     Serial.print(F("ble_device:"));

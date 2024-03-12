@@ -5,7 +5,7 @@
 #include <ArduinoBLE.h>
 #include <SerialLogger.hpp>
 #include <sara_data.hpp>
-
+#include <sara_battery.hpp>
 
 
 namespace sara_ble{
@@ -46,6 +46,11 @@ namespace sara_ble{
       BLECharacteristic rainfallCharacteristic;
       BLECharacteristic winddirectionCharacteristic;
       BLECharacteristic windspeedCharacteristic;
+
+      BLEService powerService; 
+
+      BLECharacteristic batterLevelCharacteristic;
+      BLECharacteristic batterRAWCharacteristic;
   };
 }
 

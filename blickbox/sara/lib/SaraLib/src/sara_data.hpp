@@ -16,6 +16,7 @@ namespace sara_data{
 
     extern weather_station_data weather_data;
 
+
     void update_sensor_data(DHT *air_sensor, SFEWeatherMeterKit *weather_station);
 }
 
