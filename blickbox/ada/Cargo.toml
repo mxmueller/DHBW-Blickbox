@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+btleplug = "0.11.5"
 serialport = "4.3.0"
 clap = "4.5.0"
 chrono = "0.4.34"
@@ -14,4 +15,6 @@ tokio = { version = "1.36.0", features = ["full"] }
 reqwest = "0.11.24"
 serde_json = "1.0.114"
 url = "2.5.0"
+uuid = "1.7.0"
 serde = { version = "1.0.197", features = ["derive"] }
+futures-util = "0.3.30"
