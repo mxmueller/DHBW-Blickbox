@@ -10,7 +10,7 @@ from threading import Lock
 
 
 app = Flask(__name__)
-influx_client = InfluxDBClient(host="localhost", database='DHBW_Blickbox')
+influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
