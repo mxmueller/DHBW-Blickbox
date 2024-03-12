@@ -2,6 +2,7 @@ mod sara;
 mod communication;
 
 use std::fs::{File, OpenOptions};
+use std::io;
 
 use std::io::{Read, Write};
 use std::str::FromStr;
@@ -25,7 +26,7 @@ pub struct SensorData {
     humidity: f32,
     wind_speed: f32,
     wind_direction: f32,
-    precipitation_amount: f32,
+    rain: f32,
 }
 
 #[tokio::main]
@@ -58,7 +59,7 @@ async fn execute() -> Result<()> {
         humidity: 0.0,
         wind_speed: 0.0,
         wind_direction: 0.0,
-        precipitation_amount: 0.0,
+        rain: 0.0,
     };
 
     // the main loop to get data every 30 minutes
@@ -71,6 +72,7 @@ async fn execute() -> Result<()> {
         peripheral.disconnect()
             .await
             .map_err(|_| String::from("Failed to disconnect from peripheral"))?;
+
 
         write_to_file(&file, &sensor_data);
 
@@ -88,3 +90,4 @@ pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
         let data = format!("{:?}\n", sensor_data);
         file.write_all(data.as_bytes()).unwrap();
 }
+
