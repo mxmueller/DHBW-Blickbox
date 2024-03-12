@@ -310,6 +310,47 @@ def insert_rain():
         log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
     
+@app.route('/iot/api/insert/battery-charge', methods=['POST'])
+def insert_battery_charge():
+    log(title='POST', message=(url_for('insert_battery_charge') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    log(title='Try', message='Versuche Akkustand Wert einzufügen', type='info', ringbuffer=ringBuffer)
+    try:
+        data = request.json
+        if 'timestamp' in data:
+            timestamp = data['timestamp']
+            try:
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error', ringbuffer=ringBuffer)
+                return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
+        else:
+            timestamp = datetime.now()
+
+        if 'battery_charge' not in data:
+            log(title='Exception', message="Key der Eingabe war nicht [battery_charge]", type='error', ringbuffer=ringBuffer)
+            return return_response("message", "Falscher Input!", 400)
+        battery_charge = float(data['battery_charge'])
+        if(battery_charge < 0.0 or battery_charge > 100.0):
+            log(title='Exception', message=f'Wert der Akkustand Wert stimmt nicht. Wert: {battery_charge}', type='error', ringbuffer=ringBuffer)
+            return return_response("message", "Falscher Input! Luftfeuchtigkeit nicht in Range", 400)
+        json_body = [
+            {
+                "measurement": "battery_charge",
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "fields": {
+                    "value": battery_charge
+                }
+            }
+        ]
+        influx_client.write_points(json_body)
+        log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success', ringbuffer=ringBuffer)
+        return return_response("message", "Daten erfolgreich eingefügt!", 200)
+    
+    except Exception as e:
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
+        return return_response("error", str(e), 500)
+
 #@app.route("/iot/api/insert/light", methods=['POST'])
 #def insert_light_data():
 #    try:
