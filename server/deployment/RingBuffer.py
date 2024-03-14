@@ -37,9 +37,6 @@ def check_and_send_new_entries(ring_buffer, socket):
 
 
 
-def handle_ada_logs(ringbuffer, socket):
-    data = socket.receive()
-    if data:
-        ringbuffer.append(json.dumps(data))
+
 
     

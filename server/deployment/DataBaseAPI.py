@@ -14,8 +14,7 @@ influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
-ada_sock = Sock(app)
-ada_sock.init_app(app)
+
 
 ringBuffer = RingBuffer(30)
 
@@ -33,15 +32,15 @@ thread_lock = Lock()
   
 
 
-@ada_sock.route('/ada-logs')
-def recieve_logs_from_ada(ada_sock):
+@app.route('/ada-logs', methods=['POST'])
+def recieve_logs_from_ada():
     try:
-        while True:
-            with thread_lock:
-                handle_ada_logs(ringBuffer, ada_sock)
+        data = request.json
+        ringBuffer.append(json.dumps(data))
+        return return_response("message:", "Erfolgreich gelogt!", 200)
     except Exception as e:
-        print('Fehler beim Empfangen von Daten von Ada:', e)    
-        ada_sock.close()
+        return return_response("error", str(e), 500)
+
 
 @sock.route('/log-stream')
 def logstream(sock):
