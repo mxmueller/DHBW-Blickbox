@@ -308,7 +308,7 @@ Visualisiert die Messdaten und Stellt Frontend bereit. \\
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4000}}@{}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5000}}@{}}
 \toprule
 \begin{minipage}[b]{\linewidth}\raggedright
 Ziel / Requirement
@@ -322,18 +322,23 @@ Details
 Alle funktionalen Requirements &
 Eventgesteuerte Architektur &
 Sensorarchitektur sendet die Messdaten an dem PI. Der PI sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt diese im Frontend da.\\
+& & \\
 Erweitbarkeit \& Wartung  &
-Lösungsansatz-2 &
-Detail-2 \\
+Modularer Projektaufbau und Tests &
+Damit Dritte, sei es irgendwelche Stakeholder oder neue Entwickler, sich in das Projekt leicht einarbeiten können, bauen wir das Projekt so auf, dass Codecomponenten voneinander getrennt aufgebaut sind, sich also in Modulen befinden. Zudem sind Funktionen getestet. \\
+& & \\
 Sicherheit  &
 Https-Verbindung, Containerisierung \& Reverse-Proxy &
 Über den Reverse-Proxy sind die Verschiedenen Server-Apps nicht direkt dem Internet Exposed. Durch die Containersierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
+& & \\
 Wiederherstellung und -erhaltung der Daten  &
-Lösungsansatz-4 &
-Detail-4 \\
+ &
+Auf dem Pi werden in einer history file, die daten abgelegt, damit man sollte die verbindung abbrechen, die noch seperat auf dem Pi sind. \\
+& & \\
 Bereitstellung einer geeigneten Umgebung für die Hardware  &
 Lösungsansatz-5 &
 Detail-5 \\
+& & \\
 Bereitstellung eines Dashboard  &
 Grafana als Open-Source Fertiglösung &
 Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
