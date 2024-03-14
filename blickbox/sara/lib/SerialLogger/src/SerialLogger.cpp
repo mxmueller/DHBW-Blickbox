@@ -5,6 +5,12 @@ namespace serial_logger{
 
     DebugLevels level = DebugLevels::DEBUG;
 
+    /**
+     * @brief Logs a Message with a Debug level
+     * 
+     * @param message 
+     * @param level 
+     */
     void log(String message,DebugLevels level){
         if(level > NONE){
             switch (level)
@@ -34,6 +40,17 @@ namespace serial_logger{
                 break;
             }
         }
+    }
+
+    /**
+     * @brief Logs a Message with prefix 
+     * 
+     * @param prefix 
+     * @param message 
+     */
+    void log(String prefix, String message){
+        Serial.print(prefix);
+        Serial.println(message);
     }
 
     DebugLevels get_debug_level(){

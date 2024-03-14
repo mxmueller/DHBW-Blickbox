@@ -16,42 +16,34 @@ namespace sara_ble{
     CONNECTED
   };
 
+  extern BLEService airService; 
+  extern BLECharacteristic temperatureCharacteristic;
+  extern BLECharacteristic humidityCharacteristic;
+  extern BLEService weatherStationService; 
+  extern BLECharacteristic rainfallCharacteristic;
+  extern BLECharacteristic winddirectionCharacteristic;
+  extern BLECharacteristic windspeedCharacteristic;
+  extern BLEService powerService; 
+  extern BLECharacteristic batterLevelCharacteristic;
+  extern BLECharacteristic batterRAWCharacteristic;
+
+  extern ble_state connection_state;
+
+  extern String connected_device;
+
+  void begin();
+
   String ble_state_to_String(ble_state state);
 
-  class SaraBLE {
-    public:
-      SaraBLE();
-      void begin();
-      ble_state get_connection_state();
-      String get_connected_device();
-      void print_bluetooth_state();
-      void loop();
-    private:
+  void on_connect(BLEDevice central );
 
-      void update_connection_state(BLEDevice *ble_device);
+  void on_disconnect(BLEDevice central );
 
-      // Verbinungs infos
-      ble_state connection_state = NONE;
-      ble_state last_connection_state = NONE;
-      String connected_device;
+  void print_bluetooth_state();
 
-      // BLE Services
-      BLEService airService; 
-
-      BLECharacteristic temperatureCharacteristic;
-      BLECharacteristic humidityCharacteristic;
-
-      BLEService weatherStationService; 
-
-      BLECharacteristic rainfallCharacteristic;
-      BLECharacteristic winddirectionCharacteristic;
-      BLECharacteristic windspeedCharacteristic;
-
-      BLEService powerService; 
-
-      BLECharacteristic batterLevelCharacteristic;
-      BLECharacteristic batterRAWCharacteristic;
-  };
+  void update_air_data(sara_data::air_data *air_data);
+  void update_weather_data(sara_data::weather_station_data *weather_data);
+  void update_battery_data(sara_data::battery_data *battery_data);
 }
 
 #endif  // SARABLE_HPP
