@@ -36,7 +36,8 @@ thread_lock = Lock()
 def recieve_logs_from_ada():
     try:
         data = request.json
-        ringBuffer.append(json.dumps(data))
+        with thread_lock:
+            ringBuffer.append(json.dumps(data))
         return return_response("message:", "Erfolgreich gelogt!", 200)
     except Exception as e:
         return return_response("error", str(e), 500)
