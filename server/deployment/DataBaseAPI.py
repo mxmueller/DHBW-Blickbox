@@ -6,13 +6,16 @@ import socket
 from datetime import datetime
 import time
 from RingBuffer import *
-from threading import Lock
+from threading import Lock, Thread
 
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
+
+ada_sock = Sock(app)
+ada_sock.init_app(app)
 
 ringBuffer = RingBuffer(30)
 
@@ -27,6 +30,19 @@ def return_response(message, value, status_code):
 
 thread_lock = Lock()
 
+  
+
+
+@ada_sock.route('/ada-logs')
+def recieve_logs_from_ada(ada_sock):
+    try:
+        while True:
+            with thread_lock:
+                handle_ada_logs(ringBuffer, ada_sock)
+    except Exception as e:
+        print('Fehler beim Empfangen von Daten von Ada:', e)    
+        ada_sock.close()
+
 @sock.route('/log-stream')
 def logstream(sock):
     try:
@@ -36,6 +52,9 @@ def logstream(sock):
     except Exception as e:
         print('Socket-Verbindung unterbrochen:', e)
         sock.close()
+
+
+
 
 @app.route('/iot/api/pingBB', methods=['POST'])
 def insertLastOnline():
