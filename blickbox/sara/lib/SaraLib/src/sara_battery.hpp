@@ -34,6 +34,7 @@ namespace sara_battery{
             void begin();
             uint16_t read_battery_adc();
             uint16_t get_last_battery_reading();
+            void monitor();
         private:
             uint8_t battery_pin;
             uint16_t last_battery_reading;

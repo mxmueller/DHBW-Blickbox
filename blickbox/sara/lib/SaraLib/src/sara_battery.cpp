@@ -7,6 +7,12 @@ namespace sara_battery{
 
    void SaraBatteryManager::begin(){
       pinMode(battery_pin, INPUT);
+      // Deaktivieren von Powerled und i2c Sensoren
+      pinMode(PIN_ENABLE_SENSORS_3V3, OUTPUT);
+      pinMode(PIN_ENABLE_I2C_PULLUP, OUTPUT);
+      digitalWrite(PIN_ENABLE_SENSORS_3V3, LOW); 
+      digitalWrite(PIN_ENABLE_I2C_PULLUP, LOW);
+      digitalWrite(LED_PWR,LOW);    // keep Power LED off
    }
    
    uint16_t SaraBatteryManager::read_battery_adc(){
@@ -20,6 +26,10 @@ namespace sara_battery{
 
    uint8_t map_to_battery_level(uint16_t raw_battery_value){
       return map(raw_battery_value, BATTERY_MIN_READING, BATTERY_MAX_READING, 0, 100);
+   }
+
+   void monitor(){
+
    }
 }
 

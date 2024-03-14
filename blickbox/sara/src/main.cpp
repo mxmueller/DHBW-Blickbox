@@ -109,9 +109,8 @@ void setup() {
   log(F("Ready"), INFO);
   print_help();
 
-  // Deaktivieren von Powerled und i2c Sensoren
-  digitalWrite(LED_PWR, LOW); // turn off power LED
-  digitalWrite(PIN_ENABLE_SENSORS_3V3, LOW); // turn off sensors
+  // Initialisiert den Battery Manager
+  battery_manager.begin();
 
   // Konfigurieren der Timer
   ble_task.begin(100);
@@ -132,6 +131,16 @@ void loop() {
   // Verwaltet die BLE Integration
   if(ble_task.fire()){
     BLE.poll();
+
+    // Energie Management falls keine Verbindung vorherscht
+    switch (sara_ble::connection_state)
+    {
+    case DISCONNECTED:
+      ble_task.update(2000);
+      break;
+    case CONNECTED:
+      ble_task.update(200);
+    }
   }
 
 
