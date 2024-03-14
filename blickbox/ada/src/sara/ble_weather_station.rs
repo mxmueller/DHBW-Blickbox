@@ -137,7 +137,7 @@ pub mod ble_weather_station {
                         // Handle temperature notification
                         let rainfall_value = data.value[0] as f32;
                         println!("Rainfall: {}", rainfall_value);
-                        sensor_data.precipitation_amount = rainfall_value;
+                        sensor_data.rain = rainfall_value;
                         notification_count += 1;
                         got_rfm_value = true;
                     }
@@ -168,6 +168,7 @@ pub mod ble_weather_station {
             }
             // Check if the desired number of notifications have been processed
             if notification_count >= DESIRED_NOTIFICATION_COUNT {
+                println!("Received new sensor data");
                 break; // Exit the loop if desired count is reached
             }
         }
