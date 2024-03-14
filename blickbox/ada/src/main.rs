@@ -11,7 +11,6 @@ use chrono_tz::Europe::Berlin;
 use serialport::SerialPort;
 use tokio::time;
 use crate::communication::http_request::http_request::send_data;
-use crate::sara::weather_station;
 use crate::sara::weather_station::weather_station::get_weather_station_data;
 
 type Error = String;
@@ -182,5 +181,22 @@ pub fn interpret_data(data: &[u8]) -> String {
         // no clue what the received data could be in this case
         println!("damn, didnt work");
         return String::new()
+    }
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_interpretation_of_data() {
+
+        let to_be_interpreted_data: &[u8] = "t:33.0\n".as_bytes();
+        let expected_data = String::from("33.0");
+
+        let data = interpret_data(to_be_interpreted_data);
+
+        assert_eq!(data, expected_data);
     }
 }
