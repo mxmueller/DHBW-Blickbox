@@ -177,7 +177,183 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
   \end{tabular}
 \end{center}
 
-\section{Entscheidungen zur Architektur}
+
+
+\newpage
+\section{Randbedingungen}
+\subsection{Technisch}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7500}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Randbedingung
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Beschreibung
+\end{minipage} \\
+\midrule
+\endhead
+Datenbank &
+Zur Datenbankpersistenz wird eine NoSQL-Datenbank wie InfluxDB verwendet. \\
+Datenübertragung & 
+Die Wetterstation wird über das Internet (WLAN) mit einer API kommunizieren. \\
+Aufteilung & 
+Frontend und Backend werden strikt getrennt. \\
+ &\\
+Fremdsoftware & 
+Opensource Bibiliotheken dürfen verwendet werden.\\
+ &\\
+Wasserfestigkeit & 
+Jegliche Hardware muss Wasserfest implementiert werden.\\
+\bottomrule
+\end{longtable}
+
+\subsection{Organisatorisch}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7500}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Randbedingung
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Beschreibung
+\end{minipage} \\
+\midrule
+\endhead
+Team &
+Vivian Berger, Maylis Grune, Max Müller und Aron Seidl \\
+Zeitplan &
+Der Zeitplan wird auf 2 Monate vom 01.02.2024 - 28.03.2024 festgelegt. \\
+ &\\
+Projektmanagement & 
+Die Entwicklung folgt dem Scrum-Framework mit zweiwöchigen Sprints. \\
+Definition of Done &
+Entwickler folgen der DoD auf dem Git-Repository. \\
+\bottomrule
+\end{longtable}
+
+
+\newpage
+\section{Kontextabgrenzung}
+\subsection{Fachlicher Kontext}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=140mm]{../c4/Business_Context.png}
+	\caption{Kontextdiagramm Blickbox }
+	\label{fig:Kontextdiagramm}
+\end{figure}  
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7500}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Knoten
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Beschreibung
+\end{minipage} \\
+\midrule
+\endhead
+Fußgänger &
+Fußgänger die sich die Blickbox anschauen und die Daten sehen. \\
+Admin &
+Administriert Dashboards und stuert Blickbox manuell. \\
+ & \\
+Blickbox & 
+Enthält Sensor Hardware und Anzeige der Daten. \\
+ & \\
+Server &
+Externer Server der mit der Hardware der Blickbox kommuniziert. \\
+\bottomrule
+\end{longtable}
+\newpage
+\subsection{Technischer Kontext}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=125mm]{../c4/Technical_Context.png}
+	\caption{Kontextdiagramm Blickbox }
+	\label{fig:Kontextdiagramm}
+\end{figure}  
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7500}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Knoten
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Beschreibung
+\end{minipage} \\
+\midrule
+\endhead
+Lichtsystem &
+Beleuchtet die Blickbox. \\
+Sensorik &
+Hardware welche die Messdaten sammelt. \\
+ &\\
+RaspberryPI & 
+Verarbeitet die Sensorik Daten und schickt diese an die Datenbank. \\
+Visualisierung &
+Gesammelte Daten werden angezeigt. \\
+Datenbank &
+Speichert die Messdaten. \\
+Webserver & 
+Visualisiert die Messdaten und Stellt Frontend bereit. \\
+\bottomrule
+\end{longtable}
+
+
+
+\section{Lösungsstrategie}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5000}}@{}}
+\toprule
+\begin{minipage}[b]{\linewidth}\raggedright
+Ziel / Requirement
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Lösungsstrategie
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Details
+\end{minipage} \\
+\midrule
+\endhead
+Alle funktionalen Requirements &
+Eventgesteuerte Architektur &
+Sensorarchitektur sendet die Messdaten an dem PI. Der PI sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt diese im Frontend da.\\
+& & \\
+Erweitbarkeit \& Wartung  &
+Modularer Projektaufbau und Tests &
+Damit Dritte, sei es irgendwelche Stakeholder oder neue Entwickler, sich in das Projekt leicht einarbeiten können, bauen wir das Projekt so auf, dass Codecomponenten voneinander getrennt aufgebaut sind, sich also in Modulen befinden. Zudem sind Funktionen getestet. \\
+& & \\
+Sicherheit  &
+Https-Verbindung, Containerisierung \& Reverse-Proxy &
+Über den Reverse-Proxy sind die Verschiedenen Server-Apps nicht direkt dem Internet Exposed. Durch die Containersierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
+& & \\
+Wiederherstellung und -erhaltung der Daten  &
+ &
+Auf dem Pi werden in einer history file, die daten abgelegt, damit man sollte die verbindung abbrechen, die noch seperat auf dem Pi sind. \\
+& & \\
+Bereitstellung einer geeigneten Umgebung für die Hardware  &
+Box &
+SARA wird in einer Box einbaut, welche Wasserdicht ist. Durch eine eigene Batterie ist sie Autak und braucht keine Spannung von außen. Die Sensoren werden über Kabelverschraubung in den Innenraum der Box gebraucht dadurch ist sie Wasserdicht. \\
+& & \\
+Bereitstellung eines Dashboard  &
+Grafana als Open-Source Fertiglösung &
+Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
+\bottomrule
+\end{longtable}
+\section{Bausteinsicht}
+Erstmal nur bis hier
+
+\section{Laufzeitsicht}
+
+\section{Verteilungssicht}
+
+\section{Querschnittliche Konzepte}
+
+\section{Architekturentscheidungen}
 \subsection{Evaluation zur Wahl des Frontend-Frameworks des Clients}
 
 Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitstitel \textit{Valentin} (Komposita aus \textit{Value} und \textit{Notification}) geführt. Vor der Initialisierung von \textit{Valentin} muss ein geeignetes Framework gewählt werden. Die nachfolgende Nutzwertanalyse dient dafür als Entscheidungsgrundlage. 
@@ -191,5 +367,11 @@ Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitsti
 
 Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
 
+\section{Qualitätsanforderungen}
+\subsection{Qualitätsbaum}
+\subsection{Qualitätsszenarien}
+
+\section{Risiken und Teschnische Schulden}
+\section{Glossar}
 
 \end{document}
