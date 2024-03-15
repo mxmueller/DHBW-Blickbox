@@ -123,4 +123,35 @@ pub mod http_request {
         let json = serde_json::to_string(&data).unwrap();
         return json
     }
+
+    #[cfg(test)]
+    mod test {
+        use std::time::SystemTime;
+        use chrono::{DateTime, Utc};
+        use chrono_tz::Europe::Berlin;
+
+        use super::*;
+
+        # [test]
+        fn test_get_json() {
+            let date_time_format: DateTime<Utc> = SystemTime::now().into();
+            let time = date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string();
+
+            let expected_temp_json = String::from("{\"timestamp\":\"2024-02-23 19:32:23\",\"temperature\":27.4}");
+
+            let sensor_data = SensorData {
+                timestamp: String::from("2024-02-23 19:32:23"),
+                temperature: 27.4,
+                humidity: 0.0,
+                wind_speed: 0.0,
+                wind_direction: 0.0,
+                precipitation_amount: 0.0,
+            };
+
+            assert_eq!(get_temp_json(&sensor_data), expected_temp_json)
+        }
+    }
+
 }
+
+

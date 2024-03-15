@@ -103,5 +103,3 @@ pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
         let data = format!("{:?}\n", sensor_data);
         file.write_all(data.as_bytes()).unwrap();
 }
-
-

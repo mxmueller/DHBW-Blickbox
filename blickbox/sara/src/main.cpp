@@ -3,36 +3,62 @@
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
 #include <sara_data.hpp>
+#include <sara_battery.hpp>
 #include <FireTimer.h>
 
-#if defined(__arm__)
-#include <SaraBLE.hpp>
+#if defined(NRF52_SERIES)
+  #include <SaraBLE.hpp>
 #endif
+
+/**Namespaces*/
+using namespace serial_communication;
+using namespace serial_logger;
+using namespace debugger;
+
+using namespace sara_data;
+using namespace sara_battery;
+using namespace sara_ble;
 
 
 /**
- * Pin Definitionen für DHT22 Sensor
+ * @brief  Pin Definitionen für DHT22 Sensor
 */
 const int PIN_DHT = 2;
 const int DHTTYPE = DHT22;
 
 /**
- * Pin Definitionen für Weather Station
+ * @brief Pin Definitionen für Weather Station
 */
 const int PIN_WIND_DIRECTION = A5;
 const int PIN_WIND_SPEED = A6;
 const int PIN_RAINFALL_SENSOR = A7;
 
 /**
- * Initalisierung der DHT Library
-*/
+ * @brief Analog Pin an dem die Batteriespannung anliegt
+ * 
+ */
+const int BATTERY_PIN = A4;
+
+/**
+ * @brief  Initalisierung der DHT Library
+ * 
+ * @return DHT 
+ */
 DHT dht(PIN_DHT, DHTTYPE);
 
 /**
  * @brief Initialisieung Wetterstation Library
  * 
+ * @return SFEWeatherMeterKit 
  */
 SFEWeatherMeterKit weather_station(PIN_WIND_DIRECTION, PIN_WIND_SPEED, PIN_RAINFALL_SENSOR);
+
+/**
+ * @brief Deklariert den Battery Manager
+ * 
+ * @return SaraBatteryManager 
+ */
+SaraBatteryManager battery_manager (BATTERY_PIN);
 
 
 /**Funktionsdefinitionen für main.cpp*/
@@ -41,28 +67,20 @@ void print_humidity();
 void print_rainfall_messurement();
 void print_wind_direction();
 void print_wind_speed();
+void print_battery_level();
+void print_battery_raw();
 void print_help();
 void handle_serial_request();
 void print_ble_state();
 void update_sensor_data();
 
 
-
-
-/**Namespaces*/
-using namespace serial_communication;
-using namespace serial_logger;
-using namespace debugger;
-
-using namespace sara_data;
-
-/*BLE Definitionen*/
-#if defined(__arm__)
-using namespace sara_ble;
-SaraBLE sara_bluetooth;
-#endif
-
-FireTimer poll_timer;
+//Anlegen der Tasks
+FireTimer ble_task;
+FireTimer serial_task;
+FireTimer air_sensor_task;
+FireTimer weather_sensor_task;
+FireTimer battery_status_task;
 
 void setup() {
 
@@ -85,15 +103,21 @@ void setup() {
   weather_station.begin();
 
   // Initialisieung der Bluetooth Integration
-  #if defined(__arm__)
-  sara_bluetooth.begin();
-  #endif
+  sara_ble::begin();
 
   // Rückgabe eines Ready Signals für den Benutzer der Seriellen Konsole
   log(F("Ready"), INFO);
   print_help();
 
-  poll_timer.begin(500);
+  // Initialisiert den Battery Manager
+  battery_manager.begin();
+
+  // Konfigurieren der Timer
+  ble_task.begin(100);
+  serial_task.begin(500);
+  air_sensor_task.begin(30000);
+  weather_sensor_task.begin(30000);
+  battery_status_task.begin(30000);
 }
 
 /**
@@ -103,24 +127,54 @@ void loop() {
   
   // Aktualisiert die Sensor Daten und speichert diese in eine
   // Datenstruktur auf die die BLE Integration zugreifen kann
-  update_sensor_data(&dht, &weather_station);
 
   // Verwaltet die BLE Integration
-  #if defined(__arm__)
-  sara_bluetooth.loop();
-  #endif
+  if(ble_task.fire()){
+    BLE.poll();
+
+    // Energie Management falls keine Verbindung vorherscht
+    switch (sara_ble::connection_state)
+    {
+    case DISCONNECTED:
+      ble_task.update(2000);
+      break;
+    case CONNECTED:
+      ble_task.update(200);
+    }
+  }
+
 
   // Verwaltet eingehende Serielle Anfragen und Kommandos
-  handle_serial_message_recieved();
-  handle_serial_request();
+  if(serial_task.fire() && Serial.available()){
+    handle_serial_message_recieved();
+    handle_serial_request();
+  }
   
+  // Sendet neue Temperatur und Luftfeutigkeitsdaten an das BLE Central Device
+  if(air_sensor_task.fire() && sara_ble::connection_state == sara_ble::CONNECTED){
+    air_data air;
+    update_air_struct(&dht, &air);
+    sara_ble::update_air_data(&air);
+  }
   
-    
+  // Sendet Batterie Level und den eigendlichen Wert vom ADC an das BLE Central Device
+  if(battery_status_task.fire() && sara_ble::connection_state == sara_ble::CONNECTED){
+    battery_data battery;
+    update_battery_struct(&battery_manager, &battery);
+    sara_ble::update_battery_data(&battery);
+  }
+
+  // Sendet neue Wetter Daten an das BLE Central Device
+  if(weather_sensor_task.fire() && sara_ble::connection_state == sara_ble::CONNECTED){
+    weather_station_data weather;
+    update_weather_station_struct(&weather_station, &weather);
+    sara_ble::update_weather_data(&weather);
+  }
 }
 
 
 
-/**
+/** 
  * Verarbeitet die Kommandos, die über das Serielle Protokoll übertragen wurden
 */
 void handle_serial_request(){
@@ -138,6 +192,10 @@ void handle_serial_request(){
       print_wind_speed();
     }else if(command == F("ble")){
       print_ble_state();
+    }else if(command == F("bl")){
+      print_battery_level();
+    }else if(command == F("br")){
+      print_battery_raw();
     }else if(command == F("help")){
       print_help();
     }
@@ -196,6 +254,28 @@ void print_rainfall_messurement(){
 }
 
 /**
+ * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
+ * 
+ */
+void print_battery_level(){
+  battery_data battery;
+  update_battery_struct(&battery_manager, &battery);
+  Serial.print(F("battery_raw:"));
+  Serial.println(battery.level);
+}
+
+/**
+ * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
+ * 
+ */
+void print_battery_raw(){
+  battery_data battery;
+  update_battery_struct(&battery_manager, &battery);
+  Serial.print(F("battery_raw:"));
+  Serial.println(battery.raw_adc);
+}
+
+/**
  * @brief Gibt eine Hilfe für Benutzer des Seriellen Kosole aus
  * 
  */
@@ -211,13 +291,8 @@ void print_help(){
  * 
  */
 void print_ble_state(){
-  #if defined(__arm__)
     Serial.print(F("ble_connection:"));
-    Serial.println(ble_state_to_String(sara_bluetooth.get_connection_state()));
+    Serial.println(ble_state_to_String(sara_ble::connection_state));
     Serial.print(F("ble_device:"));
-    Serial.println(sara_bluetooth.get_connected_device());
-  #endif
-  #if defined(__AVR__)
-    Serial.print(F("ble_device:No BLE Device available"));
-  #endif
+    Serial.println(sara_ble::connected_device);
 }

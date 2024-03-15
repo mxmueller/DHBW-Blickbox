@@ -217,7 +217,7 @@ class TestDatabaseAPI(unittest.TestCase):
     def test_wind_speed_edge_casesN1(self):
         if(nowindspeed):
             return
-        payload = {"wind-speed": -0.1}
+        payload = {"wind_speed": -0.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
         response = requests.post(getURL("/insert/wind-speed"), json=payload)
@@ -227,7 +227,7 @@ class TestDatabaseAPI(unittest.TestCase):
     def test_wind_speed_edge_casesN2(self):
         if(nowindspeed):
             return
-        payload = {"wind-speed": -1000}
+        payload = {"wind_speed": -1000}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
         response = requests.post(getURL("/insert/wind-speed"), json=payload)
@@ -237,7 +237,7 @@ class TestDatabaseAPI(unittest.TestCase):
     def test_wind_speed_edge_casesP1(self):
         if(nowindspeed):
             return
-        payload = {"wind-speed": 500.1}
+        payload = {"wind_speed": 500.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
         response = requests.post(getURL("/insert/wind-speed"), json=payload)
@@ -247,7 +247,7 @@ class TestDatabaseAPI(unittest.TestCase):
     def test_wind_speed_edge_casesP2(self):
         if(nowindspeed):
             return
-        payload = {"wind-speed": 44343532.1}
+        payload = {"wind_speed": 44343532.1}
         expected_status_code = 400
         expected_data = {"message": "Falscher Input! Windgeschwindigkeit nicht in Range"}
         response = requests.post(getURL("/insert/wind-speed"), json=payload)
@@ -257,7 +257,7 @@ class TestDatabaseAPI(unittest.TestCase):
     def test_wind_speed_edge_casesP2(self):
         if(nowindspeed):
             return
-        payload = {"wind-speed": "hello"}
+        payload = {"wind_speed": "hello"}
         expected_status_code = 500
         response = requests.post(getURL("/insert/wind-speed"), json=payload)
         self.assertEqual(response.status_code, expected_status_code)
