@@ -9,14 +9,14 @@ pub mod http_request {
     pub struct LogEntry {
         title: String,
         message: String,
+        #[serde(rename = "type")]
         log_type: String,
         timestamp: String,
     }
 
-
     pub async fn send_logs(ringbuffer: &mut VecDeque<LogEntry>) -> crate::Result<()> {
 
-        let url = "https://dhbwapi.maytastix.de/log-stream";
+        let url = "https://dhbwapi.maytastix.de/ada-logs";
         // Create a reqwest HTTP client
         let client = Client::new();
 
