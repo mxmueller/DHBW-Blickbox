@@ -25,9 +25,9 @@ pub mod http_request {
         wind_direction: f32,
     }
     #[derive(Serialize, Clone, Debug)]
-    struct PrecipitationData {
+    struct RainData {
         timestamp: String,
-        precipitation_amount: f32,
+        rain: f32,
     }
 
     pub async fn send_data(sensor_data: &SensorData) -> crate::Result<()> {
@@ -39,14 +39,14 @@ pub mod http_request {
         let hum_json = get_humidity_json(&sensor_data);
         let ws_json = get_wind_speed_json(&sensor_data);
         let wd_json = get_wind_direction_json(&sensor_data);
-        let precip_json = get_precipitation_amount_json(&sensor_data);
+        let rain_json = get_rain_json(&sensor_data);
 
         let data_types = vec![
             (String::from("temperature"), temp_json),
             (String::from("air-humidity"), hum_json),
             (String::from("wind-speed"), ws_json),
             (String::from("wind-direction"), wd_json),
-            (String::from("precipitation-amount"), precip_json),
+            (String::from("rain"), rain_json),
         ];
 
         // Create a reqwest HTTP client
@@ -57,7 +57,7 @@ pub mod http_request {
             println!("{}", data_type.0);
             let url = format!("{}{}", base_url, data_type.0);
 
-            let json = serde_json::to_string(&data_type.1).unwrap();
+            let json = data_type.1;
             println!("JSON: {} sent to <{:?}>", json, url);
 
             // Send the sensor data as JSON in the body of a POST request
@@ -115,12 +115,43 @@ pub mod http_request {
         return json
     }
 
-    fn get_precipitation_amount_json(sensor_data: &SensorData) -> String {
-        let data = PrecipitationData {
+    fn get_rain_json(sensor_data: &SensorData) -> String {
+        let data = RainData {
             timestamp: sensor_data.clone().timestamp,
-            precipitation_amount: sensor_data.precipitation_amount,
+            rain: sensor_data.rain,
         };
         let json = serde_json::to_string(&data).unwrap();
         return json
     }
+
+    #[cfg(test)]
+    mod test {
+        use std::time::SystemTime;
+        use chrono::{DateTime, Utc};
+        use chrono_tz::Europe::Berlin;
+
+        use super::*;
+
+        # [test]
+        fn test_get_json() {
+            let date_time_format: DateTime<Utc> = SystemTime::now().into();
+            let time = date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string();
+
+            let expected_temp_json = String::from("{\"timestamp\":\"2024-02-23 19:32:23\",\"temperature\":27.4}");
+
+            let sensor_data = SensorData {
+                timestamp: String::from("2024-02-23 19:32:23"),
+                temperature: 27.4,
+                humidity: 0.0,
+                wind_speed: 0.0,
+                wind_direction: 0.0,
+                precipitation_amount: 0.0,
+            };
+
+            assert_eq!(get_temp_json(&sensor_data), expected_temp_json)
+        }
+    }
+
 }
+
+

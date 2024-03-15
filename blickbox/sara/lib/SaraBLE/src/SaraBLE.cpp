@@ -4,6 +4,7 @@ namespace sara_ble{
     using namespace serial_logger;
     using namespace sara_data;
 
+
     /**
      * @brief Gibt die String repräsentation vom Enum zurück
      * 
@@ -25,35 +26,38 @@ namespace sara_ble{
         }
     }
 
-    /**
-     * @brief Deklariert die SARA Bluetooth Initation mit allen Services
-     * und Charakteristiken
-     * 
-     */
-    SaraBLE::SaraBLE() : 
-    airService("1101"), 
-    temperatureCharacteristic("2101", BLERead | BLENotify, 16) ,
-    humidityCharacteristic("2102", BLERead | BLENotify, 16),
-    weatherStationService("1102"), 
-    rainfallCharacteristic("2203", BLERead | BLENotify, 16),
-    winddirectionCharacteristic("2201", BLERead | BLENotify, 16) ,
-    windspeedCharacteristic("2202", BLERead | BLENotify, 16)
-    {
-    }
+    ble_state connection_state = DISCONNECTED;
 
-    /**
-     * @brief Initialisert und versucht eine Verbindung mit dem Bluetooth Modul
-     * herzustellen.
-     * 
-     */
-    void SaraBLE::begin(){
+    String connected_device;
+
+    BLEService airService("1101");
+    BLECharacteristic temperatureCharacteristic("2101", BLERead | BLENotify, 16) ;
+    BLECharacteristic humidityCharacteristic("2102", BLERead | BLENotify, 16);
+    BLEService weatherStationService("1102");
+    BLECharacteristic rainfallCharacteristic("2203", BLERead | BLENotify, 16);
+    BLECharacteristic winddirectionCharacteristic("2201", BLERead | BLENotify, 16) ;
+    BLECharacteristic windspeedCharacteristic("2202", BLERead | BLENotify, 16);
+    BLEService powerService("1103");
+    BLECharacteristic batterLevelCharacteristic("2301", BLERead | BLENotify, 16) ;
+    BLECharacteristic batterRAWCharacteristic("2302", BLERead | BLENotify, 16);
+
+  
+    void begin(){
         
-        //Setting up Bluetooth Services
+        // BLE Error Handling
         if (!BLE.begin()) {
             log(F("ble_failed:Starting BLE failed!"), ERROR);
             while (1);
         }
+
+        // Setze Event Handler
+        BLE.setEventHandler( BLEConnected, on_connect );
+        BLE.setEventHandler( BLEDisconnected, on_disconnect );
+
+        // Setze BLE Name
         BLE.setLocalName("SARA Weather Station");
+        
+        // Definiere BLE Services und Charakteristiken
         BLE.setAdvertisedService(airService);
         airService.addCharacteristic(temperatureCharacteristic);
         airService.addCharacteristic(humidityCharacteristic);
@@ -61,86 +65,68 @@ namespace sara_ble{
         weatherStationService.addCharacteristic(winddirectionCharacteristic);
         weatherStationService.addCharacteristic(windspeedCharacteristic);
         weatherStationService.addCharacteristic(rainfallCharacteristic);
-        BLE.addService(weatherStationService);
+        BLE.setAdvertisedService(powerService);
+        powerService.addCharacteristic(batterLevelCharacteristic);
+        powerService.addCharacteristic(batterRAWCharacteristic);
         BLE.addService(airService);
+        BLE.addService(weatherStationService);
+        BLE.addService(powerService);
 
+        // Advertise Services und Charakteristiken
         BLE.advertise();
-
+    }
+    
+    void on_connect(BLEDevice central ){
+        connection_state = CONNECTED;
+        connected_device = central.address();
+        BLE.stopAdvertise();
+        log(F("Device Connected"), INFO);
     }
 
-    /**
-     * @brief Speichert und schreibt den aktuellen Status der Bluetooth integation
-     * auf der Konsole aus
-     * 
-     * @param ble_device Benötigt ein BLEDevice Objekt welches im Loop erstellt wird
-     */
-    void SaraBLE::update_connection_state(BLEDevice *ble_device){
-        if(ble_device->connected()==true){
-            connection_state = CONNECTED;
-            if(last_connection_state <= DISCONNECTED){
-                last_connection_state = CONNECTED;
-                log(F("BLE Device Connected"), INFO);
-            }
-            connected_device = ble_device->address();
-            
-
-        }else{
-            if(last_connection_state == CONNECTED){
-                last_connection_state = DISCONNECTED;
-                log(F("BLE Device disconnect"), INFO);
-            }
-            connection_state = DISCONNECTED;
-            connected_device = "";
-        }
+    void on_disconnect(BLEDevice central ){
+        connection_state = DISCONNECTED;
+        BLE.advertise();
+        log(F("Device Disconnected"), INFO);
     }
-
     /**
      * @brief Schreibt fürs Debugging die aktuellen Bluetooth Status auf der Konsole aus
      * 
      */
-    void SaraBLE::print_bluetooth_state(){
+    void print_bluetooth_state(){
         Serial.print(F("ble_connection:"));
-        Serial.println(ble_state_to_String(this->get_connection_state()));
+        Serial.println(ble_state_to_String(connection_state));
         Serial.print(F("ble_device:"));
-        Serial.println(this->get_connected_device());
+        Serial.println(connected_device);
     }
 
-    /**
-     * @brief Getter für den aktuellen Verbindungsstatus
-     * 
-     * @return ble_state 
-     */
-    ble_state SaraBLE::get_connection_state(){
-        return connection_state;
+    void update_air_data(sara_data::air_data *air_data) {
+        temperatureCharacteristic.writeValue(air_data->temperature);
+        humidityCharacteristic.writeValue(air_data->humidity);
     }
 
-    /**
-     * @brief Gibt die MAC Adresse des Verbundenen Geräts zurück
-     * 
-     * @return String 
-     */
-    String SaraBLE::get_connected_device(){
-        return connected_device;
+    void update_weather_data(sara_data::weather_station_data *weather_data) {
+        winddirectionCharacteristic.writeValue(weather_data->winddirection);
+        windspeedCharacteristic.writeValue(weather_data->windspeed);
+        rainfallCharacteristic.writeValue(weather_data->rainfall);
     }
 
-    /**
-     * @brief Prozess für den Hauptprogramm loop
-     * 
-     */
-    void SaraBLE::loop(){
-       BLEDevice central = BLE.central();
-
-       update_connection_state(&central);
-
-        if (central) 
-        {
-            if(central.connected()){
-                temperatureCharacteristic.writeValue(weather_data.temperature);
-                humidityCharacteristic.writeValue(weather_data.humidity);
-                winddirectionCharacteristic.writeValue(weather_data.winddirection);
-                windspeedCharacteristic.writeValue(weather_data.windspeed);
-                rainfallCharacteristic.writeValue(weather_data.rainfall);
-            }
-        }
+    void update_battery_data(sara_data::battery_data *battery_data) {
+        batterRAWCharacteristic.writeValue(battery_data->raw_adc);
+        batterLevelCharacteristic.writeValue(battery_data->level);
     }
+
+    // if(central.connected()){
+    //     update_air_data(&air_data);
+    //     update_weather_data(&weather_data);
+    //     update_battery_data(&battery_data);
+    // }
+            // if(central.connected()){
+            //     temperatureCharacteristic.writeValue(weather_data.temperature);
+            //     humidityCharacteristic.writeValue(weather_data.humidity);
+            //     winddirectionCharacteristic.writeValue(weather_data.winddirection);
+            //     windspeedCharacteristic.writeValue(weather_data.windspeed);
+            //     rainfallCharacteristic.writeValue(weather_data.rainfall);
+            //     batterRAWCharacteristic.writeValue(battery.raw_adc);
+            //     batterLevelCharacteristic.writeValue(battery.level);
+
 }

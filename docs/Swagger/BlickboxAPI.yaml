@@ -223,8 +223,81 @@ paths:
                     example: 'Falscher Input'
         '500':
           description: Interner Fehler
-          
-          
+  /insert/wind-direction:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Windrichtungs Wert hinzufügen
+      description: Füg einen neuen Windrichtungs Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Windrichtungs Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Windrichtung'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '500':
+          description: Interner Fehler
+
+  /insert/rain:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Regenmenge Wert hinzufügen
+      description: Füg einen neuen Regenmenge Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Regenmenge Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Regenmenge'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '500':
+          description: Interner Fehler
           
 components:
   schemas:
@@ -247,17 +320,39 @@ components:
         timestamp:
           type: string
           example: "2024-02-23 19:32:23"
-        air-humidity:
+        air_humidity:
           type: number
           example: 13.2
     Windgeschwindigkeit:
       required:
-        - wind-speed
+        - wind_speed
       type: object
       properties:
         timestamp:
           type: string
           example: "2024-02-23 19:32:23"
-        wind-speed:
+        wind_speed:
           type: number
-          example: 120
+          example: 120.0
+    Windrichtung:
+      required:
+        - wind_direction
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
+        wind_direction:
+          type: number
+          example: 81
+    Regenmenge:
+      required:
+        - rain
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
+        rain:
+          type: number
+          example: 49.3
