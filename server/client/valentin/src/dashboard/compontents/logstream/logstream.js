@@ -103,7 +103,7 @@ const Logstream = () => {
                           key={index}
                           message={item.message}
                           type={item.type}
-                          code={item.style}
+                          code={item.code}
                           date={item.date}
                         />
                       ))}
