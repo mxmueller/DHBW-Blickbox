@@ -30,10 +30,33 @@ pub mod http_request {
         rain: f32,
     }
 
+    pub async fn send_last_online() -> crate::Result<()> {
+
+        let url = " https://dhbwapi.maytastix.de/iot/api/pingBB";
+
+        // Create a reqwest HTTP client
+        let client = Client::new();
+
+            // Send the sensor data as JSON in the body of a POST request
+            let response = client.post(url)
+                .send()
+                .await
+                .map_err(|error| format!("Failed to send request: {:?}", error))?;
+
+            match response.status().is_success() {
+                true => {
+                    println!("Last Online Status sent successfully!");
+                }
+                false => {
+                    Err(format!("Request failed: {:?}", response.status()))?;
+                }
+            }
+        Ok(())
+    }
+
     pub async fn send_data(sensor_data: &SensorData) -> crate::Result<()> {
 
         let base_url = "https://dhbwapi.maytastix.de/iot/api/insert/";
-
 
         let temp_json = get_temp_json(&sensor_data);
         let hum_json = get_humidity_json(&sensor_data);
@@ -145,7 +168,7 @@ pub mod http_request {
                 humidity: 0.0,
                 wind_speed: 0.0,
                 wind_direction: 0.0,
-                precipitation_amount: 0.0,
+                rain: 0.0,
             };
 
             assert_eq!(get_temp_json(&sensor_data), expected_temp_json)
