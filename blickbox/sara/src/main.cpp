@@ -23,7 +23,7 @@ using namespace sara_ble;
 /**
  * @brief  Pin Definitionen für DHT22 Sensor
 */
-const int PIN_DHT = 2;
+const int PIN_DHT = A3;
 const int DHTTYPE = DHT22;
 
 /**
