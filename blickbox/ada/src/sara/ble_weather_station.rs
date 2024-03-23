@@ -14,11 +14,15 @@ pub mod ble_weather_station {
     const RAINFALL_NOTIFY_CHARACTERISTICS_UUID: Uuid = uuid_from_u16(0x2203);
     const WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID: Uuid = uuid_from_u16(0x2201);
     const WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID: Uuid = uuid_from_u16(0x2202);
+
+    const BATTERY_LEVEL_UUID: Uuid = uuid_from_u16(0x2301);
+    const BATTERY_RAW_UUID: Uuid = uuid_from_u16(0x2302);
+
     // Define the UUID for the service containing the characteristics
     const AIR_SERVICE_UUID: Uuid = uuid_from_u16(0x1101);
     const WEATHER_STATION_SERVICE_UUID: Uuid = uuid_from_u16(0x1102);
 
-    // gotta be 5 later on for production
+    // gotta be 6 later on for production
     const DESIRED_NOTIFICATION_COUNT: i32 = 2;
 
     pub async fn get_data_ble(peripheral: Peripheral, sensor_data: &mut SensorData) -> crate::Result<()> {
@@ -94,6 +98,19 @@ pub mod ble_weather_station {
             .await
             .map_err(|_| String::from("Failed to subscribe to rainfall notifications"))?;
 
+        // Find the battery level characteristics
+        let bl_characteristic = peripheral
+            .characteristics()
+            .iter()
+            .find(|&c| c.uuid == BATTERY_LEVEL_UUID && c.properties.contains(CharPropFlags::NOTIFY))
+            .unwrap().clone();
+
+        // Subscribe to battery level notification
+        peripheral
+            .subscribe(&bl_characteristic)
+            .await
+            .map_err(|_| String::from("Failed to subscribe to battery level notifications"))?;
+
         // Process notifications as they are received
         let mut notification_stream = peripheral
             .notifications()
@@ -108,6 +125,7 @@ pub mod ble_weather_station {
         let mut got_ws_value = false;
         let mut got_wd_value = false;
         let mut got_rfm_value = false;
+        let mut got_bl_value = false;
 
         // Process while the BLE connection is not broken or stopped.
         while let Some(data) = notification_stream.next().await {
@@ -115,7 +133,8 @@ pub mod ble_weather_station {
                 TEMP_NOTIFY_CHARACTERISTICS_UUID => {
                     if !got_temp_value {
                         // Handle temperature notification
-                        let temperature_value = data.value[0] as f32;
+                        let temperature_value = (data.value[0] as f32 / 10.0) + (data.value[0] as f32 % 10.0);
+                        //let temperature_value = data.value[0] as f32;
                         println!("Temperature: {}", temperature_value);
                         sensor_data.temperature = temperature_value;
                         notification_count += 1;
@@ -125,7 +144,7 @@ pub mod ble_weather_station {
                 HUMIDITY_NOTIFY_CHARACTERISTICS_UUID => {
                     if !got_hum_value {
                         // Handle temperature notification
-                        let humidity_value = data.value[0] as f32;
+                        let humidity_value = (data.value[0] as f32 / 10.0) + (data.value[0] as f32 % 10.0);
                         println!("Humidity: {}", humidity_value);
                         sensor_data.humidity = humidity_value;
                         notification_count += 1;
@@ -135,7 +154,7 @@ pub mod ble_weather_station {
                 RAINFALL_NOTIFY_CHARACTERISTICS_UUID => {
                     if !got_rfm_value {
                         // Handle temperature notification
-                        let rainfall_value = data.value[0] as f32;
+                        let rainfall_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
                         println!("Rainfall: {}", rainfall_value);
                         sensor_data.rain = rainfall_value;
                         notification_count += 1;
@@ -145,7 +164,7 @@ pub mod ble_weather_station {
                 WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID => {
                     if !got_wd_value {
                         // Handle temperature notification
-                        let wd_value = data.value[0] as f32;
+                        let wd_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
                         println!("Wind direction: {}", wd_value);
                         sensor_data.wind_direction = wd_value;
                         notification_count += 1;
@@ -155,11 +174,20 @@ pub mod ble_weather_station {
                 WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID => {
                     if !got_ws_value {
                         // Handle temperature notification
-                        let ws_value = data.value[0] as f32;
+                        let ws_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
                         println!("Wind speed: {}", ws_value);
                         sensor_data.wind_speed = ws_value;
                         notification_count += 1;
                         got_ws_value = true;
+                    }
+                }
+                BATTERY_LEVEL_UUID => {
+                    if !got_bl_value {
+                        let bl_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
+                        println!("Battery level: {}", bl_value);
+                        sensor_data.battery_charge = bl_value;
+                        notification_count += 1;
+                        got_bl_value = true
                     }
                 }
                 _ => {

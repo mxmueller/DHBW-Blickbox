@@ -29,6 +29,11 @@ pub mod http_request {
         timestamp: String,
         rain: f32,
     }
+    #[derive(Serialize, Clone, Debug)]
+    struct Battery {
+        timestamp: String,
+        battery_charge: f32,
+    }
 
     pub async fn send_last_online() -> crate::Result<()> {
 
@@ -63,6 +68,7 @@ pub mod http_request {
         let ws_json = get_wind_speed_json(&sensor_data);
         let wd_json = get_wind_direction_json(&sensor_data);
         let rain_json = get_rain_json(&sensor_data);
+        let battery_json = get_battery_json(&sensor_data);
 
         let data_types = vec![
             (String::from("temperature"), temp_json),
@@ -70,6 +76,7 @@ pub mod http_request {
             (String::from("wind-speed"), ws_json),
             (String::from("wind-direction"), wd_json),
             (String::from("rain"), rain_json),
+            (String::from("battery-charge"), battery_json),
         ];
 
         // Create a reqwest HTTP client
@@ -142,6 +149,15 @@ pub mod http_request {
         let data = RainData {
             timestamp: sensor_data.clone().timestamp,
             rain: sensor_data.rain,
+        };
+        let json = serde_json::to_string(&data).unwrap();
+        return json
+    }
+
+    fn get_battery_json(sensor_data: &SensorData) -> String {
+        let data = Battery {
+            timestamp: sensor_data.clone().timestamp,
+            battery_charge: sensor_data.battery_charge,
         };
         let json = serde_json::to_string(&data).unwrap();
         return json
