@@ -114,8 +114,8 @@ void setup() {
 
   // Konfigurieren der Timer
   ble_task.begin(100);
-  serial_task.begin(500);
-  air_sensor_task.begin(30000);
+  serial_task.begin(200);
+  
   weather_sensor_task.begin(30000);
   battery_status_task.begin(30000);
 }
@@ -155,6 +155,10 @@ void loop() {
     air_data air;
     update_air_struct(&dht, &air);
     sara_ble::update_air_data(&air);
+    if(serial_logger::level == DEBUG){
+      print_air_data(&air);
+    }
+    air_sensor_task.begin(AIR_TASK_TIMING);
   }
   
   // Sendet Batterie Level und den eigendlichen Wert vom ADC an das BLE Central Device
@@ -162,6 +166,10 @@ void loop() {
     battery_data battery;
     update_battery_struct(&battery_manager, &battery);
     sara_ble::update_battery_data(&battery);
+    if(serial_logger::level == DEBUG){
+      print_battery_data(&battery);
+    }
+    air_sensor_task.begin(BATTERY_TASK_TIMING);
   }
 
   // Sendet neue Wetter Daten an das BLE Central Device
@@ -169,6 +177,10 @@ void loop() {
     weather_station_data weather;
     update_weather_station_struct(&weather_station, &weather);
     sara_ble::update_weather_data(&weather);
+    if(serial_logger::level == DEBUG){
+      print_weather_station_data(&weather);
+    }
+    weather_sensor_task.begin(WEATHER_TASK_TIMING);    
   }
 }
 
@@ -260,8 +272,8 @@ void print_rainfall_messurement(){
 void print_battery_level(){
   battery_data battery;
   update_battery_struct(&battery_manager, &battery);
-  Serial.print(F("battery_raw:"));
-  Serial.println(battery.level);
+  Serial.print(F("battery_level:"));
+  Serial.println(battery.voltage);
 }
 
 /**

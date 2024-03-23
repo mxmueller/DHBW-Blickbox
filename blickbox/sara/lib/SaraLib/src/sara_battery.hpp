@@ -24,9 +24,16 @@ const uint16_t BATTERY_MAX_READING = 840;
  */
 const uint16_t BATTERY_MIN_READING = 650;
 
+const float ADC_UNITS = 1024.0F;
+
+const float ADC_REF_VOLTAGE = 3.3F;
+
+const uint8_t ADC_SCALE_FACTOR = 2;
+
 namespace sara_battery{
 
     uint8_t map_to_battery_level(uint16_t);
+    float calculate_battery_voltage(uint16_t);
 
     class SaraBatteryManager{
         public:

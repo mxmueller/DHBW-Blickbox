@@ -9,6 +9,7 @@ namespace sara_data{
      void update_battery_struct(sara_battery::SaraBatteryManager* battery_obj, battery_data* battery){
           battery->raw_adc = battery_obj->read_battery_adc();
           battery->level = sara_battery::map_to_battery_level(battery->raw_adc);
+          battery->voltage = sara_battery::calculate_battery_voltage(battery->raw_adc);
      }
      void update_air_struct(DHT* dht_obj, air_data* air){
           air->humidity = round(dht_obj->readHumidity() * 100);

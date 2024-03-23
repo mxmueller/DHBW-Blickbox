@@ -10,6 +10,10 @@ using namespace sara_battery;
 
 namespace sara_data{
 
+    const uint16_t AIR_TASK_TIMING = 10000;
+    const uint16_t WEATHER_TASK_TIMING = 10000;
+    const uint16_t BATTERY_TASK_TIMING = 10000;
+
     struct weather_station_data{
         uint16_t winddirection;
         uint16_t windspeed;
@@ -23,6 +27,7 @@ namespace sara_data{
     
     struct battery_data{
         uint16_t raw_adc;
+        float voltage;
         uint8_t level;
     };
 
