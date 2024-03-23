@@ -84,7 +84,6 @@ pub mod http_request {
 
         for data_type in data_types.clone() {
 
-            println!("{}", data_type.0);
             let url = format!("{}{}", base_url, data_type.0);
 
             let json = data_type.1;
@@ -100,7 +99,7 @@ pub mod http_request {
 
             match response.status().is_success() {
                 true => {
-                    println!("Sensor data sent successfully!");
+                    println!("Sensor data from {} sent successfully!", data_type.0);
                 }
                 false => {
                     Err(format!("Request failed: {:?}", response.status()))?;

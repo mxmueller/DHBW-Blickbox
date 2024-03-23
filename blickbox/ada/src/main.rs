@@ -37,8 +37,8 @@ async fn main() {
 
     let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
 
-    // Timer interval for sending commands (every 30 minutes)
-    let mut interval = time::interval(Duration::from_secs(30 * 60));
+    // Timer interval for sending commands (every 10 minutes)
+    let mut interval = time::interval(Duration::from_secs(10 * 60));
 
     loop {
         // the main loop to get data every 30 minutes
