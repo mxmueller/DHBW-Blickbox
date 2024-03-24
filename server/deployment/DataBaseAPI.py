@@ -54,6 +54,9 @@ def logstream(sock):
 @app.route('/iot/api/pingBB', methods=['POST'])
 def insertLastOnline():
     log(title='POST', message=(url_for('insertLastOnline') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
     log(title='Try', message='Versuche Zuletzt Online Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         timestamp = datetime.now()
@@ -128,6 +131,10 @@ def pingthis():
 @app.route('/iot/api/insert/temperature', methods=['POST'])
 def insert_temperature():
     log(title='POST', message=(url_for('insert_temperature') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
+    
     log(title='Try', message='Versuche Temperatur-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
@@ -169,6 +176,11 @@ def insert_temperature():
 @app.route('/iot/api/insert/air-humidity', methods=['POST'])
 def insert_air_humidity():
     log(title='POST', message=(url_for('insert_air_humidity') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
+    
     log(title='Try', message='Versuche Luftfeuchtigkeits-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
@@ -211,6 +223,11 @@ def insert_air_humidity():
 @app.route('/iot/api/insert/wind-direction', methods=['POST'])
 def insert_wind_direction():
     log(title='POST', message=(url_for('insert_wind_direction') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
+    
     log(title='Try', message='Versuche Windrichtungs-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
@@ -255,6 +272,9 @@ def insert_wind_direction():
 @app.route('/iot/api/insert/wind-speed', methods=['POST'])
 def insert_wind_speed():
     log(title='POST', message=(url_for('insert_wind_speed') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
     log(title='Try', message='Versuche Windgeschwindigkeits-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
@@ -296,6 +316,9 @@ def insert_wind_speed():
 @app.route('/iot/api/insert/rain', methods=['POST'])
 def insert_rain():
     log(title='POST', message=(url_for('insert_rain') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
     log(title='Try', message='Versuche Niederschlags-Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
@@ -337,6 +360,9 @@ def insert_rain():
 @app.route('/iot/api/insert/battery-charge', methods=['POST'])
 def insert_battery_charge():
     log(title='POST', message=(url_for('insert_battery_charge') + " from " + request.remote_addr), type='info', ringbuffer=ringBuffer)
+    if request.headers.get('blickbox') != 'true':
+        log(title='Exception', message='Unauthorized acess detected!', type='error', ringbuffer=ringBuffer)
+        return return_response("error", "Unauthorized", 401)
     log(title='Try', message='Versuche Akkustand Wert einzufügen', type='info', ringbuffer=ringBuffer)
     try:
         data = request.json
