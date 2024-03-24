@@ -52,15 +52,16 @@ namespace sara_battery{
     * @param battery_voltage 
     * @return uint8_t 
     */
-   uint8_t map_to_battery_level(uint16_t battery_voltage){
-      size_t arraySize = sizeof(BATTERY_VOLTAGE_1S) / sizeof(BATTERY_VOLTAGE_1S[0]);
-      for (int i = arraySize - 1; i >= 0; --i) {
+   uint8_t map_to_battery_level(float battery_voltage){
+      int level = 0; // angenommen, volle Ladung
+      uint16_t array_size = sizeof(BATTERY_VOLTAGE_1S) / sizeof(float);
+      for (u_int16_t i = 0; i < array_size; ++i) {
          if (battery_voltage >= BATTERY_VOLTAGE_1S[i]) {
-               return (100.0 * (i + 1)) / arraySize;
+               break;
          }
+         level += 5; 
       }
-
-      return 0.0;
+      return level;
    }
    
 
@@ -79,7 +80,7 @@ namespace sara_battery{
    float calculate_battery_voltage(uint16_t raw_battery_value){
       float mVPerUnit = ADC_REF_VOLTAGE / ADC_UNITS;
       float battery_voltage = raw_battery_value * mVPerUnit * ADC_SCALE_FACTOR;
-      return raw_battery_value * mVPerUnit * ADC_SCALE_FACTOR;
+      return battery_voltage;
    }
 
    void monitor(){

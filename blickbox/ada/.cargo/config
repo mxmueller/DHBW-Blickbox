@@ -1,0 +1,19 @@
+# content of .cargo/config
+[build]
+target = "arm-unknown-linux-gnueabihf" #set default target
+
+#for raspberry pi 1/zero
+[target.arm-unknown-linux-gnueabihf]
+linker = "/home/maylis/.toolchains/cross-pi-gcc-10.3.0-0/bin/arm-linux-gnueabihf-gcc-10.2.0"
+rustflags = [
+    "-C", "link-arg=--sysroot=/home/maylis/.toolchains/cross-pi-gcc-10.3.0-0/arm-linux-gnueabihf/libc"
+]
+
+#for raspberry pi 3/4
+[target.aarch64-unknown-linux-gnu]
+linker = "/home/judge/.toolchains/cross-pi-gcc-10.3.0-64/bin/aarch64-linux-gnu-gcc"
+rustflags = [
+    "-C", "link-arg=--sysroot=/home/maylis/.toolchains/cross-pi-gcc-10.3.0-0/aarch64-linux-gnu/libc"
+]
+
+[target.x86_64-unknown-linux-gnu]

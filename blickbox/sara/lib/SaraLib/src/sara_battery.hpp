@@ -39,22 +39,22 @@ namespace sara_battery{
      * @param value Der zu mappende Wert.
      * @return Der gemappte Batteriestand als uint8_t in Prozent.
      */
-    uint8_t map_to_battery_level(uint16_t);
+    uint8_t map_to_battery_level(float);
 
-    
     float calculate_battery_voltage(uint16_t);
 
+    class SaraBatteryManager
+    {
+    public:
+        SaraBatteryManager(uint8_t);
+        void begin();
+        uint16_t read_battery_adc();
+        uint16_t get_last_battery_reading();
+        void monitor();
 
-    class SaraBatteryManager{
-        public:
-            SaraBatteryManager(uint8_t);
-            void begin();
-            uint16_t read_battery_adc();
-            uint16_t get_last_battery_reading();
-            void monitor();
-        private:
-            uint8_t battery_pin;
-            uint16_t last_battery_reading;
+    private:
+        uint8_t battery_pin;
+        uint16_t last_battery_reading;
     };
 }
 
