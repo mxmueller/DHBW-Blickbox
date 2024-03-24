@@ -23,7 +23,7 @@ using namespace sara_ble;
 /**
  * @brief  Pin Definitionen für DHT22 Sensor
 */
-const int PIN_DHT = 2;
+const int PIN_DHT = A3;
 const int DHTTYPE = DHT22;
 
 /**
@@ -67,8 +67,7 @@ void print_humidity();
 void print_rainfall_messurement();
 void print_wind_direction();
 void print_wind_speed();
-void print_battery_level();
-void print_battery_raw();
+void print_battery_status();
 void print_help();
 void handle_serial_request();
 void print_ble_state();
@@ -114,10 +113,7 @@ void setup() {
 
   // Konfigurieren der Timer
   ble_task.begin(100);
-  serial_task.begin(500);
-  air_sensor_task.begin(30000);
-  weather_sensor_task.begin(30000);
-  battery_status_task.begin(30000);
+  serial_task.begin(200);
 }
 
 /**
@@ -155,6 +151,10 @@ void loop() {
     air_data air;
     update_air_struct(&dht, &air);
     sara_ble::update_air_data(&air);
+    if(serial_logger::level == DEBUG){
+      print_air_data(&air);
+    }
+    air_sensor_task.begin(AIR_TASK_TIMING);
   }
   
   // Sendet Batterie Level und den eigendlichen Wert vom ADC an das BLE Central Device
@@ -162,6 +162,10 @@ void loop() {
     battery_data battery;
     update_battery_struct(&battery_manager, &battery);
     sara_ble::update_battery_data(&battery);
+    if(serial_logger::level == DEBUG){
+      print_battery_data(&battery);
+    }
+    battery_status_task.begin(BATTERY_TASK_TIMING);
   }
 
   // Sendet neue Wetter Daten an das BLE Central Device
@@ -169,6 +173,10 @@ void loop() {
     weather_station_data weather;
     update_weather_station_struct(&weather_station, &weather);
     sara_ble::update_weather_data(&weather);
+    if(serial_logger::level == DEBUG){
+      print_weather_station_data(&weather);
+    }
+    weather_sensor_task.begin(WEATHER_TASK_TIMING);    
   }
 }
 
@@ -192,10 +200,8 @@ void handle_serial_request(){
       print_wind_speed();
     }else if(command == F("ble")){
       print_ble_state();
-    }else if(command == F("bl")){
-      print_battery_level();
-    }else if(command == F("br")){
-      print_battery_raw();
+    }else if(command == F("bat")){
+      print_battery_status();
     }else if(command == F("help")){
       print_help();
     }
@@ -254,25 +260,18 @@ void print_rainfall_messurement(){
 }
 
 /**
- * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
+ * @brief Gibt den Batteriezustand der Batterie über die Serielle Konsole aus
  * 
  */
-void print_battery_level(){
+void print_battery_status(){
   battery_data battery;
   update_battery_struct(&battery_manager, &battery);
-  Serial.print(F("battery_raw:"));
-  Serial.println(battery.level);
-}
-
-/**
- * @brief Gibt die gemessene Regenmenge über die Serielle Konolle aus
- * 
- */
-void print_battery_raw(){
-  battery_data battery;
-  update_battery_struct(&battery_manager, &battery);
+  Serial.print(F("battery_voltage:"));
+  Serial.println(battery.voltage);
   Serial.print(F("battery_raw:"));
   Serial.println(battery.raw_adc);
+  Serial.print(F("battery_level:"));
+  Serial.println(battery.level);
 }
 
 /**

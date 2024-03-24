@@ -26,10 +26,19 @@ namespace sara_ble{
         }
     }
 
+    /**
+     * @brief Speichert den aktuellen Bluetooth Verbindungs Status
+     * 
+     */
     ble_state connection_state = DISCONNECTED;
 
+    /**
+     * @brief Speichert die MAC Adresse des verbundenen Geräts
+     * 
+     */
     String connected_device;
 
+    // Definiere BLE Services und Charakteristiken
     BLEService airService("1101");
     BLECharacteristic temperatureCharacteristic("2101", BLERead | BLENotify, 16) ;
     BLECharacteristic humidityCharacteristic("2102", BLERead | BLENotify, 16);
@@ -39,7 +48,7 @@ namespace sara_ble{
     BLECharacteristic windspeedCharacteristic("2202", BLERead | BLENotify, 16);
     BLEService powerService("1103");
     BLECharacteristic batterLevelCharacteristic("2301", BLERead | BLENotify, 16) ;
-    BLECharacteristic batterRAWCharacteristic("2302", BLERead | BLENotify, 16);
+    BLECharacteristic batterVoltageCharacteristic("2302", BLERead | BLENotify, 16);
 
   
     void begin(){
@@ -67,7 +76,7 @@ namespace sara_ble{
         weatherStationService.addCharacteristic(rainfallCharacteristic);
         BLE.setAdvertisedService(powerService);
         powerService.addCharacteristic(batterLevelCharacteristic);
-        powerService.addCharacteristic(batterRAWCharacteristic);
+        powerService.addCharacteristic(batterVoltageCharacteristic);
         BLE.addService(airService);
         BLE.addService(weatherStationService);
         BLE.addService(powerService);
@@ -76,6 +85,12 @@ namespace sara_ble{
         BLE.advertise();
     }
     
+    /**
+     * @brief Connect Event Handler setzt den Bluetooth Status auf CONNECTED und
+     * speichert die MAC Adresse des verbundenen Geräts und stoppt das Advertisen der Services
+     * 
+     * @param central 
+     */
     void on_connect(BLEDevice central ){
         connection_state = CONNECTED;
         connected_device = central.address();
@@ -83,11 +98,19 @@ namespace sara_ble{
         log(F("Device Connected"), INFO);
     }
 
+    /**
+     * @brief Disconnect Event Handler setzt den Bluetooth Status auf DISCONNECTED und
+     * startet das Advertisen der Services
+     * 
+     * @param central 
+     */
     void on_disconnect(BLEDevice central ){
         connection_state = DISCONNECTED;
+        connected_device = "";
         BLE.advertise();
         log(F("Device Disconnected"), INFO);
     }
+
     /**
      * @brief Schreibt fürs Debugging die aktuellen Bluetooth Status auf der Konsole aus
      * 
@@ -99,34 +122,52 @@ namespace sara_ble{
         Serial.println(connected_device);
     }
 
+    /**
+     * @brief Aktualisiert die Luftdaten in den BLE Charakteristiken
+     * wenn das Gerät mit einem Notification Handler verbunden ist 
+     * wird diese über neue Daten informiert. Wandelt die Floats in Ints um indem es
+     * die Werte mit 100 multipliziert und rundet.
+     * 
+     * @param air_data 
+     */
     void update_air_data(sara_data::air_data *air_data) {
-        temperatureCharacteristic.writeValue(air_data->temperature);
-        humidityCharacteristic.writeValue(air_data->humidity);
+        uint16_t temperature = round(air_data->temperature * 100);
+        uint16_t humidity = round(air_data->humidity * 100);
+
+        temperatureCharacteristic.writeValue(temperature);
+        humidityCharacteristic.writeValue(humidity);
     }
 
+    /**
+     * @brief Aktualisiert die Wetterdaten in den BLE Charakteristiken
+     * wenn das Gerät mit einem Notification Handler verbunden ist 
+     * wird diese über neue Daten informiert. Wandelt die Floats in Ints um indem es
+     * die Werte mit 100 multipliziert und rundet.
+     * 
+     * @param weather_data 
+     */
     void update_weather_data(sara_data::weather_station_data *weather_data) {
-        winddirectionCharacteristic.writeValue(weather_data->winddirection);
-        windspeedCharacteristic.writeValue(weather_data->windspeed);
-        rainfallCharacteristic.writeValue(weather_data->rainfall);
+        uint16_t winddirection = round(weather_data->winddirection * 100);
+        uint16_t windspeed = round(weather_data->windspeed * 100);
+        uint16_t rainfall = round(weather_data->rainfall * 100);
+
+        winddirectionCharacteristic.writeValue(winddirection);
+        windspeedCharacteristic.writeValue(windspeed);
+        rainfallCharacteristic.writeValue(rainfall);
     }
 
+    /**
+     * @brief Aktualisiert die Batteriedaten in den BLE Charakteristiken
+     * wenn das Gerät mit einem Notification Handler verbunden ist 
+     * wird diese über neue Daten informiert. Wandelt das Batterielevel in ein Int um indem es
+     * die Werte mit 100 multipliziert und rundet.
+     * 
+     * @param battery_data 
+     */
     void update_battery_data(sara_data::battery_data *battery_data) {
-        batterRAWCharacteristic.writeValue(battery_data->raw_adc);
+        int16_t battery_voltage = round(battery_data->voltage * 100);
+
+        batterVoltageCharacteristic.writeValue(battery_voltage);
         batterLevelCharacteristic.writeValue(battery_data->level);
     }
-
-    // if(central.connected()){
-    //     update_air_data(&air_data);
-    //     update_weather_data(&weather_data);
-    //     update_battery_data(&battery_data);
-    // }
-            // if(central.connected()){
-            //     temperatureCharacteristic.writeValue(weather_data.temperature);
-            //     humidityCharacteristic.writeValue(weather_data.humidity);
-            //     winddirectionCharacteristic.writeValue(weather_data.winddirection);
-            //     windspeedCharacteristic.writeValue(weather_data.windspeed);
-            //     rainfallCharacteristic.writeValue(weather_data.rainfall);
-            //     batterRAWCharacteristic.writeValue(battery.raw_adc);
-            //     batterLevelCharacteristic.writeValue(battery.level);
-
 }

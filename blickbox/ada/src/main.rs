@@ -13,7 +13,7 @@ use chrono::{DateTime, Utc};
 use chrono_tz::Europe::Berlin;
 use serialport::SerialPort;
 use tokio::time;
-use crate::communication::http_request::http_request::send_data;
+use crate::communication::http_request::http_request::{send_data, send_last_online};
 use crate::communication::logging::http_request::{log, LogEntry, send_logs};
 use crate::sara::ble_weather_station::ble_weather_station::{connect_peripheral_device, get_data_ble};
 use crate::sara::weather_station::weather_station::get_weather_station_data;
@@ -29,6 +29,7 @@ pub struct SensorData {
     wind_speed: f32,
     wind_direction: f32,
     rain: f32,
+    battery_charge: f32,
 }
 
 #[tokio::main]
@@ -43,20 +44,21 @@ async fn main() {
         // the main loop to get data every 30 minutes
         interval.tick().await;
 
-        if let Err(error) = execute(&mut ringbuffer).await {
-
+        if let Err(error) = handle_sensor_data(&mut ringbuffer).await {
             // here it should send the error to the cloud for it to be noted or fixed
             // should that be handled in the execute() bc its gotta be send as a log with a log-flag...
             eprintln!("{}", error);
-            let title = String::from("Error");
-            let log_type = String::from("Error");
+            log(String::from("Error"), format!("{}", error), String::from("error"), &mut ringbuffer);
+        }
+        if let Err(error) = send_last_online().await {
+            eprintln!("{}", error);
             log(String::from("Error"), format!("{}", error), String::from("error"), &mut ringbuffer);
         }
         send_logs(&mut ringbuffer).await.expect("Failed to send log");
     }
 }
 
-async fn execute(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
+async fn handle_sensor_data(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
 
     // Opens file in append mode (and creating it if it doesn't exist)
     let mut file = OpenOptions::new()
@@ -74,6 +76,7 @@ async fn execute(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
         wind_speed: 0.0,
         wind_direction: 0.0,
         rain: 0.0,
+        battery_charge: 0.0,
     };
 
     let peripheral = connect_peripheral_device().await?;
