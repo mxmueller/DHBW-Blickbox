@@ -11,9 +11,9 @@ rustflags = [
 
 #for raspberry pi 3/4
 [target.aarch64-unknown-linux-gnu]
-linker = "/home/judge/.toolchains/cross-pi-gcc-10.3.0-64/bin/aarch64-linux-gnu-gcc"
+linker = "/home/judge/.toolchains/cross-pi-gcc-10.3.1/bin/arm-linux-gnueabihf-gcc-10.3.0"
 rustflags = [
-    "-C", "link-arg=--sysroot=/home/maylis/.toolchains/cross-pi-gcc-10.3.0-0/aarch64-linux-gnu/libc"
+    "-C", "link-arg=--sysroot=/home/maylis/.toolchains/cross-pi-gcc-10.3.1/arm-linux-gnueabihf/libc"
 ]
 
 [target.x86_64-unknown-linux-gnu]
