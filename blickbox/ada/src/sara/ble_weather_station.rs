@@ -41,6 +41,8 @@ pub mod ble_weather_station {
                 .find(|&c| c.uuid == uuid)
                 .unwrap().clone();
 
+            println!("{}", uuid);
+
             let sensor_value = match peripheral.read(&characteristic).await {
                 Ok(value) => {
                     let low_byte = value[0] as u16;
@@ -50,27 +52,36 @@ pub mod ble_weather_station {
                     value
                 }
                 Err(e) => {
+                    peripheral.disconnect()
+                        .await
+                        .map_err(|_| String::from("Failed to disconnect from peripheral"))?;
                     Err(format!("Failed to read data: {}", e))?
                 }
             };
 
             match uuid {
                 TEMP_NOTIFY_CHARACTERISTICS_UUID => {
+                    println!("temp updated");
                     sensor_data.temperature = sensor_value
                 }
                 HUMIDITY_NOTIFY_CHARACTERISTICS_UUID => {
+                    println!("hum updated");
                     sensor_data.humidity = sensor_value
                 }
                 RAINFALL_NOTIFY_CHARACTERISTICS_UUID => {
+                    println!("rain updated");
                     sensor_data.rain = sensor_value
                 }
                 WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID => {
+                    println!("wd updated");
                     sensor_data.wind_direction = sensor_value
                 }
                 WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID => {
+                    println!("ws updated");
                     sensor_data.wind_speed = sensor_value
                 }
                 BATTERY_LEVEL_UUID => {
+                    println!("battery updated");
                     sensor_data.battery_charge = sensor_value
                 }
                 _ => {

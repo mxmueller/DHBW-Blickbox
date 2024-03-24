@@ -37,25 +37,27 @@ pub mod http_request {
 
     pub async fn send_last_online() -> crate::Result<()> {
 
-        let url = " https://dhbwapi.maytastix.de/iot/api/pingBB";
+        let url = "https://dhbwapi.maytastix.de/iot/api/pingBB";
 
         // Create a reqwest HTTP client
         let client = Client::new();
 
-            // Send the sensor data as JSON in the body of a POST request
-            let response = client.post(url)
-                .send()
-                .await
-                .map_err(|error| format!("Failed to send request: {:?}", error))?;
+        // Send the sensor data as JSON in the body of a POST request
+        let response = client
+            .post(url)
+            .header("blickbox", "true")
+            .send()
+            .await
+            .map_err(|error| format!("Failed to send request: {:?}", error))?;
 
-            match response.status().is_success() {
-                true => {
-                    println!("Last Online Status sent successfully!");
-                }
-                false => {
-                    Err(format!("Request failed: {:?}", response.status()))?;
-                }
+        match response.status().is_success() {
+            true => {
+                println!("Last Online Status sent successfully!");
             }
+            false => {
+                Err(format!("Request failed: {:?}", response.status()))?;
+            }
+        }
         Ok(())
     }
 
@@ -92,6 +94,7 @@ pub mod http_request {
             // Send the sensor data as JSON in the body of a POST request
             let response = client.post(url)
                 .header("Content-Type", "application/json")
+                .header("blickbox", "true")
                 .body(json)
                 .send()
                 .await
@@ -184,6 +187,7 @@ pub mod http_request {
                 wind_speed: 0.0,
                 wind_direction: 0.0,
                 rain: 0.0,
+                battery_charge: 0.0,
             };
 
             assert_eq!(get_temp_json(&sensor_data), expected_temp_json)
