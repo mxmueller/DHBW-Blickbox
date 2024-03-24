@@ -30,6 +30,7 @@ pub struct SensorData {
     wind_direction: f32,
     rain: f32,
     battery_charge: f32,
+    battery_voltage: f32,
 }
 
 #[tokio::main]
@@ -77,6 +78,7 @@ async fn handle_sensor_data(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
         wind_direction: 0.0,
         rain: 0.0,
         battery_charge: 0.0,
+        battery_voltage: 0.0,
     };
 
     let peripheral = connect_peripheral_device().await?;

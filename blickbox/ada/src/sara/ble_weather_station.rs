@@ -16,6 +16,7 @@ pub mod ble_weather_station {
     const WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID: Uuid = uuid_from_u16(0x2202);
 
     const BATTERY_LEVEL_UUID: Uuid = uuid_from_u16(0x2301);
+    const BATTERY_VOLTAGE_UUID: Uuid = uuid_from_u16(0x2302);
 
     pub async fn get_data_ble(peripheral: Peripheral, sensor_data: &mut SensorData) -> crate::Result<()> {
         // Discover possible services from peripheral device
@@ -30,6 +31,7 @@ pub mod ble_weather_station {
             WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID,
             WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID,
             BATTERY_LEVEL_UUID,
+            BATTERY_VOLTAGE_UUID,
         ];
 
         for uuid in characteristics {
@@ -81,8 +83,12 @@ pub mod ble_weather_station {
                     sensor_data.wind_speed = sensor_value
                 }
                 BATTERY_LEVEL_UUID => {
-                    println!("battery updated");
+                    println!("battery level updated");
                     sensor_data.battery_charge = sensor_value
+                }
+                BATTERY_VOLTAGE_UUID => {
+                    println!("battery voltage updated");
+                    sensor_data.battery_voltage = sensor_value
                 }
                 _ => {
                     Err(String::from("Unknown data °O°"))?;

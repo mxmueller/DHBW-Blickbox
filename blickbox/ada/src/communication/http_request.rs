@@ -30,9 +30,14 @@ pub mod http_request {
         rain: f32,
     }
     #[derive(Serialize, Clone, Debug)]
-    struct Battery {
+    struct BatteryLevel {
         timestamp: String,
         battery_charge: f32,
+    }
+    #[derive(Serialize, Clone, Debug)]
+    struct BatteryVoltage {
+        timestamp: String,
+        battery_voltage: f32,
     }
 
     pub async fn send_last_online() -> crate::Result<()> {
@@ -70,7 +75,8 @@ pub mod http_request {
         let ws_json = get_wind_speed_json(&sensor_data);
         let wd_json = get_wind_direction_json(&sensor_data);
         let rain_json = get_rain_json(&sensor_data);
-        let battery_json = get_battery_json(&sensor_data);
+        let battery_level_json = get_battery_level_json(&sensor_data);
+        let battery_voltage_json = get_battery_voltage_json(&sensor_data);
 
         let data_types = vec![
             (String::from("temperature"), temp_json),
@@ -78,7 +84,8 @@ pub mod http_request {
             (String::from("wind-speed"), ws_json),
             (String::from("wind-direction"), wd_json),
             (String::from("rain"), rain_json),
-            (String::from("battery-charge"), battery_json),
+            (String::from("battery-charge"), battery_level_json),
+            (String::from("battery-voltage"), battery_voltage_json),
         ];
 
         // Create a reqwest HTTP client
@@ -156,10 +163,19 @@ pub mod http_request {
         return json
     }
 
-    fn get_battery_json(sensor_data: &SensorData) -> String {
-        let data = Battery {
+    fn get_battery_level_json(sensor_data: &SensorData) -> String {
+        let data = BatteryLevel {
             timestamp: sensor_data.clone().timestamp,
             battery_charge: sensor_data.battery_charge,
+        };
+        let json = serde_json::to_string(&data).unwrap();
+        return json
+    }
+
+    fn get_battery_voltage_json(sensor_data: &SensorData) -> String {
+        let data = BatteryVoltage {
+            timestamp: sensor_data.clone().timestamp,
+            battery_voltage: sensor_data.battery_voltage,
         };
         let json = serde_json::to_string(&data).unwrap();
         return json
@@ -188,6 +204,7 @@ pub mod http_request {
                 wind_direction: 0.0,
                 rain: 0.0,
                 battery_charge: 0.0,
+                battery_voltage: 0.0,
             };
 
             assert_eq!(get_temp_json(&sensor_data), expected_temp_json)
