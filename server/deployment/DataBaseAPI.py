@@ -24,13 +24,7 @@ def return_response(message, value, status_code):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-
-
-
 thread_lock = Lock()
-
-  
-
 
 @app.route('/ada-logs', methods=['POST'])
 def recieve_logs_from_ada():
@@ -151,7 +145,7 @@ def insert_temperature():
             log(title='Exception', message="Key der Eingabe war nicht [temperature]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         temperature = float(data['temperature'])
-        if(temperature < -60.0 or temperature > 100.0):
+        if(temperature < -40.0 or temperature > 65.0):
             log(title='Exception', message=f'Wert der Temperatur stimmt nicht. Wert: {temperature}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Temperatur nicht in Range", 400)
         json_body = [
@@ -278,7 +272,7 @@ def insert_wind_speed():
             log(title='Exception', message="Key der Eingabe war nicht [wind_speed]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         wind_speed = float(data['wind_speed'])
-        if(wind_speed < 0.0 or wind_speed > 500.0):
+        if(wind_speed < 0.0 or wind_speed > 200.0):
             log(title='Exception', message=f'Wert der Windgeschwindigkeit stimmt nicht. Wert: {wind_speed}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Windgeschwindigkeit nicht in Range", 400)
         json_body = [
@@ -319,7 +313,7 @@ def insert_rain():
             log(title='Exception', message="Key der Eingabe war nicht [rain]", type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input!", 400)
         rain = float(data['rain'])
-        if(rain < 0.0 or rain > 3000.0):
+        if(rain < 0.0 or rain > 1100.0):
             log(title='Exception', message=f'Wert des Niederschlags stimmt nicht. Wert: {rain}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Niederschlag nicht in Range", 400)
         json_body = [
