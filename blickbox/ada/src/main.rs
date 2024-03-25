@@ -30,6 +30,7 @@ pub struct SensorData {
     wind_direction: f32,
     rain: f32,
     battery_charge: f32,
+    battery_voltage: f32,
 }
 
 #[tokio::main]
@@ -37,8 +38,8 @@ async fn main() {
 
     let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
 
-    // Timer interval for sending commands (every 30 minutes)
-    let mut interval = time::interval(Duration::from_secs(30 * 60));
+    // Timer interval for sending commands (every 10 minutes)
+    let mut interval = time::interval(Duration::from_secs(10 * 60));
 
     loop {
         // the main loop to get data every 30 minutes
@@ -77,6 +78,7 @@ async fn handle_sensor_data(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
         wind_direction: 0.0,
         rain: 0.0,
         battery_charge: 0.0,
+        battery_voltage: 0.0,
     };
 
     let peripheral = connect_peripheral_device().await?;

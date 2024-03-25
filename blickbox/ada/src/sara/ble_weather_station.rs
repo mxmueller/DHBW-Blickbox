@@ -16,14 +16,7 @@ pub mod ble_weather_station {
     const WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID: Uuid = uuid_from_u16(0x2202);
 
     const BATTERY_LEVEL_UUID: Uuid = uuid_from_u16(0x2301);
-    const BATTERY_RAW_UUID: Uuid = uuid_from_u16(0x2302);
-
-    // Define the UUID for the service containing the characteristics
-    const AIR_SERVICE_UUID: Uuid = uuid_from_u16(0x1101);
-    const WEATHER_STATION_SERVICE_UUID: Uuid = uuid_from_u16(0x1102);
-
-    // gotta be 6 later on for production
-    const DESIRED_NOTIFICATION_COUNT: i32 = 2;
+    const BATTERY_VOLTAGE_UUID: Uuid = uuid_from_u16(0x2302);
 
     pub async fn get_data_ble(peripheral: Peripheral, sensor_data: &mut SensorData) -> crate::Result<()> {
         // Discover possible services from peripheral device
@@ -31,176 +24,78 @@ pub mod ble_weather_station {
             .await
             .map_err(|_| String::from("Failed to discover services of peripheral"))?;
 
-        // Find the temperature characteristics
-        let temp_characteristic = peripheral
-            .characteristics()
-            .iter()
-            .find(|&c| c.uuid == TEMP_NOTIFY_CHARACTERISTICS_UUID && c.properties.contains(CharPropFlags::NOTIFY))
-            .unwrap().clone();
+        let characteristics = vec![
+            TEMP_NOTIFY_CHARACTERISTICS_UUID,
+            HUMIDITY_NOTIFY_CHARACTERISTICS_UUID,
+            RAINFALL_NOTIFY_CHARACTERISTICS_UUID,
+            WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID,
+            WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID,
+            BATTERY_LEVEL_UUID,
+            BATTERY_VOLTAGE_UUID,
+        ];
 
-        // Subscribe to temperature notification
-        peripheral
-            .subscribe(&temp_characteristic)
-            .await
-            .map_err(|_| String::from("Failed to subscribe to humidity notifications"))?;
+        for uuid in characteristics {
 
-        // Find the humidity characteristic
-        let humidity_characteristic = peripheral
-            .characteristics()
-            .iter()
-            .find(|&c| c.uuid == HUMIDITY_NOTIFY_CHARACTERISTICS_UUID && c.properties.contains(CharPropFlags::NOTIFY))
-            .unwrap().clone();
+            // Find the temperature characteristics
+            let characteristic = peripheral
+                .characteristics()
+                .iter()
+                .find(|&c| c.uuid == uuid)
+                .unwrap().clone();
 
-        // Subscribe humidity value
-        peripheral
-            .subscribe(&humidity_characteristic)
-            .await
-            .map_err(|_| String::from("Failed to subscribe to humidity notifications"))?;
+            println!("{}", uuid);
 
-        // Find the wind speed characteristics
-        let ws_characteristic = peripheral
-            .characteristics()
-            .iter()
-            .find(|&c| c.uuid == WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID && c.properties.contains(CharPropFlags::NOTIFY))
-            .unwrap().clone();
+            let sensor_value = match peripheral.read(&characteristic).await {
+                Ok(value) => {
+                    let low_byte = value[0] as u16;
+                    let high_byte = value[1] as u16;
+                    let combined_value = (high_byte << 8) | low_byte;
+                    let value = combined_value as f32 / 100.0;
+                    value
+                }
+                Err(e) => {
+                    peripheral.disconnect()
+                        .await
+                        .map_err(|_| String::from("Failed to disconnect from peripheral"))?;
+                    Err(format!("Failed to read data: {}", e))?
+                }
+            };
 
-        // Subscribe to wind speed notification
-        peripheral
-            .subscribe(&ws_characteristic)
-            .await
-            .map_err(|_| String::from("Failed to subscribe to wind speed notifications"))?;
-
-
-        // Find the wind direction characteristics
-        let wd_characteristic = peripheral
-            .characteristics()
-            .iter()
-            .find(|&c| c.uuid == WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID && c.properties.contains(CharPropFlags::NOTIFY))
-            .unwrap().clone();
-
-        // Subscribe to wind direction notification
-        peripheral
-            .subscribe(&wd_characteristic)
-            .await
-            .map_err(|_| String::from("Failed to subscribe to wind direction notifications"))?;
-
-
-        // Find the rainfall characteristics
-        let rfm_characteristic = peripheral
-            .characteristics()
-            .iter()
-            .find(|&c| c.uuid == RAINFALL_NOTIFY_CHARACTERISTICS_UUID && c.properties.contains(CharPropFlags::NOTIFY))
-            .unwrap().clone();
-
-        // Subscribe to rainfall notification
-        peripheral
-            .subscribe(&rfm_characteristic)
-            .await
-            .map_err(|_| String::from("Failed to subscribe to rainfall notifications"))?;
-
-        // Find the battery level characteristics
-        let bl_characteristic = peripheral
-            .characteristics()
-            .iter()
-            .find(|&c| c.uuid == BATTERY_LEVEL_UUID && c.properties.contains(CharPropFlags::NOTIFY))
-            .unwrap().clone();
-
-        // Subscribe to battery level notification
-        peripheral
-            .subscribe(&bl_characteristic)
-            .await
-            .map_err(|_| String::from("Failed to subscribe to battery level notifications"))?;
-
-        // Process notifications as they are received
-        let mut notification_stream = peripheral
-            .notifications()
-            .await
-            .map_err(|_| String::from("Failed to get notification stream"))?;
-
-        // Define a counter to limit the number of notifications processed
-        let mut notification_count = 0;
-
-        let mut got_temp_value = false;
-        let mut got_hum_value = false;
-        let mut got_ws_value = false;
-        let mut got_wd_value = false;
-        let mut got_rfm_value = false;
-        let mut got_bl_value = false;
-
-        // Process while the BLE connection is not broken or stopped.
-        while let Some(data) = notification_stream.next().await {
-            match data.uuid {
+            match uuid {
                 TEMP_NOTIFY_CHARACTERISTICS_UUID => {
-                    if !got_temp_value {
-                        // Handle temperature notification
-                        let temperature_value = (data.value[0] as f32 / 10.0) + (data.value[0] as f32 % 10.0);
-                        //let temperature_value = data.value[0] as f32;
-                        println!("Temperature: {}", temperature_value);
-                        sensor_data.temperature = temperature_value;
-                        notification_count += 1;
-                        got_temp_value = true;
-                    }
+                    println!("temp updated");
+                    sensor_data.temperature = sensor_value
                 }
                 HUMIDITY_NOTIFY_CHARACTERISTICS_UUID => {
-                    if !got_hum_value {
-                        // Handle temperature notification
-                        let humidity_value = (data.value[0] as f32 / 10.0) + (data.value[0] as f32 % 10.0);
-                        println!("Humidity: {}", humidity_value);
-                        sensor_data.humidity = humidity_value;
-                        notification_count += 1;
-                        got_hum_value = true;
-                    }
+                    println!("hum updated");
+                    sensor_data.humidity = sensor_value
                 }
                 RAINFALL_NOTIFY_CHARACTERISTICS_UUID => {
-                    if !got_rfm_value {
-                        // Handle temperature notification
-                        let rainfall_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
-                        println!("Rainfall: {}", rainfall_value);
-                        sensor_data.rain = rainfall_value;
-                        notification_count += 1;
-                        got_rfm_value = true;
-                    }
+                    println!("rain updated");
+                    sensor_data.rain = sensor_value
                 }
                 WIND_DIRECTION_NOTIFY_CHARACTERISTICS_UUID => {
-                    if !got_wd_value {
-                        // Handle temperature notification
-                        let wd_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
-                        println!("Wind direction: {}", wd_value);
-                        sensor_data.wind_direction = wd_value;
-                        notification_count += 1;
-                        got_wd_value = true;
-                    }
+                    println!("wd updated");
+                    sensor_data.wind_direction = sensor_value
                 }
                 WIND_SPEED_NOTIFY_CHARACTERISTICS_UUID => {
-                    if !got_ws_value {
-                        // Handle temperature notification
-                        let ws_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
-                        println!("Wind speed: {}", ws_value);
-                        sensor_data.wind_speed = ws_value;
-                        notification_count += 1;
-                        got_ws_value = true;
-                    }
+                    println!("ws updated");
+                    sensor_data.wind_speed = sensor_value
                 }
                 BATTERY_LEVEL_UUID => {
-                    if !got_bl_value {
-                        let bl_value = ((data.value[0] / 100) + (data.value[0] % 100)) as f32;
-                        println!("Battery level: {}", bl_value);
-                        sensor_data.battery_charge = bl_value;
-                        notification_count += 1;
-                        got_bl_value = true
-                    }
+                    println!("battery level updated");
+                    sensor_data.battery_charge = sensor_value
+                }
+                BATTERY_VOLTAGE_UUID => {
+                    println!("battery voltage updated");
+                    sensor_data.battery_voltage = sensor_value
                 }
                 _ => {
-                    println!("Unknown data received °o°");
+                    Err(String::from("Unknown data °O°"))?;
                 }
             }
-            // Check if the desired number of notifications have been processed
-            if notification_count >= DESIRED_NOTIFICATION_COUNT {
-                println!("Received new sensor data");
-                break; // Exit the loop if desired count is reached
-            }
+            println!("temp: {}, hum: {}, rain: {}", sensor_data.temperature, sensor_data.humidity, sensor_data.rain);
         }
-
         Ok(())
     }
 
