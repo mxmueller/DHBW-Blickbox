@@ -8,7 +8,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=blickbox
-ExecStart=/home/blickbox/DHBW-Blickbox/blickbox/ada/target/release/ada
+ExecStart=/usr/local/ada
 
 [Install]
 WantedBy=multi-user.target
