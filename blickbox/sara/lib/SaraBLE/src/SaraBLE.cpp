@@ -166,8 +166,9 @@ namespace sara_ble{
      */
     void update_battery_data(sara_data::battery_data *battery_data) {
         int16_t battery_voltage = round(battery_data->voltage * 100);
+        int16_t battery_level = round(battery_data->level * 100);
 
         batterVoltageCharacteristic.writeValue(battery_voltage);
-        batterLevelCharacteristic.writeValue(battery_data->level);
+        batterLevelCharacteristic.writeValue(battery_level);
     }
 }
