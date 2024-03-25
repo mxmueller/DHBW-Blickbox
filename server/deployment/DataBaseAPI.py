@@ -43,7 +43,7 @@ def logstream(sock):
         while True:
             with thread_lock:
                 check_and_send_new_entries(ringBuffer, sock)
-                time.Sleep(40)
+                time.sleep(0.04)
     except Exception as e:
         print('Socket-Verbindung unterbrochen:', e)
         sock.close()
