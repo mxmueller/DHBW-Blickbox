@@ -7,8 +7,8 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User=blickbox
-ExecStart=/usr/local/ada
+User=root
+ExecStart=/usr/local/ada/ada
 
 [Install]
 WantedBy=multi-user.target
