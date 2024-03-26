@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response, url_for
 from flask_sock import Sock
 from influxdb import InfluxDBClient
 import requests
-import socket
+from flasgger import Swagger
 from datetime import datetime
 import time
 from RingBuffer import *
@@ -14,6 +14,7 @@ influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
+swagger = Swagger(app)  
 
 
 ringBuffer = RingBuffer(30)
@@ -49,6 +50,9 @@ def logstream(sock):
         sock.close()
 
 
+@app.route('/api/swagger.json')
+def swagger_json():
+    return swagger.template, 200, {'Content-Type': 'application/json'}
 
 
 @app.route('/iot/api/pingBB', methods=['POST'])
