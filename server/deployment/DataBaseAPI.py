@@ -298,6 +298,7 @@ def insert_wind_speed():
         if(wind_speed < 0.0 or wind_speed > 200.0):
             log(title='Exception', message=f'Wert der Windgeschwindigkeit stimmt nicht. Wert: {wind_speed}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Windgeschwindigkeit nicht in Range", 400)
+        Warning(wind_speed, "wind_speed", 60, "Achtung Windig", f'Die Windgeschwindigkeit beträgt {wind_speed} km/h')
         json_body = [
             {
                 "measurement": "wind_speed",
