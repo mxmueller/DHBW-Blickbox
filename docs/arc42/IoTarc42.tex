@@ -252,7 +252,7 @@ Entwickler folgen der DoD auf dem Git-Repository. \\
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=140mm]{../c4/Business_Context.png}
-	\caption{Kontextdiagramm Blickbox }
+	\caption{Das C4-Modell bietet eine strukturierte Methode zur Visualisierung und Kommunikation von Softwarearchitektur, wobei der Fachkontext eine wichtige Rolle spielt. Die Kernkonzepte des Domänenwissens und die Interaktionen mit den technischen Komponenten mit den Akteuren wird beschrieben. Durch die Integration des Fachkontexts in das C4-Modell können Architekten und Entwickler eine ganzheitliche Sicht auf das System erhalten und die Umsetzung von Anforderungen in eine entsprechende technische Architektur erleichtern.}
 	\label{fig:Kontextdiagramm}
 \end{figure}  
 
@@ -284,7 +284,7 @@ Externer Server, der mit der Hardware der Blickbox kommuniziert. \\
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=125mm]{../c4/Technical_Context.png}
-	\caption{Kontextdiagramm Blickbox }
+	\caption{Im C4-Modell repräsentiert der technische Kontext die Ebene der technischen Details und Infrastruktur, die für die Implementierung und Bereitstellung der Softwareanwendung relevant sind. Dies umfasst Aspekte wie die Auswahl der Programmiersprachen, Frameworks, Datenbanken, APIs und anderen technischen Komponenten, die für die Realisierung der Systemarchitektur erforderlich sind. Eine klare Darstellung des technischen Kontexts im C4-Modell ermöglicht es den Entwicklern, die Abhängigkeiten und Interaktionen zwischen den technischen Komponenten zu verstehen und erleichtert die Kommunikation und Zusammenarbeit während des Entwicklungsprozesses.}
 	\label{fig:Kontextdiagramm}
 \end{figure}  
 
@@ -315,6 +315,7 @@ Visualisiert die Messdaten und stellt Frontend bereit. \\
 \bottomrule
 \end{longtable}
 
+\newpage
 \section{Lösungsstrategie}
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
@@ -391,7 +392,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=70mm]{resources/erDiagram-sensordaten-datenhaltung.png}
-	\caption{Datenhaltung RaspberryPI}
+	\caption{Die Datenhaltung der Sensordaten wird in einem Entity-Relationship-Diagramm dargestellt. Der logische Aufbau der verschiedenen Sensordaten wird in Verbindung mit der Speicherung angegeben.}
 	\label{fig:Datenhaltung}
 \end{figure}  
 
@@ -400,14 +401,14 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinschicht_Sara.png}
-	\caption{Bausteinsicht Server}
+	\caption{Beschreibt die Bausteinschicht der Sensorik. Dabei wird in Ebene 1 zwischen der Bluetooth Low Energy Kommunikation der Daten Acquisition und der Seriellen Kommunikation unterschieden. Die BLE Kommunikation steht als Kabellose Schnittstelle für ein Edge Device zur Verfügung, da keine Kabelverbindung möglich ist. Die Serielle Kommunikation wird für die Anwendungsentwicklung, als auch für das Debugging verwendet. Die Datenacquisition nutzt Libraries um auf die General Purpose Input/Output und den Analog Schnittstellen die Sensordaten zu erfassen. Der Batteriemanager auf der Ebene 2 ließt die Batterie aus und steuert Energiesparmaßnahmen. Die DHT 22 API greift über das OneWire Protokoll auf die Daten des DHT Temperatur- und Luftfeutigkeitssensors zu, während die SparkFun Weather Meter API Daten der Wetterstation hält diese löst je nach Umweltgegebenheiten ein Interrupt aus, welcher die Daten innerhalb der API verändert.}
 	\label{fig:BausteinSensorik}
 \end{figure}  
 \subsection{Server}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinsicht_Server.png}
-	\caption{Bausteinsicht Arduino}
+	\caption{Die Bausteinsicht im C4-Modell für den Server bietet eine strukturierte Darstellung der verschiedenen Bausteine und deren Beziehungen innerhalb der Serverarchitektur. Sie umfasst typischerweise Komponenten wie Datenbanken, APIs, Services und externe Schnittstellen, um die Funktionalität und Struktur des Serversystems zu veranschaulichen.}
 	\label{fig:BausteinServer}
 \end{figure}  
 
@@ -415,7 +416,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Laufzeitsicht.png}
-	\caption{Laufzeitsicht}
+	\caption{Oben Laufzeitsicht aus der Sicht der Sensorik, unten aus der Sicht des Frontends. Wird die Sensorik aktiv, adversioniert diese ihre Bluetooth Services, die von anderen Geräten wahrgenommen werden können. Der Raspberry Pi ließt die BLE Services aus. Wenn die Bluetooth Services die richtigen Identifikationsnummern haben werden die Charakteristiken, welche von diesen Services gehalten werden abgefragt. Die Charakteristiken enthalten hierbei die Sensor- und Statusdaten der Wetterstation. Nachdem die Daten von der Sensorik empfangen wurden, werden sie an eine API gesendet, welche die erhaltenen Daten in der Datenbank speichert. Öffnet ein Nutzer die Frontend-App, frägt diese zuerst die "Health" Daten der Systeme ab. Diese werden vom Health Controller innhalb der API verwaltet. Der Raspberry PI übermittelt beim Start eine online Mitteilung an die API. Anschließend werden die eingebetteten iframes von Grafana geladen. Grafana lädt hierfür die Daten aus der Datenbank, erstellt eine Virtualisierung und stellt diese da.}
 	\label{fig:Laufzeitsicht}
 \end{figure}  
 
@@ -424,7 +425,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=170mm]{resources/Verteilungssicht_Deployment.png}
-	\caption{Qualitätsbaum}
+	\caption{Zeigt die Verteilung der einzelnen Komponenten. Der Nutzer interagiert hier mit dem Valentin Frontend, welches auf einem Debian Server gehostet wird. Der Raspberry Pi ist für die Sensordaten zuständig und sendet diese an den Server. Die Sensork nutzt den Arduino 33 BLE als Hardware Plattform und Sensoren für die Acquisition der Daten. Der Raspberry Pi kann die Daten über Bluetooth BLE abrufen. Die Anwendungen werden auf dem Server mithilfe von Docker werden die Anwendungen virtualisiert.}
 	\label{fig:Qualitätsbaum}
 \end{figure}  
 
