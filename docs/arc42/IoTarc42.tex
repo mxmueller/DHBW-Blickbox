@@ -115,14 +115,14 @@ Zu der Implementierung der Wetterstation gehören folgende Features:
 
 
 
-
+\newpage
 \hypertarget{_stakeholder}{%
 \subsection{Stakeholder}\label{_stakeholder}}
 Ein umfassender Überblick über die Stakeholder des Systems ist von entscheidender Bedeutung. Dies bezieht sich auf sämtliche Personen, Rollen oder Organisationen, die entweder die Architektur des Systems kennen sollten oder von dieser überzeugt werden müssen. Zu den Stakeholdern zählen auch jene, die aktiv mit der Architektur oder dem Code arbeiten, beispielsweise indem sie Schnittstellen nutzen. Ebenso gehören Personen dazu, die die Dokumentation der Architektur benötigen, um ihre eigene Arbeit effizient zu gestalten. Darüber hinaus sind Stakeholder involviert, die Entscheidungen über das System und dessen Entwicklung treffen.
 Die nachfolgende Analyse zeigt alle Stakeholder gebündelt in ihren Gewichtungen und Beziehungen.  
 \begin{figure}
   \centering
-  \includegraphics[width=1\textwidth]{./resources/stakeholderanalyse.drawio.png}
+  \includegraphics[width=160mm]{./resources/stakeholderanalyse.drawio.png}
   \caption{Stakeholder Analyse und Zusammenfassung in den Unterscheidungen: Einbindungsgrad, Interesse und Einflüsse. Das Entwicklungsteam geht deutlich als am stärksten partizipativ gekennzeichneten Stakeholder hevor. Am repressivsten zeigen sich die Stakeholder in Form der Fußgänger.}
   \label{fig:deine_label}
 \end{figure}
@@ -248,7 +248,7 @@ Entwickler folgen der DoD auf dem Git-Repository. \\
 \end{longtable}
 
 
-\newpage
+
 \section{Kontextabgrenzung}
 \subsection{Fachlicher Kontext}
 \begin{figure}[htbp]
@@ -318,7 +318,7 @@ Visualisiert die Messdaten und stellt Frontend bereit. \\
 \end{longtable}
 
 
-
+\newpage
 \section{Lösungsstrategie}
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
@@ -376,14 +376,31 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 	\caption{Componmentdiagram Frontend}
 	\label{fig:CPFrontent}
 \end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=140mm]{resources/reactpatternfe.drawio.png}
+	\caption{React Pattern}
+	\label{fig:ReactPattern}
+\end{figure}
+
+\newpage
 \subsection{Raspberry Pi}
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=100mm]{resources/ADABausteinsicht.png}
+	\includegraphics[width=90mm]{resources/ADABausteinsicht.png}
 	\caption{Bausteinsicht Raspberry PI}
 	\label{fig:BausteinRaspberry}
 \end{figure}  
-\newpage
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=70mm]{resources/erDiagram-sensordaten-datenhaltung.png}
+	\caption{Datenhaltung RaspberryPI}
+	\label{fig:Datenhaltung}
+\end{figure}  
+
+
 \subsection{Sensorik}
 \begin{figure}[htbp]
 	\centering
@@ -399,7 +416,14 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 	\label{fig:BausteinServer}
 \end{figure}  
 
+\newpage
 \section{Laufzeitsicht}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=160mm]{resources/Laufzeitsicht.png}
+	\caption{Laufzeitsicht}
+	\label{fig:Laufzeitsicht}
+\end{figure}  
 
 \newpage
 \section{Verteilungssicht}
@@ -425,6 +449,13 @@ Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitsti
 
 Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=160mm]{resources/femockup-1.jpg}
+	\caption{Frontend Mockup}
+	\label{fig:FrontendMockup}
+\end{figure}  
+
 \subsection{Evaluation zur Wahl des Technologie-Stacks der Hardware}
 
 Die Hardware zur Sensordatenauslesung und Weiterleitung wird unter dem Arbeitstitel \textit{SARA} (Sensor Appliance and Remote Analysis) und \textit{ADA} (Automatic Digital Aggregator) geführt. Vor der Implementierung von \textit{SARA} und \textit{ADA} muss ein geeigneter Hardwarestack ausgewählt werden. Die nachfolgenden Analysen dienen dabei als Entscheidungsgrundlage.
@@ -440,7 +471,14 @@ Die Auswahl zur Programmiersprache \textit{Rust} für die \textit{ADA}-Anwendung
 Da die Anwendung in der mit Solarenergie betriebenen Blickbox installiert werden soll, ist vor allem die Energieeffizienz ausschlaggebend für die Auswahl.
 
 Die Auswahl zur Programmiersprache \textit{C++} für die \textit{SARA}-Anwendung beruht auf dem bereits vorhandenen und verwendeten Framework \textit{Arduino}, als auch an den Bibliotheken \textit{DHT}- und \textit{SparkFun\_Weather\_Meter\_Kit\_Arduino} für die Auslesung der Sensoren. Diese basieren auf \textit{C++}.
-
+\subsection{Evaluation zur Wahl der Technologie der API}
+Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund der einfachkeit, der großen Anzahl an Frameworks und der großen Community verwendet. Die nachfolgende Grafik erläutert die Auswahl des Frameworks.
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{./resources/ArchitekturAPI.png}
+    \caption{Analyse zur Entscheidung des Frameworks für die API}
+    \label{fig:deine_label}
+\end{figure}
 
 \section{Qualitätsanforderungen}
 \begin{figure}[htbp]
@@ -454,11 +492,16 @@ Die Auswahl zur Programmiersprache \textit{C++} für die \textit{SARA}-Anwendung
 \subsection{Risiken}
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=180mm]{resources/Risiken.png}
+	\includegraphics[width=160mm]{resources/Risiken.png}
 	\caption{Risiken}
 	\label{fig:Risiken}
 \end{figure}
-
-\section{Glossar}
+\section{Technische Schulden}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=80mm]{resources/technischeSchulden.drawio.png}
+	\caption{Technische Schulden}
+	\label{fig:TechnischeSchulden}
+\end{figure}  
 
 \end{document}
