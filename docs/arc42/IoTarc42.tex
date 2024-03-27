@@ -83,9 +83,9 @@
     bottom=2cm
 } 
 
-\title{\includegraphics{header.jpg} Template}
+\title{\includegraphics{header.jpg} Dokumentation IOT-Semesterprojekt}
 \author{}
-\date{Januar 2023}
+\date{Januar - März 2024}
 \usepackage{geometry} 
 
 \geometry{
@@ -100,12 +100,12 @@
 % DOCUMENT STARTS HERE
 \hypertarget{section-introduction-and-goals}{%
 \section{Einführung und Ziele}\label{section-introduction-and-goals}}
-Die Blickboxen vor der DHBW Heidenheim soll um smarte Features erweitert werden.
-Diese sollen dazu dienen die Blickbox attraktiver zu machen.
-Außerdem dient das Projekt als Basis für weitere Semesterprojekte der Informatikstudiengänge die Blickbox.
+Die Blickboxen vor der DHBW Heidenheim können im Umfang von Semesterprojekten um Austellungsstücke und smarte Features erweitert werden.
+Im IOT-Semesterprojekt wird die Blickbox und vorhandene Sensoren, um eine Wetterstation erweitert.
+Die Wettersensorik kann auch als Basis für weitere Semesterprojekte der Informatikstudiengänge der Blickbox dienen.
 Vor der Implementierung der Features wird eine ausführlich durchdachte Software-Design- und Architekturplanung stattfinden.
 
-Zu den smarten Features gehören:
+Zu der Implementierung der Wetterstation gehören folgende Features:
 \begin{itemize}
   \item Überwachung der Wetterdaten
   \item Übermittlung der Daten an zentrale Datenbank
@@ -136,30 +136,27 @@ Zusammenhang mit der Umsetzung des Blickbox-Projekts.
   Funktionale Anforderungen beschreiben spezifisch die konkreten Zwecke, die das zu entwickelnde Produkt erfüllen soll.
 
 \subsection{Nicht funktionale Anforderungen (NFA)}
-Im Gegensatz zu funktionalen Anforderungen sind nicht-funktionale Anforderungen eher allgemein gehalten und betreen die gesamte Architektur und das Design des Produkts.
+Im Gegensatz zu funktionalen Anforderungen sind nicht-funktionale Anforderungen eher allgemein gehalten und betreffen die gesamte Architektur und das Design des Produkts.
 Sie können auf verschiedene Projekte angewendet werden.
-
-\subsection{Hyptohetische Anforderungen (HFA)}
-Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorherigen Abhängigkeiten definiert. Ihr Zweck besteht darin, mögliche Entscheidungen und Eventualitäten abzudecken, die eintreten können oder auch nicht.
-
 
 \begin{center}
   \begin{tabular}{|p{\linewidth}|}
     \hline
     \textbf{Datenerfassung und -übertragung (FA1)} \\
     Beschreibung: Das IOT-System muss in der Lage sein, kontinuierlich Sensordaten zu erfassen.
-    Diese Daten sollen in der Sensoreinheit eingelesen und im Raspberry PI gespeichert und verarbeitet werden.
-    Die Datenübertragung auf den Server erfolgt Event-gesteuert und drahtlos über einen http-Client.
-    Die Daten werden in festgelegten Intervallen im JSON-Format übertragen und in der Datenbank festgehalten. \\ \\
+    Diese Daten sollen in der Sensoreinheit eingelesen, an den Raspberry Pi geschickt, dort gespeichert und verarbeitet werden.
+    Die Datenübertragungen erfolgen Event-gesteuert und drahtlos.
+    Von der Sensoreinheit erfolgt die Übertragung über Bluetooth und zum Server über einen http-Client.
+    Die Daten werden in festgelegten Intervallen im JSON-Format an den Server übertragen und in der Datenbank festgehalten. \\ \\
     \hline
     \textbf{Interaktivität zu Dritten (FA2)} \\
-    Beschreibung: Der Blickbox soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
+    Beschreibung: Die Blickbox soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
     Das soll in Form eines Displays oder Ton und Licht geschehen.
     Ein Display soll in der Lage sein, Dritten aktuelle Daten aus der Datenbank wie etwa das Wetter anzuzeigen.
     Bei Dunkelheit sollen Bewegungsmelder Lichter aktivieren.\\ \\
     \hline
     \textbf{Containerisierung (FA3)} \\
-    Beschreibung: Die Anwendungen sollen in Containern gekapselt werden, um eine verbesserte Portabilität und Skalierbarkeit zu gewährleisten.
+    Beschreibung: Die Serveranwendungen sollen in Containern gekapselt werden, um eine verbesserte Portabilität und Skalierbarkeit zu gewährleisten.
     Es wird die Container-Technologien Docker verwendet werden, um die Anwendungen effizient zu verwalten und zu deployen. \\ \\
     \hline
   \end{tabular}
@@ -180,11 +177,11 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
     Beschreibung: Ein Standardprogramm auf dem Raspberry Pi soll die kontinuierliche Sicherung der Daten gewährleisten, um die ungestörte Funktionalität der Blickbox zu sichern.
     Die Daten puffern wir auf dem Pi, damit die Datenbank nur zur Darstellung in Grafana existiert.
     Die Daten sollen dazu auf dem Raspberry Pi in einer Datei gespeichert werden.
-    Das Risiko des Verlierens der Daten soll so minimiert werden.\\ \\
+    Das Risiko des Verlierens der zeitabhängigen Daten soll so minimiert werden.\\ \\
     \hline
     \textbf{Bereitstellung einer geeigneten Umgebung für die Hardware (NF4)} \\
-    Beschreibung: Die Hardware muss sowohl innerhalb als auch außerhalb der Blickbox an trockenen und sicheren Orten platziert werden.
-    Es sollen wetterfeste und isolierte Boxen verwendet werden, um die Hardware vor Umwelteinflüssen zu schützen und ihre Langlebigkeit zu gewährleisten.\\ \\
+    Beschreibung: Die Hardware muss sowohl innerhalb als auch außerhalb der Blickbox an einem trockenen und sicheren Ort platziert werden.
+    Es sollen wetterfeste und isolierte Boxen verwendet werden, um die Hardware vor Umwelteinflüssen zu schützen und ihre Langlebigkeit zu unterstützen.\\ \\
     \hline
     \textbf{Bereitstellung eines Dashboard (NF5)} \\
     Beschreibung: Die Daten der Datenbank sollen mit Grafana grafisch dargestellt werden.
@@ -219,10 +216,10 @@ Aufteilung &
 Frontend und Backend werden strikt getrennt. \\
  &\\
 Fremdsoftware & 
-Opensource Bibiliotheken dürfen verwendet werden.\\
+Open Source Bibliotheken dürfen verwendet werden.\\
  &\\
 Wasserfestigkeit & 
-Jegliche Hardware muss Wasserfest implementiert werden.\\
+Jegliche Hardware muss wasserfest implementiert werden.\\
 \bottomrule
 \end{longtable}
 
@@ -244,7 +241,7 @@ Zeitplan &
 Der Zeitplan wird auf 2 Monate vom 01.02.2024 - 28.03.2024 festgelegt. \\
  &\\
 Projektmanagement & 
-Die Entwicklung folgt dem Scrum-Framework mit zweiwöchigen Sprints. \\
+Die Entwicklung folgt dem SCRUM-Framework mit zweiwöchigen Sprints. \\
 Definition of Done &
 Entwickler folgen der DoD auf dem Git-Repository. \\
 \bottomrule
@@ -273,15 +270,15 @@ Beschreibung
 \midrule
 \endhead
 Fußgänger &
-Fußgänger die sich die Blickbox anschauen und die Daten sehen. \\
+Fußgänger, die sich die Blickbox anschauen und die Daten sehen. \\
 Admin &
-Administriert Dashboards und stuert Blickbox manuell. \\
+Administriert Dashboards und steuert Blickbox manuell. \\
  & \\
 Blickbox & 
-Enthält Sensor Hardware und Anzeige der Daten. \\
+Enthält Sensor Hardware und Display. \\
  & \\
 Server &
-Externer Server der mit der Hardware der Blickbox kommuniziert. \\
+Externer Server, der mit der Hardware der Blickbox kommuniziert. \\
 \bottomrule
 \end{longtable}
 \newpage
@@ -307,16 +304,16 @@ Beschreibung
 Lichtsystem &
 Beleuchtet die Blickbox. \\
 Sensorik &
-Hardware welche die Messdaten sammelt. \\
+Hardware, welche die Messdaten sammelt. \\
  &\\
-RaspberryPI & 
-Verarbeitet die Sensorik Daten und schickt diese an die Datenbank. \\
+Raspberry Pi &
+Verarbeitet die Sensordaten und schickt diese an die Datenbank. \\
 Visualisierung &
 Gesammelte Daten werden angezeigt. \\
 Datenbank &
 Speichert die Messdaten. \\
 Webserver & 
-Visualisiert die Messdaten und Stellt Frontend bereit. \\
+Visualisiert die Messdaten und stellt Frontend bereit. \\
 \bottomrule
 \end{longtable}
 
@@ -339,27 +336,27 @@ Details
 \endhead
 Alle funktionalen Requirements &
 Eventgesteuerte Architektur &
-Sensorarchitektur sendet die Messdaten an dem PI. Der PI sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt diese im Frontend da.\\
+Sensorarchitektur sendet die Messdaten an den Raspberry Pi. Der Raspberry Pi sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt sie im Frontend dar.\\
 & & \\
 Erweitbarkeit \& Wartung  &
 Modularer Projektaufbau und Tests &
-Damit Dritte, sei es irgendwelche Stakeholder oder neue Entwickler, sich in das Projekt leicht einarbeiten können, bauen wir das Projekt so auf, dass Codecomponenten voneinander getrennt aufgebaut sind, sich also in Modulen befinden. Zudem sind Funktionen getestet. \\
+Damit Dritte, wie etwa Stakeholder oder neue Entwickler, sich in das Projekt leicht einarbeiten können, bauen wir das Projekt so auf, dass Codekomponenten voneinander getrennt aufgebaut sind, sich also in Modulen befinden. Zudem sind Funktionen getestet. \\
 & & \\
 Sicherheit  &
 Https-Verbindung, Containerisierung \& Reverse-Proxy &
-Über den Reverse-Proxy sind die Verschiedenen Server-Apps nicht direkt dem Internet Exposed. Durch die Containersierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
+Über den Reverse-Proxy sind die verschiedenen Server-Apps nicht direkt dem Internet offengelegt. Durch die Containerisierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
 & & \\
 Wiederherstellung und -erhaltung der Daten  &
  &
-Auf dem Pi werden in einer history file, die daten abgelegt, damit man sollte die verbindung abbrechen, die noch seperat auf dem Pi sind. \\
+Auf dem Raspberry Pi werden in einer history file die Daten abgelegt, damit sie bei einer unterbrochenen Verbindung noch separat gespeichert werden. \\
 & & \\
 Bereitstellung einer geeigneten Umgebung für die Hardware  &
-Box &
-SARA wird in einer Box einbaut, welche Wasserdicht ist. Durch eine eigene Batterie ist sie Autak und braucht keine Spannung von außen. Die Sensoren werden über Kabelverschraubung in den Innenraum der Box gebraucht dadurch ist sie Wasserdicht. \\
+Wasserdichte Box &
+SARA wird in einer Box eingebaut. Durch eine eigene Batterie ist sie autark und braucht keine Spannung von außen. Die Sensoren werden über Kabelverschraubungen in den Innenraum der Box gebracht, wodurch sie wasserdicht ist. \\
 & & \\
 Bereitstellung eines Dashboard  &
-Grafana als Open-Source Fertiglösung &
-Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
+Grafana als Open Source Fertiglösung &
+Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
 \bottomrule
 \end{longtable}
 \newpage
@@ -368,17 +365,23 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbin
 \subsection{Native React App}
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=120mm]{resources/BausteinsichtValentin.drawio.png}
+	\includegraphics[width=160mm]{resources/BausteinsichtValentin.drawio.png}
 	\caption{Bausteinsicht React App}
-	\label{fig:ContextDiagram}
+	\label{fig:BausteinFrontend}
 \end{figure}  
 
-\subsection{Raspberry PI}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=160mm]{resources/fecomponentsdiagr.drawio.png}
+	\caption{Componmentdiagram Frontend}
+	\label{fig:CPFrontent}
+\end{figure}
+\subsection{Raspberry Pi}
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=100mm]{resources/ADABausteinsicht.png}
 	\caption{Bausteinsicht Raspberry PI}
-	\label{fig:ContextDiagram}
+	\label{fig:BausteinRaspberry}
 \end{figure}  
 \newpage
 \subsection{Sensorik}
@@ -386,19 +389,27 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbin
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinschicht_Sara.png}
 	\caption{Bausteinsicht Server}
-	\label{fig:ContextDiagram}
+	\label{fig:BausteinSensorik}
 \end{figure}  
 \subsection{Server}
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinsicht_Server.png}
 	\caption{Bausteinsicht Arduino}
-	\label{fig:ContextDiagram}
+	\label{fig:BausteinServer}
 \end{figure}  
 
 \section{Laufzeitsicht}
 
+\newpage
 \section{Verteilungssicht}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=170mm]{resources/Verteilungssicht_Deployment.png}
+	\caption{Qualitätsbaum}
+	\label{fig:Qualitätsbaum}
+\end{figure}  
 
 \section{Architekturentscheidungen}
 \subsection{Evaluation zur Wahl des Frontend-Frameworks des Clients}
@@ -414,15 +425,40 @@ Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitsti
 
 Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
 
+\subsection{Evaluation zur Wahl des Technologie-Stacks der Hardware}
+
+Die Hardware zur Sensordatenauslesung und Weiterleitung wird unter dem Arbeitstitel \textit{SARA} (Sensor Appliance and Remote Analysis) und \textit{ADA} (Automatic Digital Aggregator) geführt. Vor der Implementierung von \textit{SARA} und \textit{ADA} muss ein geeigneter Hardwarestack ausgewählt werden. Die nachfolgenden Analysen dienen dabei als Entscheidungsgrundlage.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{./resources/AuswahlRust.png}
+    \caption{Analyse zur Entscheidung einer geeigneten Technologie für \textit{ADA} gemessen an der Energieeffizienz, der Zeit und der Speichereffizienz.}
+    \label{fig:deine_label}
+\end{figure}
+
+Die Auswahl zur Programmiersprache \textit{Rust} für die \textit{ADA}-Anwendung wird aufgrund der beschränkten Ressourcen einer autark laufenden Applikation, gewählt.
+Da die Anwendung in der mit Solarenergie betriebenen Blickbox installiert werden soll, ist vor allem die Energieeffizienz ausschlaggebend für die Auswahl.
+
+Die Auswahl zur Programmiersprache \textit{C++} für die \textit{SARA}-Anwendung beruht auf dem bereits vorhandenen und verwendeten Framework \textit{Arduino}, als auch an den Bibliotheken \textit{DHT}- und \textit{SparkFun\_Weather\_Meter\_Kit\_Arduino} für die Auslesung der Sensoren. Diese basieren auf \textit{C++}.
+
+
 \section{Qualitätsanforderungen}
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=170mm]{resources/Qualitätsbaum.drawio.png}
-	\caption{Qualitätsbaum}
-	\label{fig:ContextDiagram}
+	\includegraphics[width=160mm]{resources/Qualitätsbaum.drawio.png}
+	\caption{Verteilungssicht}
+	\label{fig:Verteilungssicht}
 \end{figure}  
 
 \section{Risiken und Teschnische Schulden}
+\subsection{Risiken}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=180mm]{resources/Risiken.png}
+	\caption{Risiken}
+	\label{fig:Risiken}
+\end{figure}
+
 \section{Glossar}
 
 \end{document}
