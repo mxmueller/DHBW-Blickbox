@@ -355,28 +355,28 @@ Grafana als Open Source Fertiglösung &
 Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
 \bottomrule
 \end{longtable}
-\newpage
+
 \section{Bausteinsicht}
 
 \subsection{Native React App}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/BausteinsichtValentin.drawio.png}
-	\caption{Bausteinsicht React App}
+	\caption{Die Bausteinsicht des C4-Modells für eine React-App umfasst die verschiedenen Komponenten und ihre Beziehungen innerhalb der Anwendung.}
 	\label{fig:BausteinFrontend}
 \end{figure}  
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/fecomponentsdiagr.drawio.png}
-	\caption{Componmentdiagram Frontend}
+	\caption{Ein Komponentendiagramm für das React-Frontend einer Softwareanwendung bietet eine detaillierte Darstellung der verschiedenen Elemente, aus denen die Benutzeroberfläche besteht, sowie deren Beziehungen zueinander. Die Komponenten werden hierarchisch erfasst.}
 	\label{fig:CPFrontent}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=140mm]{resources/reactpatternfe.drawio.png}
-	\caption{React Pattern}
+	\caption{Ein Diagramm für React-Patterns könnte die Darstellung gängiger Muster wie Container-Komponenten zur Datenverwaltung, Präsentationskomponenten für rein visuelle Darstellungen und Higher-Order Components (HOCs) zur gemeinsamen Funktionalitätsweitergabe enthalten. Zusätzlich könnten Render Props, Context-API und Hooks als weitere Muster dargestellt werden, um den Austausch von Daten und Funktionalitäten zwischen Komponenten zu erleichtern. Das Diagramm würde die Beziehungen zwischen diesen Patterns veranschaulichen und ihre Verwendung zur Lösung spezifischer Probleme in React-Anwendungen verdeutlichen.}
 	\label{fig:ReactPattern}
 \end{figure}
 
@@ -384,7 +384,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=90mm]{resources/ADABausteinsicht.png}
-	\caption{Bausteinsicht Raspberry PI}
+	\caption{Die Bausteinsicht des C4-Modells für die ADA-Anwendung auf dem Raspberry Pi stellt auf Ebene 1 die Kommunikation mit dem Server und SARA dar. Auf Ebene 2 werden die einzelnen Komponenten weiter in ihre Bestandteile unterteilt.}
 	\label{fig:BausteinRaspberry}
 \end{figure}  
 
@@ -419,7 +419,6 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 	\label{fig:Laufzeitsicht}
 \end{figure}  
 
-\newpage
 \section{Verteilungssicht}
 
 \begin{figure}[H]
@@ -446,7 +445,7 @@ Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel au
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/femockup-1.jpg}
-	\caption{Frontend Mockup}
+	\caption{Ein Frontend-Mockup wurde konzipiert, um eine grobe Planung des Dashboards zu ermöglichen. Das Mockup wurde mittels manueller Zeichnung erstellt und in den Entwicklungsprozess integriert, um die Positionierung der einzelnen Komponenten zu beschreiben. Das erstellte Mockup fungiert als visuelle Darstellung, die es ermöglicht, die Platzierung und Interaktion der verschiedenen Komponenten innerhalb des Dashboards zu skizzieren, um eine klare Vorstellung von der späteren Anordnung zu vermitteln.}
 	\label{fig:FrontendMockup}
 \end{figure}  
 
@@ -470,15 +469,19 @@ Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{./resources/ArchitekturAPI.png}
-    \caption{Analyse zur Entscheidung des Frameworks für die API}
+    \caption{Eine Analyse wurde durchgeführt, um die Entscheidung für das geeignete Framework zur Entwicklung der API zu treffen. Dabei wurden die Vor- und Nachteile von Flask und Django gegenübergestellt und verglichen.}
     \label{fig:deine_label}
 \end{figure}
 
 \section{Qualitätsanforderungen}
+Qualitätsanforderungen im Softwareengineering sind definierte Spezifikationen und Merkmale, die die Qualität eines Softwareprodukts oder -systems bestimmen.
+Diese Anforderungen umfassen typischerweise Kriterien wie Funktionalität, Leistung, Zuverlässigkeit, Benutzerfreundlichkeit, Wartbarkeit und Sicherheit.
+Sie dienen dazu, sicherzustellen, dass das entwickelte Softwareprodukt die Bedürfnisse und Erwartungen der Benutzer erfüllt und den spezifizierten Standards und Anforderungen entspricht.
+Dabei ist es entscheidend, dass die Qualitätsanforderungen während des gesamten Softwareentwicklungsprozesses berücksichtigt werden, angefangen bei der Anforderungsanalyse über das Design, die Implementierung und das Testen bis hin zur Wartung und Aktualisierung des Systems.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Qualitätsbaum.drawio.png}
-	\caption{Verteilungssicht}
+	\caption{Das vorliegende Diagramm veranschaulicht die Qualitätsanforderungen in Form eines "Baums der Qualitäten", wobei spezifische Qualitäten, Aspekte der Qualität und mögliche Szenarien dargestellt sind. Die Struktur des Diagramms zeigt eine hierarchische Darstellung der Qualitätsanforderungen, beginnend mit allgemeinen Qualitätsmerkmalen und sich auf spezifischere Aspekte und Szenarien hinunterbewegend. Jede Ebene des Baumes repräsentiert eine zunehmende Spezifität der Qualitätsanforderungen, wodurch eine klarere und detailliertere Definition der erforderlichen Qualitätsmerkmale erreicht wird.}
 	\label{fig:Verteilungssicht}
 \end{figure}  
 
@@ -487,14 +490,16 @@ Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Risiken.png}
-	\caption{Risiken}
+	\caption{Risiken im Softwareengineering können verschiedene Formen annehmen, darunter technische Herausforderungen wie unvorhergesehene Komplexität in der Implementierung, sowie organisatorische Risiken wie Verzögerungen im Zeitplan.}
 	\label{fig:Risiken}
 \end{figure}
 \section{Technische Schulden}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=80mm]{resources/technischeSchulden.drawio.png}
-	\caption{Technische Schulden}
+	\caption{Technische Schulden im Softwareengineering bezeichnen die Konsequenzen von Entscheidungen, die kurzfristig zu schnellern Entwicklungszeiten führen, langfristig jedoch zu erhöhten Wartungskosten, verminderten Leistungen und erschwerten Erweiterungen führen können.
+    Diese Schulden entstehen beispielsweise durch die Verwendung von ineffizienten oder unsauberen Programmierpraktiken, unzureichende Dokumentation, nicht ausreichendes Refactoring oder das Ignorieren von Best Practices während der Entwicklung.
+    Während technische Schulden manchmal bewusst eingegangen werden, um kurzfristige Ziele zu erreichen, ist es wichtig, sie kontinuierlich zu überwachen und zu reduzieren, um die langfristige Gesundheit und Nachhaltigkeit des Softwareprodukts zu gewährleisten.}
 	\label{fig:TechnischeSchulden}
 \end{figure}  
 
