@@ -56,6 +56,7 @@ def testMail():
     subject = "Test"
     body= "Auch ein test"
     sendEmail(subject, body)
+    return return_response("ja", "hatgeklappt", 200)
 
 @app.route('/iot/api/pingBB', methods=['POST'])
 def insertLastOnline():
