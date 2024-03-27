@@ -53,13 +53,13 @@ namespace sara_battery{
     * @return uint8_t 
     */
    uint8_t map_to_battery_level(float battery_voltage){
-      int level = 0; // angenommen, volle Ladung
+      int level = 100; // angenommen, volle Ladung
       uint16_t array_size = sizeof(BATTERY_VOLTAGE_1S) / sizeof(float);
       for (u_int16_t i = 0; i < array_size; ++i) {
          if (battery_voltage >= BATTERY_VOLTAGE_1S[i]) {
                break;
          }
-         level += 5; 
+         level -= 5; 
       }
       return level;
    }
