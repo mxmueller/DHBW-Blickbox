@@ -51,12 +51,7 @@ def logstream(sock):
         sock.close()
 
 
-@app.route('/testMail', methods=['GET'])
-def testMail():
-    subject = "Test"
-    body= "Auch ein test"
-    sendEmail(subject, body)
-    return return_response("ja", "hatgeklappt", 200)
+
 
 @app.route('/iot/api/pingBB', methods=['POST'])
 def insertLastOnline():
@@ -162,6 +157,7 @@ def insert_temperature():
         if(temperature < -40.0 or temperature > 65.0):
             log(title='Exception', message=f'Wert der Temperatur stimmt nicht. Wert: {temperature}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Temperatur nicht in Range", 400)
+        Warning(temperature, "temperature", 35.0, "Achtung sehr heiß", f'Pass auf, die Außentemperatur beträgt {temperature} Grad.')
         json_body = [
             {
                 "measurement": "temperature",
@@ -455,23 +451,23 @@ def insert_battery_voltage():
 
 
 
-def rainWarning(value):
+def Warning(value, measurement, limit, subject, message):
     try:
-        query = 'SELECT last("value") FROM "last_online"'
+        query = f'SELECT last("value") FROM "{measurement}"'
         result = influx_client.query(query)
-        last_online_value = list(result.get_points())[0]['last']
-        log(title='Info', message=f'Zuletzt Online Wert der Blickbox abgerufen: {last_online_value}', type='success', ringbuffer=ringBuffer)
-        return return_response("last_online", last_online_value, 200)
+        last_value = list(result.get_points())[0]['last']
+
+        if(value > limit and last_value <= limit):
+            sendEmail(subject, message)
     except Exception as e:
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
-        return return_response("error", str(e), 500)
 
 
 def sendEmail(subject, body):
     senderEmail = 'blickbox@maytastix.de'
     receiver_email = 'aronseidl17@gmail.com'
-    password = "vczo8y9w7k24u321tysq"
+    password = "vczo8y9w7k24u321tysq" # :(
 
 
     message = MIMEMultipart()
