@@ -8,6 +8,7 @@
 \usepackage{lmodern}
 \usepackage{iftex}
 \usepackage{graphicx}
+\usepackage{float}
 
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -120,7 +121,7 @@ Zu der Implementierung der Wetterstation gehören folgende Features:
 \subsection{Stakeholder}\label{_stakeholder}}
 Ein umfassender Überblick über die Stakeholder des Systems ist von entscheidender Bedeutung. Dies bezieht sich auf sämtliche Personen, Rollen oder Organisationen, die entweder die Architektur des Systems kennen sollten oder von dieser überzeugt werden müssen. Zu den Stakeholdern zählen auch jene, die aktiv mit der Architektur oder dem Code arbeiten, beispielsweise indem sie Schnittstellen nutzen. Ebenso gehören Personen dazu, die die Dokumentation der Architektur benötigen, um ihre eigene Arbeit effizient zu gestalten. Darüber hinaus sind Stakeholder involviert, die Entscheidungen über das System und dessen Entwicklung treffen.
 Die nachfolgende Analyse zeigt alle Stakeholder gebündelt in ihren Gewichtungen und Beziehungen.  
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=160mm]{./resources/stakeholderanalyse.drawio.png}
   \caption{Stakeholder Analyse und Zusammenfassung in den Unterscheidungen: Einbindungsgrad, Interesse und Einflüsse. Das Entwicklungsteam geht deutlich als am stärksten partizipativ gekennzeichneten Stakeholder hevor. Am repressivsten zeigen sich die Stakeholder in Form der Fußgänger.}
@@ -192,9 +193,6 @@ Sie können auf verschiedene Projekte angewendet werden.
   \end{tabular}
 \end{center}
 
-
-
-\newpage
 \section{Randbedingungen}
 \subsection{Technisch}
 \begin{longtable}[]{@{}
@@ -251,7 +249,7 @@ Entwickler folgen der DoD auf dem Git-Repository. \\
 
 \section{Kontextabgrenzung}
 \subsection{Fachlicher Kontext}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=140mm]{../c4/Business_Context.png}
 	\caption{Kontextdiagramm Blickbox }
@@ -281,9 +279,9 @@ Server &
 Externer Server, der mit der Hardware der Blickbox kommuniziert. \\
 \bottomrule
 \end{longtable}
-\newpage
+
 \subsection{Technischer Kontext}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=125mm]{../c4/Technical_Context.png}
 	\caption{Kontextdiagramm Blickbox }
@@ -317,8 +315,6 @@ Visualisiert die Messdaten und stellt Frontend bereit. \\
 \bottomrule
 \end{longtable}
 
-
-\newpage
 \section{Lösungsstrategie}
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
@@ -363,37 +359,36 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \section{Bausteinsicht}
 
 \subsection{Native React App}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/BausteinsichtValentin.drawio.png}
 	\caption{Bausteinsicht React App}
 	\label{fig:BausteinFrontend}
 \end{figure}  
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/fecomponentsdiagr.drawio.png}
 	\caption{Componmentdiagram Frontend}
 	\label{fig:CPFrontent}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=140mm]{resources/reactpatternfe.drawio.png}
 	\caption{React Pattern}
 	\label{fig:ReactPattern}
 \end{figure}
 
-\newpage
 \subsection{Raspberry Pi}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=90mm]{resources/ADABausteinsicht.png}
 	\caption{Bausteinsicht Raspberry PI}
 	\label{fig:BausteinRaspberry}
 \end{figure}  
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=70mm]{resources/erDiagram-sensordaten-datenhaltung.png}
 	\caption{Datenhaltung RaspberryPI}
@@ -402,23 +397,22 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 
 
 \subsection{Sensorik}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinschicht_Sara.png}
 	\caption{Bausteinsicht Server}
 	\label{fig:BausteinSensorik}
 \end{figure}  
 \subsection{Server}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinsicht_Server.png}
 	\caption{Bausteinsicht Arduino}
 	\label{fig:BausteinServer}
 \end{figure}  
 
-\newpage
 \section{Laufzeitsicht}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Laufzeitsicht.png}
 	\caption{Laufzeitsicht}
@@ -428,7 +422,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \newpage
 \section{Verteilungssicht}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=170mm]{resources/Verteilungssicht_Deployment.png}
 	\caption{Qualitätsbaum}
@@ -440,7 +434,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 
 Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitstitel \textit{Valentin} (Komposita aus \textit{Value} und \textit{Notification}) geführt. Vor der Initialisierung von \textit{Valentin} muss ein geeignetes Framework gewählt werden. Die nachfolgende Nutzwertanalyse dient dafür als Entscheidungsgrundlage. 
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{./resources/techevaluationfe.png}
   \caption{Nutzwertanalyse zur Entscheidung eines geeigneten Frameworks gemessen an der Popularität, der Entwickler Awarness (Welches Framework enthält welchen Support), den Vorkenntnissen des Entwicklungsteams und der Rendergeschwindigkeit auf den Systemen der Clients.}
@@ -449,7 +443,7 @@ Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitsti
 
 Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/femockup-1.jpg}
 	\caption{Frontend Mockup}
@@ -460,7 +454,7 @@ Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel au
 
 Die Hardware zur Sensordatenauslesung und Weiterleitung wird unter dem Arbeitstitel \textit{SARA} (Sensor Appliance and Remote Analysis) und \textit{ADA} (Automatic Digital Aggregator) geführt. Vor der Implementierung von \textit{SARA} und \textit{ADA} muss ein geeigneter Hardwarestack ausgewählt werden. Die nachfolgenden Analysen dienen dabei als Entscheidungsgrundlage.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{./resources/AuswahlRust.png}
     \caption{Analyse zur Entscheidung einer geeigneten Technologie für \textit{ADA} gemessen an der Energieeffizienz, der Zeit und der Speichereffizienz.}
@@ -473,7 +467,7 @@ Da die Anwendung in der mit Solarenergie betriebenen Blickbox installiert werden
 Die Auswahl zur Programmiersprache \textit{C++} für die \textit{SARA}-Anwendung beruht auf dem bereits vorhandenen und verwendeten Framework \textit{Arduino}, als auch an den Bibliotheken \textit{DHT}- und \textit{SparkFun\_Weather\_Meter\_Kit\_Arduino} für die Auslesung der Sensoren. Diese basieren auf \textit{C++}.
 \subsection{Evaluation zur Wahl der Technologie der API}
 Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund der einfachkeit, der großen Anzahl an Frameworks und der großen Community verwendet. Die nachfolgende Grafik erläutert die Auswahl des Frameworks.
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{./resources/ArchitekturAPI.png}
     \caption{Analyse zur Entscheidung des Frameworks für die API}
@@ -481,7 +475,7 @@ Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund 
 \end{figure}
 
 \section{Qualitätsanforderungen}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Qualitätsbaum.drawio.png}
 	\caption{Verteilungssicht}
@@ -490,14 +484,14 @@ Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund 
 
 \section{Risiken und Teschnische Schulden}
 \subsection{Risiken}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Risiken.png}
 	\caption{Risiken}
 	\label{fig:Risiken}
 \end{figure}
 \section{Technische Schulden}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=80mm]{resources/technischeSchulden.drawio.png}
 	\caption{Technische Schulden}
