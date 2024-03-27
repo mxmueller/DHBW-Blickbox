@@ -86,7 +86,15 @@
 \title{\includegraphics{header.jpg} Template}
 \author{}
 \date{Januar 2023}
+\usepackage{geometry} 
 
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm
+}
 \begin{document}
 \maketitle
 % DOCUMENT STARTS HERE
@@ -317,8 +325,8 @@ Visualisiert die Messdaten und Stellt Frontend bereit. \\
 \section{Lösungsstrategie}
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5000}}@{}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4000}}@{}}
 \toprule
 \begin{minipage}[b]{\linewidth}\raggedright
 Ziel / Requirement
@@ -354,14 +362,43 @@ Grafana als Open-Source Fertiglösung &
 Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
 \bottomrule
 \end{longtable}
+\newpage
 \section{Bausteinsicht}
-Erstmal nur bis hier
+
+\subsection{Native React App}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=120mm]{resources/BausteinsichtValentin.drawio.png}
+	\caption{Bausteinsicht React App}
+	\label{fig:ContextDiagram}
+\end{figure}  
+
+\subsection{Raspberry PI}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=100mm]{resources/ADABausteinsicht.png}
+	\caption{Bausteinsicht Raspberry PI}
+	\label{fig:ContextDiagram}
+\end{figure}  
+\newpage
+\subsection{Sensorik}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=130mm]{resources/Bausteinschicht_Sara.png}
+	\caption{Bausteinsicht Server}
+	\label{fig:ContextDiagram}
+\end{figure}  
+\subsection{Server}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=130mm]{resources/Bausteinsicht_Server.png}
+	\caption{Bausteinsicht Arduino}
+	\label{fig:ContextDiagram}
+\end{figure}  
 
 \section{Laufzeitsicht}
 
 \section{Verteilungssicht}
-
-\section{Querschnittliche Konzepte}
 
 \section{Architekturentscheidungen}
 \subsection{Evaluation zur Wahl des Frontend-Frameworks des Clients}
@@ -378,8 +415,12 @@ Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitsti
 Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
 
 \section{Qualitätsanforderungen}
-\subsection{Qualitätsbaum}
-\subsection{Qualitätsszenarien}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=170mm]{resources/Qualitätsbaum.drawio.png}
+	\caption{Qualitätsbaum}
+	\label{fig:ContextDiagram}
+\end{figure}  
 
 \section{Risiken und Teschnische Schulden}
 \section{Glossar}
