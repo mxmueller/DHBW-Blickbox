@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.10.26)  8 FEB 2024 15:27
+This is LuaHBTeX, Version 1.16.0 (TeX Live 2023)  (format=lualatex 2023.10.26)  27 MAR 2024 14:18
  restricted system commands enabled.
  file:line:error style messages enabled.
 **IoTarc42.tex
@@ -465,46 +465,66 @@ Package: ctablestack 2015/10/01 v1.0 Catcode table stable support
 \CatcodeTableOther=\catcodetable12
 \CatcodeTableExpl=\catcodetable13
 )
-Inserting `Suppress ligatures selectively' in `ligaturing'.) (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux
+Inserting `Suppress ligatures selectively' in `ligaturing'.) (/usr/local/texlive/2023/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (/usr/local/texlive/2023/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+)
+\Gm@cnth=\count312
+\Gm@cntv=\count313
+\c@Gm@tempcnt=\count314
+\Gm@bindingoffset=\dimen178
+\Gm@wd@mp=\dimen179
+\Gm@odd@mp=\dimen180
+\Gm@even@mp=\dimen181
+\Gm@layoutwidth=\dimen182
+\Gm@layoutheight=\dimen183
+\Gm@layouthoffset=\dimen184
+\Gm@layoutvoffset=\dimen185
+\Gm@dimlist=\toks28
+) (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux
+
+LaTeX Warning: Label `fig:Kontextdiagramm' multiply defined.
+
 
 LaTeX Warning: Label `fig:deine_label' multiply defined.
 
 )
 \openout1 = IoTarc42.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 90.
+LaTeX Font Info:    ... okay on input line 90.
  (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count312
-\scratchdimen=\dimen178
+\scratchcounter=\count315
+\scratchdimen=\dimen186
 \scratchbox=\box63
-\nofMPsegments=\count313
-\nofMParguments=\count314
-\everyMPshowfont=\toks28
-\MPscratchCnt=\count315
-\MPscratchDim=\dimen179
-\MPnumerator=\count316
-\makeMPintoPDFobject=\count317
-\everyMPtoPDFconversion=\toks29
+\nofMPsegments=\count316
+\nofMParguments=\count317
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count318
+\MPscratchDim=\dimen187
+\MPnumerator=\count319
+\makeMPintoPDFobject=\count320
+\everyMPtoPDFconversion=\toks30
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -512,19 +532,19 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 80.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 90.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 80.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 90.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 80.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 90.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 80.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 90.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 80.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 90.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 80.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 90.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 80.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 90.
 
 Package fontspec Info: latinmodern-math scale = 0.9999964596882403.
 
@@ -555,7 +575,7 @@ Package fontspec Info: Font family 'latinmodern-math.otf(0)' created for font
 (fontspec)             \__um_luatex_copy_fontdimens: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 80.
+(Font)              scaled to size 10.0pt on input line 90.
 
 Package fontspec Info: latinmodern-math scale = 0.9999964596882403.
 
@@ -592,15 +612,15 @@ Package fontspec Info: Font family 'latinmodern-math.otf(1)' created for font
 (fontspec)             \__um_luatex_copy_fontdimens: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 80.
+(Font)              scaled to size 10.0pt on input line 90.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 80.
+(Font)              `operators' in the math version `normal' on input line 90.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input line 80.
+(Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input line 90.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 80.
+(Font)              `operators' in the math version `bold' on input line 90.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on input line 80.
+(Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on input line 90.
 
 Package fontspec Info: latinmodern-math scale = 0.9999964596882403.
 
@@ -682,13 +702,13 @@ Package fontspec Info: Font family 'latinmodern-math.otf(2)' created for font
 (fontspec)             21\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 80.
+(Font)              `symbols' in the math version `normal' on input line 90.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
-(Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on input line 80.
+(Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on input line 90.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 80.
+(Font)              `symbols' in the math version `bold' on input line 90.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
-(Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on input line 80.
+(Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on input line 90.
 
 Package fontspec Info: latinmodern-math scale = 0.9999964596882403.
 
@@ -752,85 +772,120 @@ Package fontspec Info: Font family 'latinmodern-math.otf(3)' created for font
 (fontspec)             \fontdimen 13\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 80.
+(Font)              `largesymbols' in the math version `normal' on input line 90.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
-(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on input line 80.
+(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on input line 90.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 80.
+(Font)              `largesymbols' in the math version `bold' on input line 90.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
-(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on input line 80.
+(Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 80.
+(Font)              scaled to size 7.0pt on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 80.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 80.
+(Font)              scaled to size 5.0pt on input line 90.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 90.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 80.
+(Font)              scaled to size 10.00092pt on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 80.
+(Font)              scaled to size 7.00064pt on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 80.
+(Font)              scaled to size 5.00046pt on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 80.
+(Font)              scaled to size 9.99893pt on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 80.
+(Font)              scaled to size 6.99925pt on input line 90.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 80.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 80.
+(Font)              scaled to size 4.99947pt on input line 90.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 90.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 80.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 90.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Info: Redefining \microtypecontext on input line 80.
-Package microtype Info: Applying patch `item' on input line 80.
-Package microtype Info: Applying patch `toc' on input line 80.
-Package microtype Info: Applying patch `eqnum' on input line 80.
-Package microtype Info: Applying patch `footnote' on input line 80.
-Package microtype Info: Applying patch `verbatim' on input line 80.
+LaTeX Info: Redefining \microtypecontext on input line 90.
+Package microtype Info: Applying patch `item' on input line 90.
+Package microtype Info: Applying patch `toc' on input line 90.
+Package microtype Info: Applying patch `eqnum' on input line 90.
+Package microtype Info: Applying patch `footnote' on input line 90.
+Package microtype Info: Applying patch `verbatim' on input line 90.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 80.
+LaTeX Info: Redefining \showhyphens on input line 90.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of spacing.
 Package microtype Info: No adjustment of kerning.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Modern Roman (RS)
 )
-Package hyperref Info: Link coloring OFF on input line 80.
+Package hyperref Info: Link coloring OFF on input line 90.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: luatex
+*geometry* verbose mode - [ preamble ] result:
+* driver: luatex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
+* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=483.69687pt
+* \textheight=731.23584pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-52.36449pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
 <header.jpg, id=4, 1204.5pt x 824.07875pt>
 File: header.jpg Graphic file (type jpg)
 <use header.jpg>
-Package luatex.def Info: header.jpg  used on input line 82.
-(luatex.def)             Requested size: 344.99533pt x 236.0343pt.
+Package luatex.def Info: header.jpg  used on input line 93.
+(luatex.def)             Requested size: 483.7029pt x 330.9334pt.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 82.
+(Font)              scaled to size 12.0pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 82.
+(Font)              scaled to size 8.0pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 82.
+(Font)              scaled to size 6.0pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 12.0011pt on input line 82.
+(Font)              scaled to size 12.0011pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 8.00073pt on input line 82.
+(Font)              scaled to size 8.00073pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 6.00055pt on input line 82.
+(Font)              scaled to size 6.00055pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.99872pt on input line 82.
+(Font)              scaled to size 11.99872pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.99915pt on input line 82.
+(Font)              scaled to size 7.99915pt on input line 93.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.99936pt on input line 82.
- (/usr/local/texlive/2023/texmf-dist/tex/latex/microtype/mt-msa.cfg
+(Font)              scaled to size 5.99936pt on input line 93.
+(/usr/local/texlive/2023/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
@@ -838,46 +893,68 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 <./resources/stakeholderanalyse.drawio.png, id=5, 5524.64pt x 6142.95pt>
 File: ./resources/stakeholderanalyse.drawio.png Graphic file (type png)
 <use ./resources/stakeholderanalyse.drawio.png>
-Package luatex.def Info: ./resources/stakeholderanalyse.drawio.png  used on input line 95.
-(luatex.def)             Requested size: 344.95197pt x 383.5585pt.
+Package luatex.def Info: ./resources/stakeholderanalyse.drawio.png  used on input line 117.
+(luatex.def)             Requested size: 483.624pt x 537.75052pt.
  [1
 
-{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}<./header.jpg>] [2<./resources/stakeholderanalyse.drawio.png>]
-Overfull \hbox (12.79999pt too wide) in paragraph at lines 117--143
+{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}<./header.jpg>]
+Overfull \hbox (12.79999pt too wide) in paragraph at lines 139--158
  [] 
  []
 
-[3]
-Overfull \hbox (12.79999pt too wide) in paragraph at lines 146--156
+
+Overfull \hbox (12.79999pt too wide) in paragraph at lines 161--188
  [] 
  []
 
-[4]
-<./resources/techevaluationfe.png, id=41, 874.26625pt x 225.84375pt>
+[2] [3<./resources/stakeholderanalyse.drawio.png>] [4] [5]
+<../c4/Business_Context.png, id=47, 561.59813pt x 313.9228pt>
+File: ../c4/Business_Context.png Graphic file (type png)
+<use ../c4/Business_Context.png>
+Package luatex.def Info: ../c4/Business_Context.png  used on input line 251.
+(luatex.def)             Requested size: 398.3347pt x 222.6616pt.
+ [6<../c4/Business_Context.png>]
+<../c4/Technical_Context.png, id=56, 630.85687pt x 626.34pt>
+File: ../c4/Technical_Context.png Graphic file (type png)
+<use ../c4/Technical_Context.png>
+Package luatex.def Info: ../c4/Technical_Context.png  used on input line 283.
+(luatex.def)             Requested size: 355.6647pt x 353.11818pt.
+
+Overfull \hbox (91.93796pt too wide) in alignment at lines 321--331
+ [][][] 
+ []
+
+
+Overfull \hbox (91.93796pt too wide) in alignment at lines 331--356
+ [][][] 
+ []
+
+[7<../c4/Technical_Context.png>]
+<./resources/techevaluationfe.png, id=66, 874.26625pt x 225.84375pt>
 File: ./resources/techevaluationfe.png Graphic file (type png)
 <use ./resources/techevaluationfe.png>
-Package luatex.def Info: ./resources/techevaluationfe.png  used on input line 165.
-(luatex.def)             Requested size: 345.00455pt x 89.12286pt.
- [5<./resources/techevaluationfe.png>] (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux)
+Package luatex.def Info: ./resources/techevaluationfe.png  used on input line 373.
+(luatex.def)             Requested size: 483.70273pt x 124.9519pt.
+ [8] [9<./resources/techevaluationfe.png>] (/Users/mumaxi2/git/mxmueller/DHBW-Blickbox/docs/arc42/.texpadtmp/IoTarc42.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
 )
 
 Here is how much of LuaTeX's memory you used:
- 20150 strings out of 478285
+ 20725 strings out of 478285
  125086,1977958 words of node,token memory allocated
- 547 words of node memory still in use:
-   6 hlist, 2 vlist, 2 rule, 2 glue, 4 kern, 1 glyph, 7 attribute, 63 glue_spec, 7 attribute_list, 1 write, 1 user_defined nodes
-   avail lists: 2:450,3:151,4:48,5:339,6:60,7:4582,8:1,9:626,10:12,11:290
- 39632 multiletter control sequences out of 65536+600000
- 61 fonts using 18919351 bytes
- 86i,8n,121p,1004b,414s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 597 words of node memory still in use:
+   7 hlist, 2 vlist, 2 rule, 1 local_par, 4 glue, 4 kern, 1 penalty, 3 glyph, 8 attribute, 63 glue_spec, 8 attribute_list, 1 write, 1 user_defined nodes
+   avail lists: 2:805,3:316,4:71,5:585,6:102,7:8176,8:1,9:793,10:12,11:582
+ 40148 multiletter control sequences out of 65536+600000
+ 61 fonts using 18919427 bytes
+ 86i,8n,121p,1004b,460s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-italic.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman12-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmroman17-regular.otf>
-Output written on IoTarc42.pdf (5 pages, 938874 bytes).
+Output written on IoTarc42.pdf (9 pages, 1006598 bytes).
 
-PDF statistics: 113 PDF objects out of 1000 (max. 8388607)
- 82 compressed objects within 1 object stream
- 18 named destinations out of 1000 (max. 131072)
- 65 words of extra memory for PDF output out of 10000 (max. 100000000)
+PDF statistics: 205 PDF objects out of 1000 (max. 8388607)
+ 167 compressed objects within 2 object streams
+ 45 named destinations out of 1000 (max. 131072)
+ 193 words of extra memory for PDF output out of 10000 (max. 100000000)
 
