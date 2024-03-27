@@ -342,6 +342,7 @@ def insert_rain():
         if(rain < 0.0 or rain > 1100.0):
             log(title='Exception', message=f'Wert des Niederschlags stimmt nicht. Wert: {rain}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Niederschlag nicht in Range", 400)
+        Warning(rain, "rain", 100, "Regen", "Wie du wahrscheinlich schon draußen siehst, regnet es.")
         json_body = [
             {
                 "measurement": "rain",
@@ -386,6 +387,9 @@ def insert_battery_charge():
         if(battery_charge < 0.0 or battery_charge > 100.0):
             log(title='Exception', message=f'Wert der Akkustand Wert stimmt nicht. Wert: {battery_charge}', type='error', ringbuffer=ringBuffer)
             return return_response("message", "Falscher Input! Akkustands Wert nicht in Range", 400)
+        
+        Warning((100.0-battery_charge), "battery_charge", 70, "Akku fast leer!", "Der Akku der Blickbox ist bei 30%")
+
         json_body = [
             {
                 "measurement": "battery_charge",
@@ -457,7 +461,7 @@ def Warning(value, measurement, limit, subject, message):
         result = influx_client.query(query)
         last_value = list(result.get_points())[0]['last']
 
-        if(value > limit and last_value <= limit):
+        if(value > limit and last_value < limit):
             sendEmail(subject, message)
     except Exception as e:
         error = str(e).replace('"', '').replace("'", "")
