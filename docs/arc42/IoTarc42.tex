@@ -84,7 +84,7 @@
     bottom=2cm
 } 
 
-\title{\includegraphics{header.jpg} Dokumentation IOT-Semesterprojekt}
+\title{\includegraphics{header.jpg} arc42-Dokumentation IOT-Semesterprojekt}
 \author{}
 \date{Januar - März 2024}
 \usepackage{geometry} 
@@ -401,7 +401,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=130mm]{resources/Bausteinschicht_Sara.png}
-	\caption{Beschreibt die Bausteinschicht der Sensorik. Dabei wird in Ebene 1 zwischen der Bluetooth Low Energy Kommunikation der Daten Acquisition und der Seriellen Kommunikation unterschieden. Die BLE Kommunikation steht als Kabellose Schnittstelle für ein Edge Device zur Verfügung, da keine Kabelverbindung möglich ist. Die Serielle Kommunikation wird für die Anwendungsentwicklung, als auch für das Debugging verwendet. Die Datenacquisition nutzt Libraries um auf die General Purpose Input/Output und den Analog Schnittstellen die Sensordaten zu erfassen. Der Batteriemanager auf der Ebene 2 ließt die Batterie aus und steuert Energiesparmaßnahmen. Die DHT 22 API greift über das OneWire Protokoll auf die Daten des DHT Temperatur- und Luftfeutigkeitssensors zu, während die SparkFun Weather Meter API Daten der Wetterstation hält diese löst je nach Umweltgegebenheiten ein Interrupt aus, welcher die Daten innerhalb der API verändert.}
+	\caption{Beschreibt die Bausteinsicht der Sensorik. Dabei wird in Ebene 1 zwischen der Bluetooth Low Energy Kommunikation, der Daten Acquisition und der Seriellen Kommunikation unterschieden. Die BLE Kommunikation steht als kabellose Schnittstelle für ein Edge Device zur Verfügung, da keine Kabelverbindung möglich ist. Die Serielle Kommunikation wird für die Anwendungsentwicklung, als auch für das Debugging verwendet. Die Datenacquisition nutzt Bibliotheken, um auf die General Purpose Input/Output und den analogen Schnittstellen die Sensordaten zu erfassen. Der Batteriemanager auf der Ebene 2 liest die Batterie aus und steuert Energiesparmaßnahmen. Die DHT 22 API greift über das OneWire Protokoll auf die Daten des DHT Temperatur- und Luftfeutigkeitssensors zu, während die SparkFun Weather Meter API Daten der Wetterstation hält. Diese löst je nach Umweltgegebenheiten ein Interrupt aus, welcher die Daten innerhalb der API verändert.}
 	\label{fig:BausteinSensorik}
 \end{figure}  
 \subsection{Server}
@@ -416,7 +416,7 @@ Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbind
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=160mm]{resources/Laufzeitsicht.png}
-	\caption{Oben Laufzeitsicht aus der Sicht der Sensorik, unten aus der Sicht des Frontends. Wird die Sensorik aktiv, adversioniert diese ihre Bluetooth Services, die von anderen Geräten wahrgenommen werden können. Der Raspberry Pi ließt die BLE Services aus. Wenn die Bluetooth Services die richtigen Identifikationsnummern haben werden die Charakteristiken, welche von diesen Services gehalten werden abgefragt. Die Charakteristiken enthalten hierbei die Sensor- und Statusdaten der Wetterstation. Nachdem die Daten von der Sensorik empfangen wurden, werden sie an eine API gesendet, welche die erhaltenen Daten in der Datenbank speichert. Öffnet ein Nutzer die Frontend-App, frägt diese zuerst die "Health" Daten der Systeme ab. Diese werden vom Health Controller innhalb der API verwaltet. Der Raspberry PI übermittelt beim Start eine online Mitteilung an die API. Anschließend werden die eingebetteten iframes von Grafana geladen. Grafana lädt hierfür die Daten aus der Datenbank, erstellt eine Virtualisierung und stellt diese da.}
+	\caption{Oben Laufzeitsicht aus der Sicht der Sensorik, unten aus der Sicht des Frontends. Wird die Sensorik aktiv, adversioniert diese ihre Bluetooth Services, die von anderen Geräten wahrgenommen werden können. Der Raspberry Pi liest die BLE Services aus. Wenn die Bluetooth Services die richtigen Identifikationsnummern haben werden die Charakteristiken, welche von diesen Services gehalten werden abgefragt. Die Charakteristiken enthalten hierbei die Sensor- und Statusdaten der Wetterstation. Nachdem die Daten von der Sensorik empfangen wurden, werden sie an eine API gesendet, welche die erhaltenen Daten in der Datenbank speichert. Öffnet ein Nutzer die Frontend-App, frägt diese zuerst die "Health" Daten der Systeme ab. Diese werden vom Health Controller innhalb der API verwaltet. Der Raspberry PI übermittelt beim Start eine online Mitteilung an die API. Anschließend werden die eingebetteten iframes von Grafana geladen. Grafana lädt hierfür die Daten aus der Datenbank, erstellt eine Virtualisierung und stellt diese dar.}
 	\label{fig:Laufzeitsicht}
 \end{figure}  
 
