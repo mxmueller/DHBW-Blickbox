@@ -461,7 +461,9 @@ def Warning(value, measurement, limit, subject, message):
         query = f'SELECT last("value") FROM "{measurement}"'
         result = influx_client.query(query)
         last_value = list(result.get_points())[0]['last']
-
+        if(measurement == "battery_charge"):
+            last_value = 100.0 - last_value
+            
         if(value > limit and last_value < limit):
             sendEmail(subject, message)
     except Exception as e:
