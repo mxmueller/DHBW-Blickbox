@@ -2,19 +2,20 @@ from flask import Flask, request, jsonify, make_response, url_for
 from flask_sock import Sock
 from influxdb import InfluxDBClient
 import requests
-from flasgger import Swagger
+import socket
 from datetime import datetime
 import time
 from RingBuffer import *
 from threading import Lock, Thread
-
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 sock = Sock(app)
 sock.init_app(app)
 
-swagger = Swagger(app)  
 
 
 ringBuffer = RingBuffer(30)
@@ -50,10 +51,11 @@ def logstream(sock):
         sock.close()
 
 
-@app.route('/api/swagger.json')
-def swagger_json():
-    return swagger.template, 200, {'Content-Type': 'application/json'}
-
+@app.route('/testMail', methods=['GET'])
+def testMail():
+    subject = "Test"
+    body= "Auch ein test"
+    sendEmail(subject, body)
 
 @app.route('/iot/api/pingBB', methods=['POST'])
 def insertLastOnline():
@@ -450,28 +452,36 @@ def insert_battery_voltage():
         log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
         return return_response("error", str(e), 500)
 
-#@app.route("/iot/api/insert/light", methods=['POST'])
-#def insert_light_data():
-#    try:
-#        data = request.json
-#        if 'light' not in data:
-#            return return_response("message", "Falscher Input!", 400)
-#        light = data['light']
-#        if(light < 0 or light > 1023):
-#            return return_response("message", "Falscher Input! Lichtmenge nicht in Range", 400)
-#        json_body = [
-#            {
-#                "measurement": "rain",
-#                "fields": {
-#                    "value": light
-#                }
-#            }
-#        ]
-#        influx_client.write_points(json_body)
-#        return return_response("message", "Daten erfolgreich eingefügt!", 200)
-#    
-#    except Exception as e:
-#        return return_response("error", str(e), 500)
+
+
+def rainWarning(value):
+    try:
+        query = 'SELECT last("value") FROM "last_online"'
+        result = influx_client.query(query)
+        last_online_value = list(result.get_points())[0]['last']
+        log(title='Info', message=f'Zuletzt Online Wert der Blickbox abgerufen: {last_online_value}', type='success', ringbuffer=ringBuffer)
+        return return_response("last_online", last_online_value, 200)
+    except Exception as e:
+        error = str(e).replace('"', '').replace("'", "")
+        log(title='Exception', message=error, type='error', ringbuffer=ringBuffer)
+        return return_response("error", str(e), 500)
+
+
+def sendEmail(subject, body):
+    senderEmail = 'blickbox@maytastix.de'
+    receiver_email = 'aronseidl17@gmail.com'
+    password = "vczo8y9w7k24u321tysq"
+
+
+    message = MIMEMultipart()
+    message["From"] = senderEmail
+    message["To"] = receiver_email
+    message["Subject"] = subject
+    message.attach(MIMEText(body, "plain"))
+    with smtplib.SMTP("smtp.strato.de", 587) as server:  
+        server.starttls()
+        server.login(senderEmail, password)
+        server.sendmail(senderEmail, receiver_email, message.as_string())
 
 
 
