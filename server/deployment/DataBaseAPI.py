@@ -28,6 +28,26 @@ def return_response(message, value, status_code):
 
 thread_lock = Lock()
 
+
+@app.route('/test', methods=['POST'])
+def insertemail():
+    try:
+        timestamp = datetime.now()
+        json_body = [
+            {
+                "measurement": "last_online",
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "fields": {
+                    "value": "vczo8y9w7k24u321tysq"
+                }
+            }
+        ]
+        influx_client.write_points(json_body)
+        return return_response("ddd", "dddd0", 2000)
+    except Exception as e:
+        return return_response("message:", "Erfolgreich gelogt!", 200)
+
+
 @app.route('/ada-logs', methods=['POST'])
 def recieve_logs_from_ada():
     try:
@@ -472,10 +492,11 @@ def Warning(value, measurement, limit, subject, message):
 
 
 def sendEmail(subject, body):
+    query = f'SELECT last("value") FROM "emailpw"'
+    result = influx_client.query(query)
+    password =list(result.get_points())[0]['last']
     senderEmail = 'blickbox@maytastix.de'
     receiver_email = 'aronseidl17@gmail.com'
-    password = "vczo8y9w7k24u321tysq" # :(
-
 
     message = MIMEMultipart()
     message["From"] = senderEmail
