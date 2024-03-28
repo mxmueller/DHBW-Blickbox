@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider, Box, Text, HStack, Code, SimpleGrid, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from "@chakra-ui/react";
+import { ChakraProvider, Flex, Box, Text, HStack, Code, SimpleGrid, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from "@chakra-ui/react";
 import { GoContainer } from "react-icons/go";
 import { GoDatabase } from "react-icons/go";
 import { SiGrafana } from "react-icons/si";
@@ -14,7 +14,7 @@ const apis = [
         error: 'Disconnected',
         delay: 300,
         duration: 500,
-        interval: 60000, 
+        interval: 300000, // 5 Minuten
         icon: GoContainer
     },
     { 
@@ -24,7 +24,7 @@ const apis = [
         error: 'Disconnected',
         delay: 450,
         duration: 600,
-        interval: 60000, 
+        interval: 300000, // 5 Minuten
         icon: GoDatabase
     },
     { 
@@ -34,7 +34,7 @@ const apis = [
         error: 'Disconnected',
         delay: 500,
         duration: 700,
-        interval: 60000, 
+        interval: 300000, // 5 Minuten
         icon: SiGrafana
     },
 ];
@@ -45,6 +45,7 @@ function Desc() {
     const [error, setError] = useState({});
     const [lastUpdated, setLastUpdated] = useState(new Date());
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [lastOnline, setLastOnline] = useState(null); // Zustand für den letzten Online-Zeitstempel
 
     useEffect(() => {
         const currentDate = new Date();
@@ -71,7 +72,7 @@ function Desc() {
                     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
                 ]);
 
-                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Client Verbindungsversuch', style: 'blackAlpha', date: formattedDateTime });
+                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ` + apiUrl + '.', type: 'Client Verbindungsversuch', code: 'blackAlpha', date: formattedDateTime });
 
                 if (response.status === 200) {
                     setSuccess(prevSuccess => ({
@@ -83,7 +84,13 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Server Erreichbar', style: 'green', date: formattedDateTime });
+                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ` + apiUrl, type: 'Server Erreichbar', code: 'green', date: formattedDateTime });
+
+                    // Wenn die GET-Anfrage erfolgreich ist, setze den letzten Online-Zeitstempel
+                    const data = await response.json();
+                    if (data && data.last_online) {
+                        setLastOnline(data.last_online);
+                    }
                 
                 } else {
                     setError(prevError => ({
@@ -95,7 +102,7 @@ function Desc() {
                         [apiUrl]: false
                     }));
 
-                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung zum Server', style: 'red', date: formattedDateTime });
+                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ` + apiUrl + ' hergestellt werden.', type: 'Keine Verbindung zum Server', code: 'red', date: formattedDateTime });
                 }
             } catch (error) {
                 setError(prevError => ({
@@ -107,7 +114,7 @@ function Desc() {
                     [apiUrl]: false
                 }));
 
-                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Client Verbindungsversuch Fehlgeschlagen', style: 'red', date: formattedDateTime });
+                Logstream.addItemToLogstream({ message: apiUrl + ' ist nicht erreibar.', type: 'Client Verbindungsversuch Fehlgeschlagen', code: 'red', date: formattedDateTime });
             } finally {
                 setLoading(prevLoading => ({
                     ...prevLoading,
@@ -129,17 +136,15 @@ function Desc() {
             fetchDataWithInterval(api);
         });
 
-       
-
-          const handleResize = () => {
+        const handleResize = () => {
             setWindowWidth(window.innerWidth);
-          };
+        };
       
-          window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleResize);
       
-          return () => {
+        return () => {
             window.removeEventListener('resize', handleResize);
-          };
+        };
     }, []);
 
     return (
@@ -150,7 +155,8 @@ function Desc() {
                         <h2>
                             <AccordionButton>
                                 <Box as="span" flex='1' textAlign='left'>
-                                    <Text fontSize='md' color='blackAlpha.700' as='b'>Health monitoring</Text>
+                                <Text fontSize='md' color='blackAlpha.700' as='b'>Health monitoring</Text>
+                                    <Flex>
                                     {windowWidth < 768 ? 
                                         <Box>
                                             <Text mt={0} color='blackAlpha.600' fontSize='sm' w={["100%"]}>Letzte Aktualisierung:</Text>
@@ -162,6 +168,10 @@ function Desc() {
                                             <Code colorScheme='blackAlpha'>{lastUpdated.toLocaleString()}</Code>
                                         </HStack>
                                     }
+                                        {lastOnline && (
+                                            <Text ml={5} mt={0} color='blackAlpha.600' fontSize='sm' mr={2} >Container zuletzt Online:<Code ml={2} colorScheme='blackAlpha'>{lastOnline}</Code></Text>
+                                        )}
+                                        </Flex>
                                     
                                 </Box>
                                 <AccordionIcon />
@@ -170,28 +180,27 @@ function Desc() {
                         <AccordionPanel mb={0}>
                             <SimpleGrid columns={{sm: 1, md: 2, lg: 4}} minChildWidth='250px'  spacing={4}>
                                 {apis.map(({ url, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
-                                    <HealthDetail
-                                        key={url}
-                                        loading={loading[url]}
-                                        success={success[url]}
-                                        error={error[url]}
-                                        header={header}
-                                        successText={successText}
-                                        errorText={errorText}
-                                        delay={delay}
-                                        duration={duration}
-                                        icon={icon}
-                                        interval={interval}
-                                    />
-                                ))}
-                            </SimpleGrid>
-                        </AccordionPanel>
-                    </AccordionItem>
-                </Accordion>
-            </Box>
-        </ChakraProvider>
-    );
+                                    <HealthDetail      
+                                    key={url}
+                                    loading={loading[url]}
+                                    success={success[url]}
+                                    error={error[url]}
+                                    header={header}
+                                    successText={successText}
+                                    errorText={errorText}
+                                    delay={delay}
+                                    duration={duration}
+                                    icon={icon}
+                                    interval={interval}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    </AccordionPanel>
+                </AccordionItem>
+            </Accordion>
+        </Box>
+    </ChakraProvider>
+);
 }
-
 
 export default Desc;

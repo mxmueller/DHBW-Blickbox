@@ -1,0 +1,14 @@
+[Unit]
+Description=ADA(Automatic Digital Aggregator) Service
+After=hciuart.service bluetooth.target network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/local/ada/ada
+
+[Install]
+WantedBy=multi-user.target
