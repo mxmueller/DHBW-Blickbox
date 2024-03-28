@@ -35,7 +35,7 @@ def insertemail():
         timestamp = datetime.now()
         json_body = [
             {
-                "measurement": "last_online",
+                "measurement": "emailpw",
                 "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "fields": {
                     "value": "vczo8y9w7k24u321tysq"
