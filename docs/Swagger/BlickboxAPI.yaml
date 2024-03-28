@@ -13,21 +13,16 @@ info:
 servers:
   - url: https://dhbwapi.maytastix.de/iot/api
 tags:
-  - name: pingDB
-    description: Verbindung zur Datenbank
-  - name: pingGF
-    description: Verbindung zum Grafana Server.
-  - name: pingBB
-    description: Verbindung zur Blickbox.
-  - name: getBBIP
-    description: IP-Adresse der Blickbox.
+  - name: Health Monitoring
+    description: Checkt ob die Systeme laufen
+
   - name: insert
     description: Daten wrden in die Datanbank geschrieben
 paths:
   /pingDB:
     get:
       tags:
-        - pingDB
+        - Health Monitoring
       summary: Checkt ob die Datenbank läuft.
       responses:
         '200':
@@ -41,11 +36,11 @@ paths:
                     type: string
                     example: 'Verbindung zur Datenbank steht'
         '500':
-          description: Fehler bei der Verbindung
+          description: Exception
   /pingGF:
     get:
       tags:
-        - pingGF
+        - Health Monitoring
       summary: Checkt ob der Grafana Server läuft.
       responses:
         '200':
@@ -68,42 +63,35 @@ paths:
                   Fehler:
                     type: string
                     example: 'Keine Verbindung zum Grafana Server' 
+                    
   /pingBB:
     get:
       tags:
-        - pingBB
-      summary: Checkt ob die Blickbox mit dem Internet verbunden ist.
+        - Health Monitoring
+      summary: Bekommt den zuletzt online Wert zurück.
       responses:
         '200':
-          description: 'Verbindung steht'
+          description: 'Abruf erfolgreich'
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  last-online:
                     type: string
-                    example: 'BlickBox ist erreichbar'            
+                    example: '2024-03-26 00:26:53'            
             
-        '503':
-          description: Fehler bei der Verbindung
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  Fehler:
-                    type: string
-                    example: 'Keine Verbindung zur Blickbox' 
+        '500':
+          description: Exception
 
-  /getBBIP:
-    get:
+  /pingBB_:
+    post:
       tags:
-        - getBBIP
-      summary: Ändert die IP Adresse der Blickbox in der API ab
+        - Health Monitoring
+      summary: Sendet einen zuletzt online Wert.
       responses:
         '200':
-          description: 'Änderung erfolgreich'
+          description: 'Einfügen erfolgreich'
           content:
             application/json:
               schema:
@@ -111,7 +99,23 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: 'IP-Adresse der BlickBox geupdatet. Neue IP: {ip_adress}'        
+                    example: 'Daten erfolgreich eingefügt!' 
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
+            
+        '500':
+          description: Exception
+
+
+       
   /insert/temperature:
     post:
       tags:
@@ -147,8 +151,18 @@ paths:
                   message:
                     type: string
                     example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
         '500':
-          description: Interner Fehler
+          description: Exception
   /insert/air-humidity:
     post:
       tags:
@@ -184,8 +198,18 @@ paths:
                   message:
                     type: string
                     example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
         '500':
-          description: Interner Fehler
+          description: Exception
   /insert/wind-speed:
     post:
       tags:
@@ -221,8 +245,19 @@ paths:
                   message:
                     type: string
                     example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
         '500':
-          description: Interner Fehler
+          description: Exception
+  
   /insert/wind-direction:
     post:
       tags:
@@ -258,8 +293,18 @@ paths:
                   message:
                     type: string
                     example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
         '500':
-          description: Interner Fehler
+          description: Exception
 
   /insert/rain:
     post:
@@ -296,8 +341,114 @@ paths:
                   message:
                     type: string
                     example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
         '500':
-          description: Interner Fehler
+          description: Exception
+          
+  /insert/battery-charge:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Akkustands Wert hinzufügen
+      description: Füg einen neuen Akkustand Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Akkustand Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Akkustand'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
+        '500':
+          description: Exception
+          
+  /insert/battery-voltage:
+    post:
+      tags:
+        - insert
+      summary: Ein neuen Akkustromspannungs Wert hinzufügen
+      description: Füg einen neuen Akkustromspannungs Wert hinzu.
+      requestBody:
+        description: Erstelle einen neuen Akkustromspannungs Wert
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Akkustromspannung'
+        required: true
+      responses:
+        '200':
+          description: Wert erfolgreich eingefügt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Daten erfolgreich eingefügt'         
+
+        '400':
+          description: Falscher Input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Falscher Input'
+        '401':
+          description: Header fehlt, Unauthorisierter Acess!
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Unauthorized'
+        '500':
+          description: Exception
           
 components:
   schemas:
@@ -314,7 +465,7 @@ components:
           example: 27.8
     Luftfeuchtigkeit:
       required:
-        - air-humidity
+        - air_humidity
       type: object
       properties:
         timestamp:
@@ -356,3 +507,25 @@ components:
         rain:
           type: number
           example: 49.3
+    Akkustand:
+      required:
+        - battery_charge
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
+        battery_charge:
+          type: number
+          example: 49.3
+    Akkustromspannung:
+      required:
+        - battery_voltage
+      type: object
+      properties:
+        timestamp:
+          type: string
+          example: "2024-02-23 19:32:23"
+        battery_voltage:
+          type: number
+          example: 4.5
