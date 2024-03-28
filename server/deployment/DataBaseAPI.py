@@ -29,8 +29,8 @@ def return_response(message, value, status_code):
 thread_lock = Lock()
 
 
-@app.route('/test', methods=['POST'])
-def insertemail():
+@app.route('/test', methods=['GET'])
+def inserteemail():
     try:
         timestamp = datetime.now()
         json_body = [
@@ -43,7 +43,7 @@ def insertemail():
             }
         ]
         influx_client.write_points(json_body)
-        return return_response("ddd", "dddd0", 2000)
+        return return_response("ddd", "dddd0", 200)
     except Exception as e:
         return return_response("message:", "Erfolgreich gelogt!", 200)
 
