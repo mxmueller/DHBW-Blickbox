@@ -1,5 +1,6 @@
 import pytest
-
+import docker
+import time
 def pytest_addoption(parser):
     parser.addoption("--noTemp", action="store_true", default=False, help="Überspringe Temperatur-Tests")
     parser.addoption("--noPing", action="store_true", default=False, help="Überspringe Ping-Tests")
@@ -44,3 +45,32 @@ def skip_batteryc_tests(request):
 @pytest.fixture
 def skip_batteryv_tests(request):
     return request.config.getoption("--noBatteryV")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def docker_container():
+    client = docker.from_env()
+
+ 
+    image, logs = client.images.build(path="../", dockerfile="Dockerfile", tag="api-test:latest")
+    for log in logs:
+        print(log.get('stream', '').strip())
+    
+
+    container = client.containers.run(
+        image.id,
+        detach=True,
+        name="api-test",
+        ports={'5000/tcp': 5000}
+    )
+    
+
+    time.sleep(10)  
+
+    yield container  
+
+    container.stop()
+    container.remove()
+
+
+    client.images.remove(image.id)
