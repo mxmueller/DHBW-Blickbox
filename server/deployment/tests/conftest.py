@@ -1,0 +1,46 @@
+import pytest
+
+def pytest_addoption(parser):
+    parser.addoption("--noTemp", action="store_true", default=False, help="Überspringe Temperatur-Tests")
+    parser.addoption("--noPing", action="store_true", default=False, help="Überspringe Ping-Tests")
+    parser.addoption("--noHumid", action="store_true", default=False, help="Überspringe Luftfeuftigkeits-Tests")
+    parser.addoption("--noWindDir", action="store_true", default=False, help="Überspringe Windrichtungs-Tests")
+    parser.addoption("--noWindSpeed", action="store_true", default=False, help="Überspringe Windgeschwindigkeits-Tests")
+    parser.addoption("--noRain", action="store_true", default=False, help="Überspringe Niederschlag-Tests")
+    parser.addoption("--noBatteryC", action="store_true", default=False, help="Überspringe Batterieladungs-Tests")
+    parser.addoption("--noBatteryV", action="store_true", default=False, help="Überspringe Batteriespannungs-Tests")
+
+
+
+@pytest.fixture
+def skip_ping_tests(request):
+    return request.config.getoption("--noPing")
+
+@pytest.fixture
+def skip_temp_tests(request):
+    return request.config.getoption("--noTemp")
+
+@pytest.fixture
+def skip_humid_tests(request):
+    return request.config.getoption("--noHumid")
+
+@pytest.fixture
+def skip_winddir_tests(request):
+    return request.config.getoption("--noWindDir")
+
+@pytest.fixture
+def skip_windspeed_tests(request):
+    return request.config.getoption("--noWindSpeed")
+
+
+@pytest.fixture
+def skip_rain_tests(request):
+    return request.config.getoption("--noRain")
+
+@pytest.fixture
+def skip_batteryc_tests(request):
+    return request.config.getoption("--noBatteryC")
+
+@pytest.fixture
+def skip_batteryv_tests(request):
+    return request.config.getoption("--noBatteryV")
