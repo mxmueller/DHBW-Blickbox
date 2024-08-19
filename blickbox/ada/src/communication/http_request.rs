@@ -182,7 +182,7 @@ pub mod http_request {
     }
 
     #[cfg(test)]
-    mod test {
+    mod json_tests {
         use std::time::SystemTime;
         use chrono::{DateTime, Utc};
         use chrono_tz::Europe::Berlin;
@@ -209,7 +209,25 @@ pub mod http_request {
 
             assert_eq!(get_temp_json(&sensor_data), expected_temp_json)
         }
+        #[test]
+        fn test_get_json_failure() {
+            let expected_temp_json = String::from("{\"timestamp\":\"2024-02-23 19:32:23\",\"temperature\":25.0}");
+
+            let sensor_data = SensorData {
+                timestamp: String::from("2024-02-23 19:32:23"),
+                temperature: 27.4, // Falsche Temperatur
+                humidity: 0.0,
+                wind_speed: 0.0,
+                wind_direction: 0.0,
+                rain: 0.0,
+                battery_charge: 0.0,
+                battery_voltage: 0.0,
+            };
+
+            assert_ne!(get_temp_json(&sensor_data), expected_temp_json);
+        }
     }
+
 
 }
 

@@ -108,3 +108,38 @@ pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
         let data = format!("{:?}\n", sensor_data);
         file.write_all(data.as_bytes()).unwrap();
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::fs::File;
+    use std::io::{Read, Seek, SeekFrom};
+    use tempfile::tempfile;
+
+    #[test]
+    fn test_write_to_file() {
+        // Temporäre Datei
+        let mut temp_file = tempfile().unwrap();
+
+        let sensor_data = SensorData {
+            timestamp: "2024-02-23 19:32:23".to_string(),
+            temperature: 27.4,
+            humidity: 55.0,
+            wind_speed: 10.2,
+            wind_direction: 270.0,
+            rain: 0.0,
+            battery_charge: 75.0,
+            battery_voltage: 3.7,
+        };
+
+        write_to_file(&mut temp_file, &sensor_data);
+
+        temp_file.seek(SeekFrom::Start(0)).unwrap();
+
+        let mut content = String::new();
+        temp_file.read_to_string(&mut content).unwrap();
+
+        let expected_data = format!("{:?}\n", sensor_data);
+        assert_eq!(content, expected_data);
+    }
+}

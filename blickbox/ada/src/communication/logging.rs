@@ -55,4 +55,27 @@ pub mod http_request {
         ringbuffer.push_back(log_entry);
     }
 
+    #[cfg(test)]
+    mod logging_tests{
+        use std::collections::VecDeque;
+        use crate::communication::logging::http_request::{log, LogEntry};
+
+        #[test]
+        fn test_log() {
+            let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
+            let title = String::from("Test Title");
+            let message = String::from("Test Message");
+            let log_type = String::from("INFO");
+
+            log(title.clone(), message.clone(), log_type.clone(), &mut ringbuffer);
+
+            assert_eq!(ringbuffer.len(), 1);
+            let log_entry = ringbuffer.pop_back().unwrap();
+
+            assert_eq!(log_entry.title, title);
+            assert_eq!(log_entry.message, message);
+            assert_eq!(log_entry.log_type, log_type);
+            assert!(!log_entry.timestamp.is_empty());
+        }
+    }
 }
