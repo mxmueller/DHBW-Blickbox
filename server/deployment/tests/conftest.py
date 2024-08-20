@@ -1,6 +1,7 @@
 import pytest
 import docker
 import time
+from docker.errors import BuildError, ContainerError, APIError
 def pytest_addoption(parser):
     parser.addoption("--noTemp", action="store_true", default=False, help="Überspringe Temperatur-Tests")
     parser.addoption("--noPing", action="store_true", default=False, help="Überspringe Ping-Tests")
@@ -50,22 +51,27 @@ def skip_batteryv_tests(request):
 @pytest.fixture(scope="session", autouse=True)
 def docker_container():
     client = docker.from_env()
+    try:
 
- 
-    image, logs = client.images.build(path="../", dockerfile="Dockerfile", tag="api-test:latest")
-    for log in logs:
-        print(log.get('stream', '').strip())
-    
+        image, logs = client.images.build(path="../", dockerfile="Dockerfile", tag="api-test:latest")
+        for log in logs:
+            print(log.get('stream', '').strip())
+    except BuildError as e:
+        pytest.fail(f"Build failed: {e.msg}")
 
-    container = client.containers.run(
-        image.id,
-        detach=True,
-        name="api-test",
-        ports={'5000/tcp': 5000}
-    )
-    
 
-    time.sleep(10)  
+    try:
+        container = client.containers.run(
+            image.id,
+            detach=True,
+            name="api-test",
+            ports={'5000/tcp': 5000}
+        )
+    except ContainerError as e:
+        pytest.fail(f"Container failed to start: {e}")    
+    except APIError as e:
+        pytest.fail(f"API error when starting the container: {e}")
+    time.sleep(5)  
 
     yield container  
 

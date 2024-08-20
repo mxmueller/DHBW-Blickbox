@@ -9,7 +9,7 @@ Diese Unittests Testen die Funktionalität der API. Hauptsächlich wird getestet
 
   
 
-    pip install reqirements.txt
+    pip install -r reqirements.txt
 
   
 
