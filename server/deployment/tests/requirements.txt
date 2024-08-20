@@ -1,3 +1,5 @@
 pytest
 pytest-mock
 docker
+unittest
+python-dotenv

@@ -1,7 +1,10 @@
 import pytest
+import os
+from dotenv import load_dotenv
 import docker
 import time
 from docker.errors import BuildError, ContainerError, APIError
+load_dotenv()
 def pytest_addoption(parser):
     parser.addoption("--noTemp", action="store_true", default=False, help="Überspringe Temperatur-Tests")
     parser.addoption("--noPing", action="store_true", default=False, help="Überspringe Ping-Tests")
@@ -50,14 +53,19 @@ def skip_batteryv_tests(request):
 
 @pytest.fixture(scope="session", autouse=True)
 def docker_container():
+    use_dev_container = os.getenv("API_USE_DEV_CONTAINER", "false").lower() == "true"
+    if not use_dev_container:
+        #pytest.skip("Production Routen werden genutzt. Container bauen ist irrelevant.")
+        yield None
+        return
     client = docker.from_env()
     try:
-
         image, logs = client.images.build(path="../", dockerfile="Dockerfile", tag="api-test:latest")
         for log in logs:
             print(log.get('stream', '').strip())
     except BuildError as e:
         pytest.fail(f"Build failed: {e.msg}")
+        
 
 
     try:
@@ -71,8 +79,8 @@ def docker_container():
         pytest.fail(f"Container failed to start: {e}")    
     except APIError as e:
         pytest.fail(f"API error when starting the container: {e}")
-    time.sleep(5)  
 
+    time.sleep(5)  
     yield container  
 
     container.stop()

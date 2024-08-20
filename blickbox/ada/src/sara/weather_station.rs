@@ -1,3 +1,4 @@
+//not used
 pub mod weather_station {
     use std::io;
     use std::time::Duration;
@@ -63,4 +64,38 @@ pub mod weather_station {
             return String::new()
         }
     }
+
+    #[cfg(test)]
+    mod test {
+        use super::*;
+
+        #[test]
+        fn test_interpret_data_temp_value() {
+            let data = b"temperature:23.5\n";
+            let result = interpret_data(data);
+            assert_eq!(result, "23.5");
+        }
+
+        #[test]
+        fn test_interpret_data_no_colon() {
+            let data = b"temperature23.5\n";
+            let result = interpret_data(data);
+            assert_eq!(result, "");
+        }
+
+        #[test]
+        fn test_interpret_data_only_key() {
+            let data = b"temperature:\n";
+            let result = interpret_data(data);
+            assert_eq!(result, "");
+        }
+
+        #[test]
+        fn test_interpret_data_no_newline() {
+            let data = b"temperature:23.5";
+            let result = interpret_data(data);
+            assert_eq!(result, "23.5");
+        }
+    }
+
 }
