@@ -74,7 +74,7 @@ def docker_container():
     )
     
 
-    time.sleep(10)  
+    time.sleep(5)  
 
     yield container  
 
