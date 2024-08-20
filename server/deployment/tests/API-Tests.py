@@ -1,10 +1,17 @@
 import pytest
 import requests
 from unittest.mock import Mock
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+use_dev_container = os.getenv("API_USE_DEV_CONTAINER", "false").lower() == "true"
 
 def getURL(path):
-    return "http://localhost:5000/iot/api" + path
-    #return "http://dhbwapi.maytastix.de/iot/api" + path
+    if(use_dev_container):
+        return "http://localhost:5000/iot/api" + path
+    else:
+        return "http://dhbwapi.maytastix.de/iot/api" + path
 
 
 session = requests.Session()
