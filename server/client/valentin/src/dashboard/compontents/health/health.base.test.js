@@ -2,7 +2,6 @@ import React from 'react';
 import { render, act, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-// Mocks für externe Abhängigkeiten
 jest.mock('@chakra-ui/react', () => ({
     ChakraProvider: ({ children }) => <div data-testid="chakra-provider">{children}</div>,
     Flex: ({ children }) => <div data-testid="flex">{children}</div>,
@@ -27,13 +26,10 @@ jest.mock('react-icons/si', () => ({
     SiGrafana: () => <span data-testid="si-grafana">SiGrafana</span>,
 }));
 
-// Mock für andere lokale Komponenten
 jest.mock('./health.detail.js', () => ({ header }) => <div data-testid="health-detail">{header}</div>);
 
-// Importiere die zu testende Komponente nach allen Mocks
 import Desc from './health.base';
 
-// Nutze gefälschte Timer für zeitbasierte Tests
 jest.useFakeTimers();
 
 describe('Desc Component', () => {
@@ -65,7 +61,6 @@ describe('Desc Component', () => {
 
         expect(screen.getByTestId('hstack')).toBeInTheDocument();
 
-        // Simuliere eine Änderung der Fenstergröße
         await act(async () => {
             global.innerWidth = 500;
             global.dispatchEvent(new Event('resize'));
