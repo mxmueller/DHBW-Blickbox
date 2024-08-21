@@ -1,29 +1,31 @@
-pub mod http_request {
+pub mod logging {
     use std::collections::VecDeque;
+
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
-    use crate::{get_time};
+
+    use crate::get_time;
 
     #[derive(Serialize)]
     pub struct LogEntry {
-        title: String,
-        message: String,
+        pub title: String,
+        pub message: String,
         #[serde(rename = "type")]
-        log_type: String,
-        timestamp: String,
+        pub log_type: String,
+        pub timestamp: String,
     }
 
-    pub async fn send_logs(ringbuffer: &mut VecDeque<LogEntry>) -> crate::Result<()> {
+    pub async fn send_logs(url: &str, ringbuffer: &mut VecDeque<LogEntry>) -> crate::Result<()> {
 
-        let url = "https://dhbwapi.maytastix.de/ada-logs";
+        println!("received url: {}", url);
         // Create a reqwest HTTP client
         let client = Client::new();
 
         for log in ringbuffer {
 
             let json = serde_json::to_string(&log).unwrap();
-            println!("{}", json);
+            println!("JSON that will be sent: {}", json);
 
             // Send the logs as JSON in the body of a POST request
             let response = client.post(url)
@@ -32,6 +34,8 @@ pub mod http_request {
                 .send()
                 .await
                 .map_err(|error| format!("Failed to send request: {:?}", error))?;
+
+            println!("Response: {:?}", response);
 
             match response.status().is_success() {
                 true => {
@@ -55,27 +59,4 @@ pub mod http_request {
         ringbuffer.push_back(log_entry);
     }
 
-    #[cfg(test)]
-    mod logging_tests{
-        use std::collections::VecDeque;
-        use crate::communication::logging::http_request::{log, LogEntry};
-
-        #[test]
-        fn test_log() {
-            let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
-            let title = String::from("Test Title");
-            let message = String::from("Test Message");
-            let log_type = String::from("INFO");
-
-            log(title.clone(), message.clone(), log_type.clone(), &mut ringbuffer);
-
-            assert_eq!(ringbuffer.len(), 1);
-            let log_entry = ringbuffer.pop_back().unwrap();
-
-            assert_eq!(log_entry.title, title);
-            assert_eq!(log_entry.message, message);
-            assert_eq!(log_entry.log_type, log_type);
-            assert!(!log_entry.timestamp.is_empty());
-        }
-    }
 }

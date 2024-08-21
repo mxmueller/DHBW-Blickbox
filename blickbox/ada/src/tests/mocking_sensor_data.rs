@@ -1,5 +1,6 @@
-pub mod mocking {
+pub mod mocking_sensor_data {
     use rand::Rng;
+
     use crate::SensorData;
 
     pub fn generate_mock_sensor_data() -> SensorData {
