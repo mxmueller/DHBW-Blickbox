@@ -2,6 +2,7 @@ pub mod http_request {
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
+    use crate::communication::mocking::mocking::generate_mock_sensor_data;
     use crate::SensorData;
 
     #[derive(Serialize, Clone, Debug)]
