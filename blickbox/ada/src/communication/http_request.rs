@@ -47,12 +47,16 @@ pub mod http_request {
         let client = Client::new();
 
         // Send the sensor data as JSON in the body of a POST request
-        let response = client
+        let response = match client
             .post(url)
             .header("blickbox", "true")
             .send()
-            .await
-            .map_err(|error| format!("Failed to send request: {:?}", error))?;
+            .await {
+                Ok(response) => response,
+                Err(error) => {
+                    return Err(format!("{}", error))
+            }
+        };
 
         match response.status().is_success() {
             true => {
@@ -91,20 +95,23 @@ pub mod http_request {
         let client = Client::new();
 
         for data_type in data_types.clone() {
-
             let url = format!("{}/{}", base_url, data_type.0);
 
             let json = data_type.1;
             println!("JSON: {} sent to <{:?}>", json, url);
 
             // Send the sensor data as JSON in the body of a POST request
-            let response = client.post(url)
+            let response = match client.post(url)
                 .header("Content-Type", "application/json")
                 .header("blickbox", "true")
                 .body(json)
                 .send()
-                .await
-                .map_err(|error| format!("Failed to send request: {:?}", error))?;
+                .await {
+                    Ok(response) => response,
+                    Err(error) => {
+                        return Err(format!("{}", error))
+                }
+            };
 
             match response.status().is_success() {
                 true => {

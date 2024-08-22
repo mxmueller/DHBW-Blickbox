@@ -15,7 +15,7 @@ pub mod tests {
         use crate::communication::logging::logging::{log, LogEntry, send_logs};
         use crate::tests::mocking_sensor_data::mocking_sensor_data::generate_mock_sensor_data;
 
-        // Testet schreiben in Datei
+        // Testet Schreiben in Datei
         #[test]
         fn test_write_to_file() {
             // Temporäre Datei

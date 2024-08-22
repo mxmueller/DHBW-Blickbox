@@ -7,7 +7,7 @@ pub mod logging {
 
     use crate::get_time;
 
-    #[derive(Serialize)]
+    #[derive(Serialize, Debug)]
     pub struct LogEntry {
         pub title: String,
         pub message: String,
@@ -28,13 +28,16 @@ pub mod logging {
             println!("JSON that will be sent: {}", json);
 
             // Send the logs as JSON in the body of a POST request
-            let response = client.post(url)
+            let response = match client.post(url)
                 .header("Content-Type", "application/json")
                 .body(json)
                 .send()
-                .await
-                .map_err(|error| format!("Failed to send request: {:?}", error))?;
-
+                .await {
+                    Ok(response) => response,
+                    Err(error) => {
+                        return Err(format!("{}", error))
+                }
+            };
             println!("Response: {:?}", response);
 
             match response.status().is_success() {
@@ -56,6 +59,7 @@ pub mod logging {
             log_type,
             timestamp: get_time(),
         };
+        println!("Log: {:?}", log_entry);
         ringbuffer.push_back(log_entry);
     }
 
