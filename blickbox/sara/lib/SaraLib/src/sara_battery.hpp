@@ -1,8 +1,16 @@
 #ifndef SARA_BATTERY_HPP
 #define SARA_BATTERY_HPP
 
+#ifdef unity_testing
+#include <stubs/ArduinoStubs.hpp>
+#include <makros/ArdunioMakros.hpp>
+#include <mock/SerialLoggerMock.hpp>
+#else
 #include <Arduino.h>
 #include <SerialLogger.hpp>
+#endif
+
+
 #include <voltage_to_capacity_table.hpp>
 
 
