@@ -4,7 +4,7 @@
 #ifndef ARDUINO_STUBS_HPP
 #define ARDUINO_STUBS_HPP
 
-//#include <types/Numbers.h>
+#include <cstdint>
 
 // Stub für pinMode
 inline void pinMode(uint8_t pin, uint8_t mode) {
