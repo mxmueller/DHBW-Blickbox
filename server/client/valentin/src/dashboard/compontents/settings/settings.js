@@ -28,14 +28,15 @@ function Settings({ }) {
   return (
       <ChakraProvider>
         <Box
+            data-testid="settings-icon"
             onClick={onOpen}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            p={2} // Fügen Sie Padding hinzu, um den Klickbereich zu vergrößern
-            borderRadius="50%" // Runden Sie die Ecken des Box-Elements ab, um ein kreisförmiges Icon zu erhalten
-            cursor="pointer" // Ändern Sie den Mauszeiger, um anzuzeigen, dass das Element klickbar ist
-            transition="background-color 0.3s" // Fügen Sie eine Übergangsanimation für die Hintergrundfarbe hinzu
-            _hover={{ backgroundColor: "#f0f0f0" }} // Fügen Sie das Hover-Styling über die Chakra-UI Pseudo-Klasse hinzu
+            p={2}
+            borderRadius="50%"
+            cursor="pointer"
+            transition="background-color 0.3s"
+            _hover={{ backgroundColor: "#f0f0f0" }}
         >
           <IoIosSettings size={24} color='#00000033'/>
         </Box>

@@ -1,4 +1,5 @@
-//not used
+// For requesting data with the console
+/*
 pub mod weather_station {
     use std::io;
     use std::time::Duration;
@@ -97,5 +98,5 @@ pub mod weather_station {
             assert_eq!(result, "23.5");
         }
     }
-
 }
+ */
