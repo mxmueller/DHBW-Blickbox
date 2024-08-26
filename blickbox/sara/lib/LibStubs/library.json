@@ -1,13 +1,13 @@
 {
-"name": "SerialLogger",
+"name": "SaraLIB",
 "version": "1.0.0",
-"description": "This library allows you to log messages to the serial port. It is useful for debugging purposes.",
+"description": "Stubs and Mocks for Arduino based frameworks",
 "keywords": [
     "ada",
-    "debug",
-    "dfplayer",
     "Blickbox",
-    "IoT"
+    "IoT",
+    "Data",
+    "Sara"
   ],
   "frameworks": {
     "arduino": {
@@ -15,8 +15,7 @@
     }
   },
   "platforms": [
-    "espressif8266",
-    "espressif32"
+    "nordicnrf52"
   ],
   "authors": [
     {

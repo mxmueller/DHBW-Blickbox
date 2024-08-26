@@ -48,10 +48,10 @@ namespace sara_data{
       * @param battery Ein Zeiger auf die Batteriedatenstruktur.
       */
      void print_battery_data(battery_data* battery){
-          Serial.print(F("Battery Data - Raw ADC: "));
-          Serial.print(battery->raw_adc);
-          Serial.print(F(", Level: "));
-          Serial.println(battery->level);
+          serial_logger::log("Battery Data - Raw ADC: ");
+          serial_logger::log(battery->raw_adc);
+          serial_logger::log(", Level: ");
+          serial_logger::log(battery->level);
      }
 
      /**
@@ -60,10 +60,10 @@ namespace sara_data{
       * @param air Ein Zeiger auf die Luftdatenstruktur.
       */
      void print_air_data(air_data* air){
-          Serial.print(F("Air Data - Humidity: "));
-          Serial.print(air->humidity);
-          Serial.print(F(", Temperature: "));
-          Serial.println(air->temperature);
+          serial_logger::log("Air Data - Humidity: ");
+          serial_logger::log(air->humidity);
+          serial_logger::log(", Temperature: ");
+          serial_logger::log(air->temperature);
      }
 
      /**
@@ -72,12 +72,12 @@ namespace sara_data{
       * @param weather Ein Zeiger auf die Wetterdatenstruktur.
       */
      void print_weather_station_data(weather_station_data* weather){
-          Serial.print(F("Weather Station Data - Rainfall: "));
-          Serial.print(weather->rainfall);
-          Serial.print(F(", Windspeed: "));
-          Serial.print(weather->windspeed);
-          Serial.print(F(", Winddirection: "));
-          Serial.println(weather->winddirection);
+          serial_logger::log("Weather Station Data - Rainfall: ");
+          serial_logger::log(weather->rainfall);
+          serial_logger::log(", Windspeed: ");
+          serial_logger::log(weather->windspeed);
+          serial_logger::log(", Winddirection: ");
+          serial_logger::log(weather->winddirection);
      }
 
 }

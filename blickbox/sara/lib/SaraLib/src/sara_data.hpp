@@ -1,9 +1,20 @@
 #ifndef SARA_DATA_HPP
 #define SARA_DATA_HPP
 
+#ifdef unity_testing
+#include <stubs/ArduinoStubs.hpp>
+#include <mock/SerialLoggerMock.hpp>
+#include <mock/DHT.hpp>
+#include <makros/FMakro.hpp>
+#include <types/String.h>
+#include <mock/SparkFun_Weather_Meter_Kit_Arduino_Library.h>
+#else
 #include <Arduino.h>
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
 #include <DHT.h>
+#endif
+
+
 #include <sara_battery.hpp>
 
 using namespace sara_battery;
