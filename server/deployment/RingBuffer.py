@@ -36,7 +36,7 @@ def check_and_send_new_entries(ring_buffer, socket):
             socket.send(entry)
 
 
-
+ 
 
 
     
