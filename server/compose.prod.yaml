@@ -14,7 +14,9 @@ services:
       > /secrets/secrets.prod.env && chmod 600 /secrets/secrets.prod.env"
 
 
-  valentin: 
+  valentin:
+      ports:
+        - "3001:80" 
       build:
         context: ./client/valentin
         dockerfile: Dockerfile
@@ -25,6 +27,8 @@ services:
       context: ./deployment/
       dockerfile: Dockerfile
     restart: always
+    ports:
+      - "3002:5000" 
     links: 
       - influxdb
     depends_on:
