@@ -17,6 +17,34 @@ Deine Subdomain kannst du selber wählen in unserem Setup nutzen wir
 6. Beachte, dass du eventuell eine Weiterleitung in deinen Subdomain Einstellung deines Hosters treffen musst.
 Eventuell muss ein A und AAAA Record mit der IP Adresse deines Servers gesetzt werden.
 
+# Development Journey
+
+## Ändern des Docker Deployments
+
+Schreibe deine Änderungen, die für die Developement Umgebung gedacht sind in 
+``compose.override.yaml``. Diese Datei wird mit docker-compose.yaml  bei ``docker compose up`` gemergt.
+
+``docker-compose.yaml`` dient als Basisdatei und sollte eher nicht geändert werden, da sich das auf die prod Umgebung auswirkt. Änderungen die für Prod als auch Dev gedacht sind können hier gemacht werden. 
+
+Schließt sich prod oder dev aus müssen die Änderungen entweder in ``compose.override.yaml`` (für dev) oder
+in ``compose.prod.yaml`` (für prod) gemacht werden.
+
+## Credentials
+
+Für Prod und Dev werden andere Keys verwendet. Alle Entwickler*innen sollten einen Schlüssel für die Dev Credentials haben. Um neue Secrets hinzuzufügen wird ![sops](https://github.com/getsops/sops) auf dem Entwicklungs-PC benötigt.  
+
+Um die Datei zu bearbeiten muss folgende Umgebungsvariable gesetzt werden.
+Diese zeigt auf den Schlüssel, der für die Verschlüsselung der secret Datei verwendet wurde.
+
+```bash
+SOPS_AGE_KEY_FILE: /secrets/key.txt
+```
+
+Mit ``sops edit secrets.dev.enc.env`` kann die Datei bearbeitet werden.
+Nach dem Speichern und schließen der Datei wird diese wieder verschlüsselt.
+
+Das Docker Deployment ersetzt die entschlüsselte Datei nach jedem Start, sodass Änderungen in dieser nicht übernommen werden.
+
 # Ausführen
 
 Mit Build:
@@ -56,6 +84,8 @@ docker-compose restart valentin
 
 1. Erstelle in /srv und /opt einen Ordner
   - Das Deployment ``compose.prod.yml`` nutzt den Ordner /srv/blickbox für die Anwendungsdaten (volumes)
+  - Um das Prod Deployment zu starten führe folgendes Kommando aus
+  ``docker compose -f compose.prod.yaml up``
 2. In /opt wird das Repository geladen
 3. In /srv werden die Anwendungsdaten, die bei der Ausführung entstehen gespeichert
 4. Die Ports der Anwendungen werden auf localhost weitergeleitet:
