@@ -51,3 +51,100 @@ docker-compose build valentin
 docker-compose up -d valentin
 docker-compose restart valentin
 ```
+
+# Deployment auf Prod ohne nginx proxy manager
+
+1. Erstelle in /srv und /opt einen Ordner
+  - Das Deployment ``compose.prod.yml`` nutzt den Ordner /srv/blickbox für die Anwendungsdaten (volumes)
+2. In /opt wird das Repository geladen
+3. In /srv werden die Anwendungsdaten, die bei der Ausführung entstehen gespeichert
+4. Die Ports der Anwendungen werden auf localhost weitergeleitet:
+  * Port 3000 -> Grafana
+  * Port 3001 -> Valentin
+  * Port 3002 -> API
+5. Für die Service sind folgende Routen vorgesehen
+  * https://blickbox.maytastix.de -> Valentin
+  * https://blickbox.maytastix.de/api -> API
+  * https://blickbox.maytastix.de/grafana -> Grafana
+6. Konfigurieren des Reverse Proxies
+Das Deployment nutzt einen auf dem Server laufenden Nginx Reverse Proxy welcher mit der Datei blickbox.maytastix.de konfiguriert wurde
+* Erstelle die Datei blickbox.maytastix.de mit folgenden Inhalt
+```json
+server {
+        listen 80;
+        listen [::]:80;
+        root /var/www/blickbox.maytastix.de;
+        index index.html;
+        server_name blickbox.maytastix.de;
+}
+```
+* Erstelle einen Symbolic Link um die Konfiguration nginx bekannt zu machen
+``ln -s /etc/nginx/sites-available/blickbox.maytastix.de /etc/nginx/sites-enabled/``
+* Rufe certbot auf und erstelle ein Zertifikat für blickbox.maytastix.de
+* Füge anschließend folgenden Inhalt unter die Zeilen ein.
+
+```
+root /var/www/blickbox.maytastix.de;
+index index.html;
+server_name blickbox.maytastix.de;
+```
+
+```json
+   location / {
+        proxy_pass http://localhost:3001/; 
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        client_max_body_size 0;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+        access_log /var/log/nginx/valentin.access.log;
+        error_log /var/log/nginx/valentin.error.log;
+    }
+
+    location /api/ {
+            proxy_pass http://localhost:3002/; 
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 0;
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+            access_log /var/log/nginx/api.access.log;
+            error_log /var/log/nginx/api.error.log;
+    }
+
+    location /grafana/ {
+            proxy_pass http://localhost:3000/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 0;
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+            access_log /var/log/nginx/graphana.access.log;
+            error_log /var/log/nginx/graphana.error.log;
+    }
+```
+
+* Vergleich die Datei /server/prod/blickbox.maytastix.de mit deiner Konfiguration
+* Reloade nginx ``systemctl reload nginx``
+8. Deine Services solltem über folgende Links erreichbar sein
+  * https://blickbox.maytastix.de -> Valentin
+  * https://blickbox.maytastix.de/api -> API
+  * https://blickbox.maytastix.de/grafana -> Grafana
+
+## Troubleshooting
+
+Auf dem verwendeten Server wurde für /srv/blickbox/graphana_data keine schreibberechtigung gesetzt um das zu fixen muss für die Gruppe das w-flag
+gesetzt werden.
+
+```bash
+chmod g+w grafana_data/
+```
