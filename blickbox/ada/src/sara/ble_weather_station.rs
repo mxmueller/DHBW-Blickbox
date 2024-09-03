@@ -1,11 +1,11 @@
 pub mod ble_weather_station {
     use std::time::Duration;
-    use btleplug::api::{bleuuid::uuid_from_u16, Central, CharPropFlags, Manager as _, Peripheral as _, ScanFilter};
+
+    use btleplug::api::{bleuuid::uuid_from_u16, Central, Manager as _, Peripheral as _, ScanFilter};
     use btleplug::platform::{Manager, Peripheral};
     use tokio::time;
-    use futures_util::stream::StreamExt;
-
     use uuid::Uuid;
+
     use crate::SensorData;
 
     // Define the UUIDs for the BLE characteristics you want to interact with

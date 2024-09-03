@@ -1,22 +1,20 @@
-mod sara;
-mod communication;
-
 use std::collections::VecDeque;
 use std::fs::{File, OpenOptions};
-use std::io;
-
-use std::io::{Read, Write};
-use std::str::FromStr;
+use std::io::{BufRead, BufReader, Write};
 use std::time::{Duration, SystemTime};
+
 use btleplug::api::Peripheral;
 use chrono::{DateTime, Utc};
 use chrono_tz::Europe::Berlin;
-use serialport::SerialPort;
 use tokio::time;
+
 use crate::communication::http_request::http_request::{send_data, send_last_online};
-use crate::communication::logging::http_request::{log, LogEntry, send_logs};
+use crate::communication::logging::logging::{log, LogEntry, send_logs};
 use crate::sara::ble_weather_station::ble_weather_station::{connect_peripheral_device, get_data_ble};
-use crate::sara::weather_station::weather_station::get_weather_station_data;
+
+mod sara;
+mod communication;
+mod tests;
 
 type Error = String;
 type Result<T> = std::result::Result<T, Error>;
@@ -45,21 +43,48 @@ async fn main() {
         // the main loop to get data every 30 minutes
         interval.tick().await;
 
-        if let Err(error) = handle_sensor_data(&mut ringbuffer).await {
-            // here it should send the error to the cloud for it to be noted or fixed
-            // should that be handled in the execute() bc its gotta be send as a log with a log-flag...
+        #[cfg(not(feature = "mock"))]
+        let sensor_data = match handle_sensor_data(&mut ringbuffer).await {
+            Ok(sensor_data) => Some(sensor_data),
+            Err(error) => {
+                eprintln!("{}", error);
+                log(String::from("Error"), format!("{}", error), String::from("error"), &mut ringbuffer);
+                None
+            }
+        };
+
+        #[cfg(feature = "mock")]
+        let sensor_data = Some(SensorData {
+            timestamp: get_time(),
+            temperature: 20.0,
+            humidity: 50.0,
+            wind_speed: 5.0,
+            wind_direction: 180.0,
+            rain: 0.0,
+            battery_charge: 90.0,
+            battery_voltage: 3.7,
+        });
+
+        if let Some(data) = sensor_data {
+            if let Err(error) = send_data("https://dhbwapi.maytastix.de/iot/api/insert/", &data).await {
+                eprintln!("{}", error);
+                log(String::from("Error"), format!("{}", error), String::from("error"), &mut ringbuffer);
+            }
+        }
+
+        if let Err(error) = send_last_online("https://dhbwapi.maytastix.de/iot/api/pingBB").await {
             eprintln!("{}", error);
             log(String::from("Error"), format!("{}", error), String::from("error"), &mut ringbuffer);
         }
-        if let Err(error) = send_last_online().await {
+
+        if let Err(error) = send_logs("https://dhbwapi.maytastix.de/ada-logs", &mut ringbuffer).await {
             eprintln!("{}", error);
             log(String::from("Error"), format!("{}", error), String::from("error"), &mut ringbuffer);
         }
-        send_logs(&mut ringbuffer).await.expect("Failed to send log");
     }
 }
 
-async fn handle_sensor_data(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
+async fn handle_sensor_data(ringbuffer: &mut VecDeque<LogEntry>) -> Result<SensorData> {
 
     // Opens file in append mode (and creating it if it doesn't exist)
     let mut file = OpenOptions::new()
@@ -93,9 +118,7 @@ async fn handle_sensor_data(ringbuffer: &mut VecDeque<LogEntry>) -> Result<()> {
 
     write_to_file(&file, &sensor_data);
 
-    send_data(&sensor_data).await?;
-
-    Ok(())
+    Ok(sensor_data)
 }
 
 pub fn get_time() -> String {

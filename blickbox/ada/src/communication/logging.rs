@@ -1,37 +1,44 @@
-pub mod http_request {
+pub mod logging {
     use std::collections::VecDeque;
+
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
-    use crate::{get_time};
 
-    #[derive(Serialize)]
+    use crate::get_time;
+
+    #[derive(Serialize, Debug)]
     pub struct LogEntry {
-        title: String,
-        message: String,
+        pub title: String,
+        pub message: String,
         #[serde(rename = "type")]
-        log_type: String,
-        timestamp: String,
+        pub log_type: String,
+        pub timestamp: String,
     }
 
-    pub async fn send_logs(ringbuffer: &mut VecDeque<LogEntry>) -> crate::Result<()> {
+    pub async fn send_logs(url: &str, ringbuffer: &mut VecDeque<LogEntry>) -> crate::Result<()> {
 
-        let url = "https://dhbwapi.maytastix.de/ada-logs";
+        println!("received url: {}", url);
         // Create a reqwest HTTP client
         let client = Client::new();
 
         for log in ringbuffer {
 
             let json = serde_json::to_string(&log).unwrap();
-            println!("{}", json);
+            println!("JSON that will be sent: {}", json);
 
             // Send the logs as JSON in the body of a POST request
-            let response = client.post(url)
+            let response = match client.post(url)
                 .header("Content-Type", "application/json")
                 .body(json)
                 .send()
-                .await
-                .map_err(|error| format!("Failed to send request: {:?}", error))?;
+                .await {
+                    Ok(response) => response,
+                    Err(error) => {
+                        return Err(format!("{}", error))
+                }
+            };
+            println!("Response: {:?}", response);
 
             match response.status().is_success() {
                 true => {
@@ -52,6 +59,7 @@ pub mod http_request {
             log_type,
             timestamp: get_time(),
         };
+        println!("Log: {:?}", log_entry);
         ringbuffer.push_back(log_entry);
     }
 
