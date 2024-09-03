@@ -4,3 +4,5 @@ output.yaml
 letsencrypt
 secrets.dev.env
 secrets.prod.env
+logdaten
+system_logs.log

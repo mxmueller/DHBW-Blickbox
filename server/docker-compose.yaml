@@ -28,6 +28,16 @@ services:
     depends_on:
       - influxdb
 
+  redis_microservice:
+    build:
+      context: ./deployment/redis_microservice
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./deployment/redis_microservice/logdaten:/app/logdaten
+    depends_on:
+      - redis
+
   influxdb:
     image: influxdb:1.8.10-alpine
     container_name: influxdb
