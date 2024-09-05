@@ -9,6 +9,10 @@ import websockets
 import os
 
 
+link = os.getenv("EMAIL_SMTP_SERVER")
+port = os.getenv("EMAIL_SMTP_PORT")
+password = os.getenv("EMAIL_SMTP_PASSWORD")
+
 
 r = redis.Redis(host='redis', port=6379, db=0)
 p = r.pubsub()
@@ -22,6 +26,7 @@ publisherList = ["backend", "grafana", "ada", "sara", "valentin"]
 
 
 connected_clients = []
+
 
 async def websocket_server(websocket, path):
     connected_clients.append(websocket)
@@ -65,7 +70,6 @@ def errorHandling(channel, data):
     logging.error(beautifyLog(channel,data))
     heading = f"Komponente {channel.replace('-logs', '')} hat einen fehler"
     sendEmail(heading, data["message"])
-
     if channel == "api-logs":
         return
     for item in publisherList:
@@ -76,20 +80,17 @@ def beautifyLog(channel, data):
     return message
 
 def sendEmail(subject, body):
-    link = os.getenv("EMAIL_SMTP_SERVER")
-    port = os.getenv("EMAIL_SMTP_PORT")
-    password = os.getenv("EMAIL_SMTP_PASSWORD")
-    senderEmail = 'blickbox@maytastix.de'
+    senderEmail = 'services@maytastix.de'
     receiver_email = 'aronseidl17@gmail.com'
     message = MIMEMultipart()
     message["From"] = senderEmail
     message["To"] = receiver_email
     message["Subject"] = subject
     message.attach(MIMEText(body, "plain"))
-    with smtplib.SMTP(link, port) as server:  
+    with smtplib.SMTP(link, port) as server:
+        server.ehlo()
         server.starttls()
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receiver_email, message.as_string())
-
 
 asyncio.run(redis_listener())
