@@ -63,7 +63,9 @@ async def send_logs_to_clients(data):
 
 def errorHandling(channel, data):
     logging.error(beautifyLog(channel,data))
-    sendEmail(f"Komponente {channel.replace("-logs", "")} hat einen fehler", data["message"])
+    heading = f"Komponente {channel.replace('-logs', '')} hat einen fehler"
+    sendEmail(heading, data["message"])
+
     if channel == "api-logs":
         return
     for item in publisherList:
