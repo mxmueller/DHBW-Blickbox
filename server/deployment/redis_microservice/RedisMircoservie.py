@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import asyncio
 import websockets
-
+import os
 
 
 
@@ -63,7 +63,7 @@ async def send_logs_to_clients(data):
 
 def errorHandling(channel, data):
     logging.error(beautifyLog(channel,data))
-    #sendEmail(f"Komponente {channel.replace(logs, "")} hat einen fehler", data["message"])
+    sendEmail(f"Komponente {channel.replace("-logs", "")} hat einen fehler", data["message"])
     if channel == "api-logs":
         return
     for item in publisherList:
@@ -74,6 +74,9 @@ def beautifyLog(channel, data):
     return message
 
 def sendEmail(subject, body):
+    link = os.getenv("EMAIL_SMTP_SERVER")
+    port = os.getenv("EMAIL_SMTP_PORT")
+    password = os.getenv("EMAIL_SMTP_PASSWORD")
     senderEmail = 'blickbox@maytastix.de'
     receiver_email = 'aronseidl17@gmail.com'
     message = MIMEMultipart()
@@ -81,7 +84,7 @@ def sendEmail(subject, body):
     message["To"] = receiver_email
     message["Subject"] = subject
     message.attach(MIMEText(body, "plain"))
-    with smtplib.SMTP("smtp.strato.de", 587) as server:  
+    with smtplib.SMTP(link, port) as server:  
         server.starttls()
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receiver_email, message.as_string())
