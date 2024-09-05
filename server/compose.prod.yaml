@@ -70,6 +70,9 @@ services:
 
   
   redis_microservice:
+    build:
+      context: ./deployment/redis_microservice
+      dockerfile: Dockerfile
     ports:
       - "3004:5001"
   
