@@ -4,25 +4,31 @@ services:
 
   sops:
     image: mozilla/sops:latest
+    user: "${UID}:${GID}"
     volumes:
       - "./secrets:/secrets"
     environment:
-      SOPS_AGE_KEY_FILE: /secrets/key.txt
+      - SOPS_AGE_KEY_FILE=/secrets/key.txt
     command: >
-      sh -c "sops --config /secrets/.sops.yaml --decrypt /secrets/secrets.dev.enc.env
-      > /secrets/secrets.dev.env && chmod 600 /secrets/secrets.dev.env"
-      
-  valentin: 
-    build:
-      context: ./client/valentin
-      dockerfile: Dockerfile
-    restart: always 
+      sh -c "sops --config /secrets/.sops.yaml --decrypt /secrets/secrets.prod.enc.env
+      > /secrets/secrets.prod.env && chmod 600 /secrets/secrets.prod.env"
+
+
+  valentin:
+      ports:
+        - "3001:80" 
+      build:
+        context: ./client/valentin
+        dockerfile: Dockerfile
+      restart: always 
 
   python_app:
     build:
       context: ./deployment/
       dockerfile: Dockerfile
     restart: always
+    ports:
+      - "3002:5000" 
     links: 
       - influxdb
     depends_on:
@@ -31,38 +37,34 @@ services:
   influxdb:
     image: influxdb:1.8.10-alpine
     container_name: influxdb
+    restart: always
     env_file:
-        - path: ./secrets/secrets.dev.env
+        - path: ./secrets/secrets.prod.env
           required: false
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - /srv/blickbox/influx:/var/lib/influxdb:uid=1000,gid=1000
   
   grafana:
     image: grafana/grafana:latest
     container_name: grafana-server
     restart: always
     env_file:
-        - path: ./secrets/secrets.dev.env
+        - path: ./secrets/secrets.prod.env
           required: false  
     links: 
       - influxdb
     depends_on:
       - influxdb
+    ports:
+      - "3000:3000" 
     volumes:
-      - grafana_data:/var/lib/grafana
-
-  reverse-proxy:
-    image: 'docker.io/jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - /srv/blickbox/grafana_data:/var/lib/grafana:rw
 
   redis:
     image: redis:7-alpine
     restart: always
     env_file:
-        - path: ./secrets/secrets.dev.env
+        - path: ./secrets/secrets.prod.env
           required: false 
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
 
