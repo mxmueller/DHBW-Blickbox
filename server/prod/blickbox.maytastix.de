@@ -47,6 +47,13 @@ server {
             error_log /var/log/nginx/graphana.error.log;
     }
 
+    location /logs/ {
+            proxy_pass http://localhost:3004/;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+    }
+
     listen [::]:443 ssl; # managed by Certbot
     listen 443 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/blickbox.maytastix.de/fullchain.pem; # managed by Certbot
