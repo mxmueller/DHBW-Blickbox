@@ -64,7 +64,7 @@ services:
       - '443:443' # Public HTTPS Port
       - '81:81' # Admin Web Port
       # Add any other Stream port you want to expose
-      # - '21:21' # FTP
+      # - '21:21' # FTP 
 
     # Uncomment the next line if you uncomment anything in the section
     # environment:
@@ -72,7 +72,7 @@ services:
       # the SQLite DB file within the container
       # DB_SQLITE_FILE: "/data/database.sqlite"
 
-      # Uncomment this if IPv6 is not enabled on your host
+      # Uncomment this if IPv6 is not e nabled on your host
       # DISABLE_IPV6: 'true'
 
     volumes:

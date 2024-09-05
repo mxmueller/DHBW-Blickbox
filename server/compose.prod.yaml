@@ -68,7 +68,11 @@ services:
           required: false 
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}" ]
 
-
+  
+  redis_microservice:
+    ports:
+      - "3004:5001"
+  
 volumes:
   grafana_data:
   influxdb_data:  
