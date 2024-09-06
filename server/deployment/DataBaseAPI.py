@@ -29,7 +29,7 @@ def redis_listener():
     p.subscribe(["backend"])
     for message in p.listen():
             if message['type'] == 'message':
-                if message['data'] == b'Restart Bitch':
+                if message['data'] == b'Restart':
                     print("Restart command received")
                     restart_container()
 
@@ -72,7 +72,7 @@ def sendValentinToRedis():
 @app.route('iot/api/ping', methods=['GET'])
 def pingALL():
     onlineGrafana = pingGrafana()
-    onlineDatabase = pingBlickBox()
+    onlineDatabase = pingDB()
     lastonlineBLickbox = None
     if(onlineDatabase):
         lastonlineBLickbox = pingBlickBox()
