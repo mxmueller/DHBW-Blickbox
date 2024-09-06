@@ -67,6 +67,7 @@ thread_lock = Lock()
 def sendValentinToRedis():
     data = request.json
     redis_client.publish("valentin-logs",json.dumps(data))
+    return return_response("Erfolgreich gelogt", "Niiiice", 200)
 
 
 @app.route('iot/api/ping', methods=['GET'])
