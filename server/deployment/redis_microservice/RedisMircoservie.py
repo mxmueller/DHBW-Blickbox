@@ -69,7 +69,7 @@ def errorHandling(channel, data):
     if channel == "api-logs":
         return
     for item in publisherList:
-        r.publish(item, "Restart Bitch")
+        r.publish(item, "Restart")
 
 def beautifyLog(channel, data):
     message = f"  {data['timestamp']}   {channel}: {data['message']}"
@@ -86,7 +86,8 @@ def sendEmail(subject, body):
     message["To"] = receiver_email
     message["Subject"] = subject
     message.attach(MIMEText(body, "plain"))
-    with smtplib.SMTP(link, port) as server:  
+    with smtplib.SMTP(link, port) as server:
+        server.ehlo()
         server.starttls()
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receiver_email, message.as_string())
