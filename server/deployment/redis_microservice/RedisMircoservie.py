@@ -73,7 +73,7 @@ def errorHandling(channel, data):
     if channel == "api-logs":
         return
     for item in publisherList:
-        r.publish(item, "Restart Bitch")
+        r.publish(item, "Restart")
 
 def beautifyLog(channel, data):
     message = f"  {data['timestamp']}   {channel}: {data['message']}"
