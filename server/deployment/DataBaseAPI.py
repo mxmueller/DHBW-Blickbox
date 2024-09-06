@@ -11,7 +11,6 @@ import json
 import redis
 import docker
 from docker.errors import ContainerError, APIError
-import logging
 import os
 
 
@@ -21,21 +20,17 @@ redis_client = redis.Redis(host='redis', port=6379, db=0)
 sock = Sock(app)
 sock.init_app(app)
 
-logging.basicConfig(filename='system_logs.log', level=logging.DEBUG)
 
 
 
 def redis_listener():
     print("Redis listener started")
-    logging.info("listener_started")
     p = redis_client.pubsub()
     p.subscribe(["backend"])
     for message in p.listen():
-            logging.info(str(message))
             if message['type'] == 'message':
-                if message['data'] == b'Restart Bitch':
+                if message['data'] == b'Restart':
                     print("Restart command received")
-                    logging.info("restart command")
                     restart_container()
 
 def restart_container():
@@ -68,6 +63,26 @@ def return_response(message, value, status_code):
 
 thread_lock = Lock()
 
+@app.route('iot/api/valentin-log', methods=['POST'])
+def sendValentinToRedis():
+    data = request.json
+    redis_client.publish("valentin-logs",json.dumps(data))
+    return return_response("Erfolgreich gelogt", "Niiiice", 200)
+
+
+@app.route('iot/api/ping', methods=['GET'])
+def pingALL():
+    onlineGrafana = pingGrafana()
+    onlineDatabase = pingDB()
+    lastonlineBLickbox = None
+    if(onlineDatabase):
+        lastonlineBLickbox = pingBlickBox()
+    data = {"Grafana-Online" : onlineGrafana, "Database-Online" :  onlineDatabase, "Blickbox-Last-Online": lastonlineBLickbox}
+    response = make_response(jsonify(data), 200)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 
 
 @app.route('/iot/api/pingBB', methods=['POST'])
@@ -96,7 +111,7 @@ def insertLastOnline():
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
 
-@app.route('/iot/api/pingBB', methods=['GET'])
+
 def pingBlickBox():
     log(title='GET', message=(url_for('pingBlickBox') + " from " + request.remote_addr), type='info' )
     log(title='Try', message='Versuche den zuletzt Online Wert der Blickbox abzurufen', type='info' )
@@ -105,14 +120,13 @@ def pingBlickBox():
         result = influx_client.query(query)
         last_online_value = list(result.get_points())[0]['last']
         log(title='Info', message=f'Zuletzt Online Wert der Blickbox abgerufen: {last_online_value}', type='success' )
-        return return_response("last_online", last_online_value, 200)
+        return last_online_value
     except Exception as e:
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error' )
-        return return_response("error", str(e), 500)
+        return None
 
 
-@app.route('/iot/api/pingGF', methods=['GET'])
 def pingGrafana():
     url = "http://grafana-server:3000/api/health"
     log(title='GET', message=(url_for('pingGrafana') + " from " + request.remote_addr), type='info' )
@@ -121,29 +135,27 @@ def pingGrafana():
         response = requests.get(url)
         if response.status_code == 200:
             log(title='Connected', message='Verbindung zu Grafana hergestellt', type='success' )
-            return return_response("message", "Verbingung zu Grafana steht", 200)
+            return True
         else:
             log(title='Info', message=f'Grafana Server hat geantwortet mit Statuscode {response.status_code}', type='info' )
-            return return_response("message", f'Grafana Server hat geantwortet mit Statuscode {response.status_code}', response.status_code)
+            return False
     except requests.ConnectionError:
         log(title='Keine Verbindung', message='Keine Verbindung zum Grafana Server', type='error' )
-        return return_response("Fehler", "Keine Verbindung zum Grafana Server", 503)
+        return False
 
 
 
-@app.route('/iot/api/pingDB', methods=['GET'])
-def pingthis():
+def pingDB():
     log(title='GET', message=(url_for('pingthis') + " from " + request.remote_addr), type='info' )
     log(title='Try', message='Versuche Verbindung zur Datenbank herzusetellen', type='info' )
-
     try:
         influx_client.ping()
         log(title='Connected', message='Verbindung zur Datenbank hergestellt', type='success' )
-        return return_response("message", "Verbingung zur Datenbank steht", 200)
+        return True
     except Exception as e:
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error' )
-        return return_response("error", str(e), 500)
+        return False
 
 
 
