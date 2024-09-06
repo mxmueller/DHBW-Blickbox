@@ -73,6 +73,10 @@ services:
     build:
       context: ./deployment/redis_microservice
       dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - path: ./secrets/secrets.prod.env
+        required: false
     ports:
       - "3004:5001"
   
