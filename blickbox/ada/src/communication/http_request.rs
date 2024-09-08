@@ -41,34 +41,6 @@ pub mod http_request {
         battery_voltage: f32,
     }
 
-    pub async fn send_last_online(url: &str) -> crate::Result<()> {
-
-        // Create a reqwest HTTP client
-        let client = Client::new();
-
-        // Send the sensor data as JSON in the body of a POST request
-        let response = match client
-            .post(url)
-            .header("blickbox", "true")
-            .send()
-            .await {
-                Ok(response) => response,
-                Err(error) => {
-                    return Err(format!("{}", error))
-            }
-        };
-
-        match response.status().is_success() {
-            true => {
-                println!("Last Online Status sent successfully!");
-            }
-            false => {
-                Err(format!("Request failed: {:?}", response.status()))?;
-            }
-        }
-        Ok(())
-    }
-
     pub async fn send_data(url: &str, sensor_data: &SensorData) -> crate::Result<()> {
 
         let base_url = url;

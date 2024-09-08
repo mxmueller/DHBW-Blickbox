@@ -9,10 +9,12 @@ pub mod tests {
         use mockito::{Matcher, Server};
         use tempfile::tempfile;
         use tokio;
+        use mockall::predicate::*;
+        use mockall::*;
 
         use crate::{SensorData, write_to_file};
-        use crate::communication::http_request::http_request::{get_temp_json, send_data, send_last_online};
-        use crate::communication::logging::logging::{log, LogEntry, send_logs};
+        use crate::communication::http_request::http_request::{get_temp_json, send_data};
+        use crate::communication::logging::logging::{log, LogEntry, LogChannel};
         use crate::tests::mocking_sensor_data::mocking_sensor_data::generate_mock_sensor_data;
 
         // Testet Schreiben in Datei
@@ -43,106 +45,19 @@ pub mod tests {
             assert_eq!(content, expected_data);
         }
 
-
-        // Testet senden von Logs an API
-        #[tokio::test]
-        async fn test_send_logs() {
-            let mut server = Server::new_async().await;
-
-            // Mock für die POST-Anfrage zu /ada-logs
-            let _m = server.mock("POST", "/ada-logs")
-                .with_status(200)
-                .with_body("ok")
-                .create_async()
-                .await;
-            let base_url = server.url();
-            let url = format!("{}/ada-logs", base_url);
-
-            let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
-            log(String::from("Test"), String::from("This is a test log"), String::from("info"), &mut ringbuffer);
-
-            let result = send_logs(&url, &mut ringbuffer).await;
-            println!("Result of test_send_logs: {:?}", result);
-
-            assert!(result.is_ok());
-        }
-        #[tokio::test]
-        async fn test_send_logs_failure() {
-            let mut server = Server::new_async().await;
-
-            // Mock für Fehlerstatuscode
-            let _m = server.mock("POST", "/ada-logs")
-                .with_status(500)
-                .with_body("error")
-                .create_async()
-                .await;
-            let base_url = server.url();
-            let url = format!("{}/ada-logs", base_url);
-
-            let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
-            log(String::from("Test"), String::from("This is a test log"), String::from("info"), &mut ringbuffer);
-
-            let result = send_logs(&url, &mut ringbuffer).await;
-            println!("Result of test_send_logs: {:?}", result);
-
-            assert!(result.is_err());
-        }
-
         // Testet Erstellen von Logs
         #[test]
         fn test_log() {
-            let mut ringbuffer: VecDeque<LogEntry> = VecDeque::new();
             let title = String::from("Test Title");
             let message = String::from("Test Message");
             let log_type = String::from("INFO");
 
-            log(title.clone(), message.clone(), log_type.clone(), &mut ringbuffer);
-
-            assert_eq!(ringbuffer.len(), 1);
-            let log_entry = ringbuffer.pop_back().unwrap();
+            let log_entry = log(title.clone(), message.clone(), log_type.clone());
 
             assert_eq!(log_entry.title, title);
             assert_eq!(log_entry.message, message);
             assert_eq!(log_entry.log_type, log_type);
             assert!(!log_entry.timestamp.is_empty());
-        }
-
-        // Testet Senden eines Zuletzt-Online-Status
-        #[tokio::test]
-        async fn test_send_last_online_success() {
-            let mut server = Server::new_async().await;
-
-            // Mock für die POST-Anfrage zu /last-online
-            let _m = server.mock("POST", "/pingBB")
-                .with_status(200)
-                .with_body("ok")
-                .create_async().await;
-
-            let base_url = server.url();
-            let url = format!("{}/pingBB", base_url);
-
-            let result = send_last_online(&url).await;
-            println!("Result of test_send_last_online_success: {:?}", result);
-
-            assert!(result.is_ok());
-        }
-        #[tokio::test]
-        async fn test_send_last_online_failure() {
-            let mut server = Server::new_async().await;
-
-            // Mock für die POST-Anfrage zu /last-online mit einem Fehlerstatuscode
-            let _m = server.mock("POST", "/pingBB")
-                .with_status(500)
-                .with_body("error")
-                .create_async().await;
-
-            let base_url = server.url();
-            let url = format!("{}/pingBB", base_url);
-
-            let result = send_last_online(&url).await;
-            println!("Result of test_send_last_online_failure: {:?}", result);
-
-            assert!(result.is_err());
         }
 
         // Testet Senden von Sensordaten
@@ -244,5 +159,81 @@ pub mod tests {
 
             assert_ne!(get_temp_json(&sensor_data), expected_temp_json);
         }
+
+        mock! {
+            pub RedisHandler {
+                async fn log_to_channel(&self, channel: LogChannel, log_entry: LogEntry) -> Result<(), String>;
+                async fn publish_all(&self) -> Result<(), String>;
+                async fn listen(&self) -> Result<(), String>;
+            }
+        }
+
+        // Testet Loggen mit Channeln
+        #[tokio::test]
+        async fn test_log_to_channel() {
+            let mut mock_redis = MockRedisHandler::new();
+            mock_redis
+                .expect_log_to_channel()
+                .with(eq(LogChannel::Ada), always())
+                .times(1)
+                .returning(|_, _| Ok(()));
+
+            let log_entry = LogEntry {
+                title: "Test".to_string(),
+                message: "Test message".to_string(),
+                log_type: "info".to_string(),
+                timestamp: "2024-03-08 10:00:00".to_string(),
+            };
+
+            let result = mock_redis.log_to_channel(LogChannel::Ada, log_entry).await;
+            assert!(result.is_ok());
+        }
+        #[tokio::test]
+        async fn test_log_to_channel_error() {
+            let mut mock_redis = MockRedisHandler::new();
+            mock_redis
+                .expect_log_to_channel()
+                .with(eq(LogChannel::Sara), always())
+                .times(1)
+                .returning(|_, _| Err("Redis connection error".to_string()));
+
+            let log_entry = LogEntry {
+                title: "Test".to_string(),
+                message: "Test message".to_string(),
+                log_type: "error".to_string(),
+                timestamp: "2024-03-08 10:00:00".to_string(),
+            };
+
+            let result = mock_redis.log_to_channel(LogChannel::Sara, log_entry).await;
+            assert!(result.is_err());
+            assert_eq!(result.unwrap_err(), "Redis connection error");
+        }
+
+        // Testet Publishen von den Logs
+        #[tokio::test]
+        async fn test_publish_all() {
+            let mut mock_redis = MockRedisHandler::new();
+            mock_redis
+                .expect_publish_all()
+                .times(1)
+                .returning(|| Ok(()));
+
+            let result = mock_redis.publish_all().await;
+            assert!(result.is_ok());
+        }
+
+        // Testet Erhalten auf dem subscribed Channel
+        #[tokio::test]
+        async fn test_listen() {
+            let mut mock_redis = MockRedisHandler::new();
+            mock_redis
+                .expect_listen()
+                .times(1)
+                .returning(|| Ok(()));
+
+            let result = mock_redis.listen().await;
+            assert!(result.is_ok());
+        }
+
     }
 }
