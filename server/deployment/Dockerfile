@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install Flask influxdb gunicorn flask-sock redis docker
+RUN pip install Flask influxdb gunicorn flask-sock redis docker flask-cors
 
 #CMD ["python", "DataBaseAPI.py"]
 CMD ["gunicorn", "-b", "0.0.0.0:5000","--workers", "2", "--threads", "5", "DataBaseAPI:app"]

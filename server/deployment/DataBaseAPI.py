@@ -12,9 +12,12 @@ import redis
 import docker
 from docker.errors import ContainerError, APIError
 import os
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/iot/api/*": {"origins": "*"}}, headers=['Content-Type', 'Authorization'])
+
+
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 redis_client = redis.Redis(host='redis', port=6379, db=0)
 sock = Sock(app)
@@ -59,18 +62,22 @@ def return_response(message, value, status_code):
     data = {message: value}
     response = make_response(jsonify(data), status_code)
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
     return response
+
+
+
 
 thread_lock = Lock()
 
-@app.route('iot/api/valentin-log', methods=['POST'])
+@app.route('/iot/api/valentin-log', methods=['POST'])
 def sendValentinToRedis():
     data = request.json
     redis_client.publish("valentin-logs",json.dumps(data))
     return return_response("Erfolgreich gelogt", "Niiiice", 200)
 
 
-@app.route('iot/api/ping', methods=['GET'])
+@app.route('/iot/api/ping', methods=['GET'])
 def pingALL():
     onlineGrafana = pingGrafana()
     onlineDatabase = pingDB()
@@ -80,6 +87,8 @@ def pingALL():
     data = {"Grafana-Online" : onlineGrafana, "Database-Online" :  onlineDatabase, "Blickbox-Last-Online": lastonlineBLickbox}
     response = make_response(jsonify(data), 200)
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+
     return response
 
 
@@ -113,7 +122,7 @@ def insertLastOnline():
 
 
 def pingBlickBox():
-    log(title='GET', message=(url_for('pingBlickBox') + " from " + request.remote_addr), type='info' )
+    log(title='GET', message='pingBlickbox', type='info' )
     log(title='Try', message='Versuche den zuletzt Online Wert der Blickbox abzurufen', type='info' )
     try:
         query = 'SELECT last("value") FROM "last_online"'
@@ -129,7 +138,7 @@ def pingBlickBox():
 
 def pingGrafana():
     url = "http://grafana-server:3000/api/health"
-    log(title='GET', message=(url_for('pingGrafana') + " from " + request.remote_addr), type='info' )
+    log(title='GET', message="pingGrafana", type='info' )
     log(title='Try', message='Versuche Verbindung mit Grafana herzusetellen', type='info' )
     try:
         response = requests.get(url)
@@ -146,7 +155,7 @@ def pingGrafana():
 
 
 def pingDB():
-    log(title='GET', message=(url_for('pingthis') + " from " + request.remote_addr), type='info' )
+    log(title='GET', message="pingDB", type='info' )
     log(title='Try', message='Versuche Verbindung zur Datenbank herzusetellen', type='info' )
     try:
         influx_client.ping()
