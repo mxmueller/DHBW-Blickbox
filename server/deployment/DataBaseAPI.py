@@ -15,13 +15,15 @@ import os
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={r"/iot/api/*": {"origins": "*"}}, headers=['Content-Type', 'Authorization'])
+CORS(app, resources={r"/iot/api/*": {"origins": "*"}}, 
+     supports_credentials=True, 
+     allow_headers="*", 
+     methods=["GET", "POST"])
 
 
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
 redis_client = redis.Redis(host='redis', port=6379, db=0)
-sock = Sock(app)
-sock.init_app(app)
+
 
 
 
@@ -62,7 +64,6 @@ def return_response(message, value, status_code):
     data = {message: value}
     response = make_response(jsonify(data), status_code)
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = '*'
     return response
 
 
