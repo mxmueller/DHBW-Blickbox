@@ -1,5 +1,6 @@
 key.txt
-data
+key*
+data/*
 output.yaml
 letsencrypt
 secrets.dev.env

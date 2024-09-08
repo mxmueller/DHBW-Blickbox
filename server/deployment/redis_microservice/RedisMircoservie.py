@@ -9,11 +9,19 @@ import websockets
 import os
 from datetime import datetime, timedelta
 
+
 onlinestatus = {"Valentin-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
                 "Grafana-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
                 "Database-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
                 "ADA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"},
                 "SARA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"}}
+
+
+link = os.getenv("EMAIL_SMTP_SERVER")
+port = os.getenv("EMAIL_SMTP_PORT")
+password = os.getenv("EMAIL_SMTP_PASSWORD")
+
+
 
 r = redis.Redis(host='redis', port=6379, db=0)
 p = r.pubsub()
@@ -27,6 +35,7 @@ publisherList = ["backend","valentin",  "ada", "sara", "grafana", "influx"]
 
 
 connected_clients = []
+
 
 async def websocket_server(websocket, path):
     connected_clients.append(websocket)
@@ -107,15 +116,18 @@ def handleOnlineStatus(channel, data):
         onlinestatus['Database-Online']['online'] = True
         onlinestatus['Database-Online']['timestamp'] = data['timestamp']
 
+    if channel == "api-logs":
+        return
+    for item in publisherList:
+        r.publish(item, "Restart")
+
+
 def beautifyLog(channel, data):
     message = f"  {data['timestamp']}   {channel}: {data['message']}"
     return message
 
 def sendEmail(subject, body):
-    link = os.getenv("EMAIL_SMTP_SERVER")
-    port = os.getenv("EMAIL_SMTP_PORT")
-    password = os.getenv("EMAIL_SMTP_PASSWORD")
-    senderEmail = 'blickbox@maytastix.de'
+    senderEmail = 'services@maytastix.de'
     receiver_email = 'aronseidl17@gmail.com'
     message = MIMEMultipart()
     message["From"] = senderEmail
