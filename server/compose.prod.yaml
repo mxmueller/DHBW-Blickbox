@@ -63,6 +63,9 @@ services:
   redis:
     image: redis:7-alpine
     restart: always
+    networks:
+        app_net:
+          ipv4_address: 172.16.238.10
     env_file:
         - path: ./secrets/secrets.prod.env
           required: false 
@@ -73,6 +76,10 @@ services:
     build:
       context: ./deployment/redis_microservice
       dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - path: ./secrets/secrets.prod.env
+        required: false
     ports:
       - "3004:5001"
   
@@ -83,3 +90,8 @@ volumes:
   letsencrypt:
 
 
+networks:
+  app_net:
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24
