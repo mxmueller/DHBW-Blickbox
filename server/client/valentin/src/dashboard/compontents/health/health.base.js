@@ -3,11 +3,13 @@ import { ChakraProvider, Flex, Box, Text, HStack, Code, SimpleGrid, Accordion, A
 import { GoContainer, GoDatabase } from "react-icons/go";
 import { SiGrafana } from "react-icons/si";
 import HealthDetail from './health.detail.js';
-import Logstream from '../logstream/logstream.js';
+import { sendLogToBackendOnly } from "../logstream/logtobackend";
+
+const API_URL = 'https://blickbox.maytastix.de/api/iot/api/ping';
 
 const apis = [
     {
-        url: 'https://dhbwapi.maytastix.de/iot/api/pingBB',
+        key: 'Blickbox',
         header: 'Blickbox Hardware',
         success: 'Connected',
         error: 'Disconnected',
@@ -17,7 +19,7 @@ const apis = [
         icon: GoContainer
     },
     {
-        url: 'https://dhbwapi.maytastix.de/iot/api/pingDB',
+        key: 'Database',
         header: 'Blickbox Datenbank',
         success: 'Connected',
         error: 'Disconnected',
@@ -27,7 +29,7 @@ const apis = [
         icon: GoDatabase
     },
     {
-        url: 'https://dhbwapi.maytastix.de/iot/api/pingGF',
+        key: 'Grafana',
         header: 'Grafana',
         success: 'Connected',
         error: 'Disconnected',
@@ -38,112 +40,76 @@ const apis = [
     },
 ];
 
-// Mock data
-const mockData = {
-    'https://dhbwapi.maytastix.de/iot/api/pingBB': { status: 200, last_online: '2024-08-20 10:00:00' },
-    'https://dhbwapi.maytastix.de/iot/api/pingDB': { status: 500, last_online: null },
-    'https://dhbwapi.maytastix.de/iot/api/pingGF': { status: 200, last_online: '2024-08-20 09:55:00' },
-};
-
 function Desc() {
-    const [loading, setLoading] = useState({});
-    const [success, setSuccess] = useState({});
-    const [error, setError] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [apiStatus, setApiStatus] = useState({});
     const [lastUpdated, setLastUpdated] = useState(new Date());
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [lastOnline, setLastOnline] = useState(null);
 
-    // Check if mocks should be used for health monitoring
     const useHealthMocks = process.env.REACT_APP_USE_HEALTH_MOCKS === 'true';
 
     useEffect(() => {
-        const currentDate = new Date();
-        const formattedDateTime = currentDate.toISOString().replace('T', ' ').substr(0, 19);
+        const fetchData = async () => {
+            const currentDate = new Date();
+            const formattedDateTime = currentDate.toISOString().replace('T', ' ').substr(0, 19);
 
-        const fetchData = async (apiUrl, interval) => {
             try {
-                setLoading(prevLoading => ({
-                    ...prevLoading,
-                    [apiUrl]: true
-                }));
+                setLoading(true);
 
                 let response;
                 if (useHealthMocks) {
-                    // Use mock data
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     response = {
-                        status: mockData[apiUrl].status,
-                        json: () => Promise.resolve(mockData[apiUrl])
+                        status: 200,
+                        json: () => Promise.resolve({
+                            "Blickbox-Last-Online": "2024-09-06 16:56:02",
+                            "Database-Online": true,
+                            "Grafana-Online": true
+                        })
                     };
                 } else {
-                    // Real API call
                     response = await Promise.race([
-                        fetch(apiUrl),
+                        fetch(API_URL),
                         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 4000))
                     ]);
                 }
 
-                Logstream.addItemToLogstream({ message: `Verbindungsaufbau: ${apiUrl}.`, type: 'Client Verbindungsversuch', code: 'blackAlpha', date: formattedDateTime });
+                sendLogToBackendOnly({ message: `Verbindungsaufbau: ${API_URL}.`, type: 'Client Verbindungsversuch', code: 'blackAlpha', date: formattedDateTime });
 
                 if (response.status === 200) {
-                    setSuccess(prevSuccess => ({
-                        ...prevSuccess,
-                        [apiUrl]: true
-                    }));
-                    setError(prevError => ({
-                        ...prevError,
-                        [apiUrl]: false
-                    }));
-
-                    Logstream.addItemToLogstream({ message: `Erfolgreiche Verbindung mit: ${apiUrl}`, type: 'Server Erreichbar', code: 'green', date: formattedDateTime });
-
                     const data = await response.json();
-                    if (data && data.last_online) {
-                        setLastOnline(data.last_online);
-                    }
-                } else {
-                    setError(prevError => ({
-                        ...prevError,
-                        [apiUrl]: true
-                    }));
-                    setSuccess(prevSuccess => ({
-                        ...prevSuccess,
-                        [apiUrl]: false
-                    }));
+                    setApiStatus({
+                        Blickbox: true,
+                        Database: data["Database-Online"],
+                        Grafana: data["Grafana-Online"]
+                    });
+                    setLastOnline(data["Blickbox-Last-Online"]);
 
-                    Logstream.addItemToLogstream({ message: `Es konnte keine Verbindung mit ${apiUrl} hergestellt werden.`, type: 'Keine Verbindung zum Server', code: 'red', date: formattedDateTime });
+                    sendLogToBackendOnly({ message: `Erfolgreiche Verbindung mit: ${API_URL}`, type: 'Server Erreichbar', code: 'green', date: formattedDateTime });
+                } else {
+                    setApiStatus({
+                        Blickbox: false,
+                        Database: false,
+                        Grafana: false
+                    });
+                    sendLogToBackendOnly({ message: `Es konnte keine Verbindung mit ${API_URL} hergestellt werden.`, type: 'Keine Verbindung zum Server', code: 'red', date: formattedDateTime });
                 }
             } catch (error) {
-                setError(prevError => ({
-                    ...prevError,
-                    [apiUrl]: true
-                }));
-                setSuccess(prevSuccess => ({
-                    ...prevSuccess,
-                    [apiUrl]: false
-                }));
-
-                Logstream.addItemToLogstream({ message: `${apiUrl} ist nicht erreichbar.`, type: 'Client Verbindungsversuch Fehlgeschlagen', code: 'red', date: formattedDateTime });
+                setApiStatus({
+                    Blickbox: false,
+                    Database: false,
+                    Grafana: false
+                });
+                sendLogToBackendOnly({ message: `${API_URL} ist nicht erreichbar.`, type: 'Client Verbindungsversuch Fehlgeschlagen', code: 'red', date: formattedDateTime });
             } finally {
-                setLoading(prevLoading => ({
-                    ...prevLoading,
-                    [apiUrl]: false
-                }));
+                setLoading(false);
                 setLastUpdated(new Date());
             }
         };
 
-        const fetchDataWithInterval = ({ url, interval }) => {
-            fetchData(url);
-            const intervalId = setInterval(() => {
-                fetchData(url);
-            }, interval);
-            return () => clearInterval(intervalId);
-        };
-
-        apis.forEach(api => {
-            fetchDataWithInterval(api);
-        });
+        fetchData();
+        const intervalId = setInterval(fetchData, 300000); // 5 minutes
 
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -152,6 +118,7 @@ function Desc() {
         window.addEventListener('resize', handleResize);
 
         return () => {
+            clearInterval(intervalId);
             window.removeEventListener('resize', handleResize);
         };
     }, [useHealthMocks]);
@@ -181,19 +148,18 @@ function Desc() {
                                             <Text ml={5} mt={0} color='blackAlpha.600' fontSize='sm' mr={2} >Container zuletzt Online:<Code ml={2} colorScheme='blackAlpha'>{lastOnline}</Code></Text>
                                         )}
                                     </Flex>
-
                                 </Box>
                                 <AccordionIcon />
                             </AccordionButton>
                         </h2>
                         <AccordionPanel mb={0}>
                             <SimpleGrid columns={{sm: 1, md: 2, lg: 4}} minChildWidth='250px'  spacing={4}>
-                                {apis.map(({ url, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
+                                {apis.map(({ key, header, success: successText, error: errorText, delay, duration, icon, interval }) => (
                                     <HealthDetail
-                                        key={url}
-                                        loading={loading[url]}
-                                        success={success[url]}
-                                        error={error[url]}
+                                        key={key}
+                                        loading={loading}
+                                        success={apiStatus[key]}
+                                        error={!apiStatus[key]}
                                         header={header}
                                         successText={successText}
                                         errorText={errorText}

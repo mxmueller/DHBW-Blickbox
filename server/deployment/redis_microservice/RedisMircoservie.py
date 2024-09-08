@@ -17,9 +17,7 @@ logging.getLogger('asyncio').setLevel(logging.ERROR)
 logging.basicConfig(filename='./logdaten/system_logs.log', level=logging.INFO)
 
 p.subscribe(["api-logs", "valentin-logs", "grafana-logs", "ada-logs", "sara-logs"])
-
 publisherList = ["backend", "grafana", "ada", "sara", "valentin"]
-
 
 connected_clients = []
 
