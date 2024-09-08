@@ -27,6 +27,8 @@ services:
       - influxdb
     depends_on:
       - influxdb
+    volumes:
+      - "${DATA_VOLUME}:${DATA_VOLUME}"
 
   redis_microservice:
     build:

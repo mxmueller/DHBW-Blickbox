@@ -7,8 +7,13 @@ from email.mime.text import MIMEText
 import asyncio
 import websockets
 import os
+from datetime import datetime, timedelta
 
-
+onlinestatus = {"Valentin-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
+                "Grafana-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
+                "Database-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
+                "ADA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"},
+                "SARA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"}}
 
 r = redis.Redis(host='redis', port=6379, db=0)
 p = r.pubsub()
@@ -16,9 +21,9 @@ logging.getLogger('websockets').setLevel(logging.ERROR)
 logging.getLogger('asyncio').setLevel(logging.ERROR)
 logging.basicConfig(filename='./logdaten/system_logs.log', level=logging.INFO)
 
-p.subscribe(["api-logs", "valentin-logs", "grafana-logs", "ada-logs", "sara-logs"])
+p.subscribe(["api-logs", "valentin-logs", "grafana-logs", "ada-logs", "sara-logs", "influx-logs"])
 
-publisherList = ["backend", "grafana", "ada", "sara", "valentin"]
+publisherList = ["backend","valentin",  "ada", "sara", "grafana", "influx"]
 
 
 connected_clients = []
@@ -39,7 +44,8 @@ async def redis_listener():
 
     await start_server
     
-   
+    asyncio.create_task(aliveChecker())
+
     while True:
         message = p.get_message()
         if message and message['type'] == 'message':
@@ -51,10 +57,13 @@ async def handleLogs(message):
     data = json.loads(message['data'])
     if data['type'] == 'info' or data['type'] == 'success':
         logging.info(beautifyLog(channel,data))
+        await send_logs_to_clients(data)
     elif data['type'] == "error":
         errorHandling(channel, data)
-
-    await send_logs_to_clients(data)
+        await send_logs_to_clients(data)
+    elif data['type'] == "online":
+        handleOnlineStatus(channel, data)
+    
 
 async def send_logs_to_clients(data):
     if connected_clients:
@@ -66,10 +75,37 @@ def errorHandling(channel, data):
     heading = f"Komponente {channel.replace('-logs', '')} hat einen fehler"
     sendEmail(heading, data["message"])
 
-    if channel == "api-logs":
-        return
-    for item in publisherList:
-        r.publish(item, "Restart")
+    handleRestart(channel)
+
+def handleRestart(channel):
+    if channel == 'valentin-logs':
+        r.publish('valentin', json.dumps({"request": "restart"}))
+    elif channel == 'grafana-logs':
+        r.publish('grafana', json.dumps({"request": "restart"}))
+    elif channel == 'ada-logs':
+        r.publish('ada', json.dumps({"request": "restart"}))
+    elif channel == 'sara-logs':
+        r.publish('sara', json.dumps({"request": "restart"}))
+    elif channel == 'influx-logs':
+        r.publish('influx', json.dumps({"request": "restart"}))
+
+def handleOnlineStatus(channel, data):
+    global onlinestatus
+    if channel == 'valentin-logs':
+        onlinestatus['Valentin-Online']['online'] = True
+        onlinestatus['Valentin-Online']['timestamp'] = data['timestamp']
+    elif channel == 'ada-logs':
+        onlinestatus['ADA-Online']['online'] = True
+        onlinestatus['ADA-Online']['timestamp'] = data['timestamp']
+    elif channel == 'grafana-logs':
+        onlinestatus['Grafana-Online']['online'] = True
+        onlinestatus['Grafana-Online']['timestamp'] = data['timestamp']
+    elif channel == 'sara-logs':
+        onlinestatus['SARA-Online']['online'] = True
+        onlinestatus['SARA-Online']['timestamp'] = data['timestamp']
+    elif channel == 'influx-logs':
+        onlinestatus['Database-Online']['online'] = True
+        onlinestatus['Database-Online']['timestamp'] = data['timestamp']
 
 def beautifyLog(channel, data):
     message = f"  {data['timestamp']}   {channel}: {data['message']}"
@@ -92,5 +128,32 @@ def sendEmail(subject, body):
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receiver_email, message.as_string())
 
+
+async def aliveChecker():
+    while True:
+        await checkAliveness()
+        await asyncio.sleep(60)
+        await update_online_status()
+        payload = {"Grafana-Online": onlinestatus['Grafana-Online']['online'],
+                   "Database-Online": onlinestatus['Database-Online']['online'],
+                   "ADA-Last-Online":onlinestatus['ADA-Online']['timestamp'],
+                    "SARA-Last-Online" : onlinestatus['SARA-Online']['timestamp'] }
+        await send_logs_to_clients(payload)
+        await asyncio.sleep(60)
+async def update_online_status():
+    global onlinestatus
+    now = datetime.now()
+    
+    time_difference = timedelta(minutes=20)
+    
+    for key, value in onlinestatus.items():
+        timestamp = datetime.strptime(value["timestamp"], "%Y-%m-%d %H:%M:%S")
+        
+        if now - timestamp > time_difference:
+            onlinestatus[key]["online"] = False
+
+async def checkAliveness():
+    for channel in publisherList:
+        r.publish(channel,json.dumps({"request": "online"}))
 
 asyncio.run(redis_listener())
