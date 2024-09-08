@@ -1,6 +1,6 @@
 const sendLogToBackend = async (logData) => {
     try {
-      const response = await fetch('https://blickbox.maytastix.de/api/iot/api/valentin-log/', {
+      const response = await fetch('https://blickbox.maytastix.de/api/iot/api/valentin-log', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
