@@ -1,3 +1,8 @@
+# Programm im Dev-Modus ausführen
+
+Sollte die Wetterstation nicht angebunden sein, kann man die Mock-Sensordaten verwenden, um nicht von der Wetterstation abhängig zu sein.
+Der Code wird dabei mit der Konfiguration ausgeführt:
+
 
 # Unittests in Rust
 

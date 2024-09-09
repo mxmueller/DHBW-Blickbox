@@ -17,6 +17,22 @@ pub mod logging {
         Sara,
     }
 
+    #[derive(Serialize, Debug, Clone)]
+    pub struct HandshakeLog {
+        #[serde(rename = "type")]
+        pub log_type: String,
+        pub timestamp: String,
+    }
+
+    pub fn handshake_log(log_type: String) -> HandshakeLog {
+        let handshake_log = HandshakeLog {
+            log_type,
+            timestamp: get_time(),
+        };
+        println!("Handshake log: {:?}", handshake_log);
+        handshake_log
+    }
+
     pub fn log(title: String, message: String, log_type: String) -> LogEntry {
         let log_entry = LogEntry {
             title,

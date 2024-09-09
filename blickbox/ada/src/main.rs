@@ -11,7 +11,7 @@ use tokio::time;
 
 use crate::communication::http_request::http_request::{send_data};
 use crate::communication::logging::logging::{log, LogChannel, LogEntry};
-use crate::communication::redis::{initialize_redis, RedisHandler};
+use crate::communication::redis::redis::{initialize_redis, RedisHandler};
 use crate::sara::ble_weather_station::ble_weather_station::{connect_peripheral_device, get_data_ble};
 
 mod sara;
