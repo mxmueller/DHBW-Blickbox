@@ -2,7 +2,8 @@ pub mod http_request {
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
-
+    use crate::communication::logging::logging::{log, LogChannel};
+    use crate::communication::redis::redis::RedisHandler;
     use crate::SensorData;
 
     #[derive(Serialize, Clone, Debug)]
@@ -41,7 +42,7 @@ pub mod http_request {
         battery_voltage: f32,
     }
 
-    pub async fn send_data(url: &str, sensor_data: &SensorData) -> crate::Result<()> {
+    pub async fn send_data(handler: &RedisHandler, url: &str, sensor_data: &SensorData) -> crate::Result<()> {
 
         let base_url = url;
 
@@ -88,8 +89,14 @@ pub mod http_request {
             match response.status().is_success() {
                 true => {
                     println!("Sensor data from {} sent successfully!", data_type.0);
+                    let log_message = format!("ADA sent {}", data_type.0);
+                    let info_log = log(String::from("ADA"), log_message, String::from("info"));
+                    handler.log_to_channel(LogChannel::Ada, info_log).await;
                 }
                 false => {
+                    let log_message = format!("ADA could not sent {}", data_type.0);
+                    let error_log = log(String::from("ADA"), log_message, String::from("error"));
+                    handler.log_to_channel(LogChannel::Ada, error_log).await;
                     Err(format!("Request failed: {:?}", response.status()))?;
                 }
             }

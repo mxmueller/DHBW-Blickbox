@@ -87,7 +87,7 @@ async fn main() {
             });
 
             if let Some(data) = sensor_data {
-                if let Err(error) = send_data("https://blickbox.maytastix.de/api/iot/api/insert/", &data).await {
+                if let Err(error) = send_data(handler, "https://blickbox.maytastix.de/api/iot/api/insert/", &data).await {
                     let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
                     handler.log_to_channel(LogChannel::Ada, error_log).await;
                 }
