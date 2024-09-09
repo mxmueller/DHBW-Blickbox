@@ -67,7 +67,7 @@ pub mod http_request {
         let client = Client::new();
 
         for data_type in data_types.clone() {
-            let url = format!("{}/{}", base_url, data_type.0);
+            let url = format!("{}{}", base_url, data_type.0);
 
             let json = data_type.1;
             println!("JSON: {} sent to <{:?}>", json, url);

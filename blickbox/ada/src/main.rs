@@ -35,7 +35,7 @@ pub struct SensorData {
 
 #[tokio::main]
 async fn main() {
-    // 10 minutes
+    // 10 Minuten
     let mut interval = time::interval(Duration::from_secs(10 * 60));
     let mut logs: HashMap<String, VecDeque<LogEntry>> = HashMap::new();
 
@@ -50,7 +50,7 @@ async fn main() {
 
 
     if let Some(handler) = &redis_handler {
-        // Start listening for messages in a separate task
+        // Wartet in anderem Task auf Nachrichten vom subscribten Channel
         let listen_handler = handler.clone();
         tokio::spawn(async move {
             if let Err(e) = listen_handler.listen().await {
@@ -59,7 +59,7 @@ async fn main() {
         });
 
         loop {
-            // the main loop to run every 10 minutes
+            // main loop läuft alle 10 Minuten
             interval.tick().await;
 
             #[cfg(not(feature = "mock"))]
@@ -87,7 +87,7 @@ async fn main() {
             });
 
             if let Some(data) = sensor_data {
-                if let Err(error) = send_data("https://blickbox.maytastix.de/iot/api/insert/", &data).await {
+                if let Err(error) = send_data("https://blickbox.maytastix.de/api/iot/api/insert/", &data).await {
                     let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
                     handler.log_to_channel(LogChannel::Ada, error_log).await;
                 }
@@ -104,7 +104,7 @@ async fn main() {
 
 async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
-    // Opens file in append mode (and creating it if it doesn't exist)
+    // Öffnet Datei in "append-mode" und erstellt sie, wenn sie nicht existiert
     let mut file = OpenOptions::new()
         .write(true)
         .append(true)
@@ -157,7 +157,7 @@ pub fn get_time() -> String {
     return time;
 }
 pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
-        // writing the received data to file system
+        // Schreibt erhaltene Daten in Datei auf dem Pi
         let data = format!("{:?}\n", sensor_data);
         file.write_all(data.as_bytes()).unwrap();
 }

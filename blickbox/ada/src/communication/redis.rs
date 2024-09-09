@@ -1,15 +1,15 @@
 pub mod redis {
-    use std::collections::{VecDeque, HashMap};
+    use std::collections::{HashMap, VecDeque};
     use std::env;
+    use std::process::Command;
+    use std::sync::Arc;
+    use std::time::Duration;
+
     use futures_util::StreamExt;
     use redis::{AsyncCommands, RedisError};
-    use std::sync::Arc;
-    use tokio::sync::{Mutex, MutexGuard};
+    use tokio::sync::Mutex;
+
     use crate::communication::logging::logging::{handshake_log, HandshakeLog, log, LogChannel, LogEntry};
-    use std::process::{Command, exit};
-    use std::thread::sleep;
-    use redis::aio::MultiplexedConnection;
-    use std::time::Duration;
 
     #[derive(Clone)]
     pub struct RedisHandler {
@@ -125,13 +125,13 @@ pub mod redis {
                         let restart_log = handshake_log(String::from("acknowledge"));
                         self.publish_handshake(String::from("ada-logs"), restart_log).await.expect("Could not send acknowledge to Redis... :(");
                         println!("Restarting ADA");
-                        // Restart Logic
-                        if let Err(e) = self.safe_restart().await {
-                            eprintln!("Failed to restart: {:?}", e);
-                            let error_log = log(String::from("ADA-Error"), String::from("Failed to restart ADA."), String::from("error"));
-                            self.log_to_channel(LogChannel::Ada, error_log).await;
-                            return Err(redis::RedisError::from((redis::ErrorKind::IoError, "Failed to restart ADA")));
-                        }
+                        // TODO: Restart Logik
+                        //if let Err(e) = self.safe_restart().await {
+                        //    eprintln!("Failed to restart: {:?}", e);
+                        //    let error_log = log(String::from("ADA-Error"), String::from("Failed to restart ADA."), String::from("error"));
+                        //    self.log_to_channel(LogChannel::Ada, error_log).await;
+                        //    return Err(redis::RedisError::from((redis::ErrorKind::IoError, "Failed to restart ADA")));
+                        //}
                     }
                     else {
                         println!("Sara has to be checked...")
@@ -154,28 +154,25 @@ pub mod redis {
         }
 
         pub async fn safe_restart(&self) -> Result<(), RedisError> {
-            // 2. Get the current executable path
             let current_exe = env::current_exe()?;
             println!("Current executable path: {:?}", current_exe);
 
-            // 3. Spawn the new process
+            // Spawnt neuen Prozess und wartet 2 Sekunden
             let mut child = Command::new(current_exe)
-                .arg("--restarted")  // Add a flag to indicate this is a restarted instance
+                .arg("--restarted")
                 .spawn()?;
 
-            // 4. Wait a bit to ensure the new process has started
             tokio::time::sleep(Duration::from_secs(2)).await;
 
-            // 5. Check if the child process is still running
+            // Überprüft, ob der Child-Prozess läuft
             match child.try_wait()? {
                 Some(status) => {
-                    let error_msg = format!("New process exited immediately with status: {:?}", status);
+                    println!("New process exited immediately with status: {:?}", status);
                     return Err(redis::RedisError::from((redis::ErrorKind::IoError, "New process exited immediately.")));
-                    //return Err(error_msg.into());
                 }
                 None => {
                     println!("New process started successfully");
-                    // 6. Exit the current process
+                    // Schließt aktuellen Prozess
                     std::process::exit(0);
                 }
             }
