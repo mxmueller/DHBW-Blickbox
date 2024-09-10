@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir('pfad/zum/react-projekt') {
+                dir('server/client/valentin') {
                     sh 'npm install'
                     sh 'npm run build'
                 }
