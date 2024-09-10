@@ -1,12 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('[GIT] 🔍 Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build') {
+        stage('[VALENTIN] 🛠️ Build') {
             steps {
                 dir('server/client/valentin') {
                     sh 'npm install'
@@ -14,6 +14,18 @@ pipeline {
                 }
             }
         }
-        // Weitere Stufen...
+        stage('[VALENTIN] 💅 Code formating') {
+           steps {
+                dir('server/client/valentin') {
+                    sh 'npm install prettier --save-dev'
+                    sh 'npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md}"'
+                }
+            }
+            post {
+                failure {
+                    echo '[ERROR] Prettier found formatting issues. Please review your code.'
+                }
+            }
+        }
     }
 }
