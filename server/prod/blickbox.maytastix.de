@@ -1,0 +1,84 @@
+
+## For dashboard.example.com subdomain
+server {
+        root /var/www/blickbox.maytastix.de;
+        index index.html;
+        server_name blickbox.maytastix.de;
+	
+   location / {
+        proxy_pass http://localhost:3001/; # set this to the nextcloud port set in doccker-compose file
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        client_max_body_size 0;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+        access_log /var/log/nginx/valentin.access.log;
+        error_log /var/log/nginx/valentin.error.log;
+    }
+
+    location /api/ {
+            proxy_pass http://localhost:3002/; # set this to the nextcloud port set in doccker-compose file
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 0;
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+            access_log /var/log/nginx/api.access.log;
+            error_log /var/log/nginx/api.error.log;
+    }
+
+    location /grafana/ {
+            proxy_pass http://localhost:3000/; # set this to the nextcloud port set in doccker-compose file
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 0;
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload";
+
+            access_log /var/log/nginx/graphana.access.log;
+            error_log /var/log/nginx/graphana.error.log;
+    }
+	
+    location /logs/ {
+        proxy_pass http://localhost:3004/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+        proxy_send_timeout 60s;
+    }
+
+    listen [::]:443 ssl; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/blickbox.maytastix.de/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/blickbox.maytastix.de/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = blickbox.maytastix.de) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+    server_name blickbox.maytastix.de;
+    return 404; # managed by Certbot
+
+
+}
