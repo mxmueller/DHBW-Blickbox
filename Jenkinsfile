@@ -1,52 +1,23 @@
 pipeline {
     agent any
+    
     environment {
         CONTAINER_NAME = "git-stats-container-${BUILD_NUMBER}"
     }
+    
+    parameters {
+        string(name: 'COMPOSE_FILE_1', defaultValue: 'docker-compose.yml', description: 'Pfad zur ersten Docker Compose-Datei')
+        string(name: 'COMPOSE_FILE_2', defaultValue: 'docker-compose.override.yml', description: 'Pfad zur zweiten Docker Compose-Datei')
+        string(name: 'COMPOSE_FILE_3', defaultValue: 'docker-compose.prod.yml', description: 'Pfad zur dritten Docker Compose-Datei')
+    }
+
     stages {
         stage('[GIT] 🔍 Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('[DOCKER] 🐳 Run git-quick-stats') {
-            steps {
-                script {
-                    // Start a long-running container
-                    sh """
-                        docker run -d --name ${CONTAINER_NAME} \
-                            -v ${WORKSPACE}:/workspace \
-                            alpine/git:latest \
-                            tail -f /dev/null
-                    """
-                    
-                    // Install git-quick-stats and run commands
-                    sh """
-                        docker exec ${CONTAINER_NAME} sh -c '
-                            cd /workspace && \
-                            wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats && \
-                            chmod +x /usr/local/bin/git-quick-stats && \
-                            git-quick-stats -T > git-stats-output.txt && \
-                            echo "\\n=== Detailed Report ===" >> git-stats-output.txt && \
-                            git-quick-stats -R >> git-stats-output.txt && \
-                            echo "\\n=== Commit Activity by Hour ===" >> git-stats-output.txt && \
-                            git-quick-stats -c >> git-stats-output.txt && \
-                            echo "\\n=== Commit Activity by Day ===" >> git-stats-output.txt && \
-                            git-quick-stats -b >> git-stats-output.txt && \
-                            echo "\\n=== List of Authors ===" >> git-stats-output.txt && \
-                            git-quick-stats -D >> git-stats-output.txt
-                        '
-                    """
-                }
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'git-stats-output.txt', fingerprint: true
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
-                }
-            }
-        }
+        
         stage('[VALENTIN] 🛠️ Build') {
             steps {
                 dir('server/client/valentin') {
@@ -55,6 +26,7 @@ pipeline {
                 }
             }
         }
+        
         stage('[VALENTIN] 💅 Code formatting') {
            steps {
                 dir('server/client/valentin') {
@@ -67,6 +39,53 @@ pipeline {
                     echo 'run: npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,scss,md}" to fix'
                 }
             }
+        }
+        
+        stage('Install Docker Tools') {
+            steps {
+                sh '''
+                    which hadolint || (curl -sL -o /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64 && chmod +x /usr/local/bin/hadolint)
+                    which yamllint || pip install yamllint
+                '''
+            }
+        }
+        
+        stage('Lint Dockerfiles') {
+            steps {
+                script {
+                    def dockerfiles = sh(script: 'find . -name Dockerfile -o -name "Dockerfile.*"', returnStdout: true).trim().split('\n')
+                    dockerfiles.each { dockerfile ->
+                        echo "Linting Dockerfile: ${dockerfile}"
+                        sh "hadolint ${dockerfile}"
+                    }
+                }
+            }
+        }
+        
+        stage('Lint Docker Compose Files') {
+            steps {
+                script {
+                    def composeFiles = [params.COMPOSE_FILE_1, params.COMPOSE_FILE_2, params.COMPOSE_FILE_3]
+                    composeFiles.each { composeFile ->
+                        if (fileExists(composeFile)) {
+                            echo "Linting Docker Compose file: ${composeFile}"
+                            sh "yamllint ${composeFile}"
+                            sh "docker-compose -f ${composeFile} config -q"
+                        } else {
+                            echo "Warnung: Die Datei ${composeFile} existiert nicht und wird übersprungen."
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline fehlgeschlagen. Überprüfen Sie die Logs für Details zu Linting-Fehlern, Build-Problemen oder Formattierungsproblemen.'
+        }
+        success {
+            echo 'Alle Überprüfungen, Builds und Linting-Prozesse erfolgreich abgeschlossen.'
         }
     }
 }
