@@ -1,13 +1,8 @@
 pub mod logging {
-    use std::collections::VecDeque;
-
-    use reqwest;
-    use reqwest::Client;
     use serde::Serialize;
-
     use crate::get_time;
 
-    #[derive(Serialize, Debug)]
+    #[derive(Serialize, Debug, Clone)]
     pub struct LogEntry {
         pub title: String,
         pub message: String,
@@ -16,43 +11,29 @@ pub mod logging {
         pub timestamp: String,
     }
 
-    pub async fn send_logs(url: &str, ringbuffer: &mut VecDeque<LogEntry>) -> crate::Result<()> {
-
-        println!("received url: {}", url);
-        // Create a reqwest HTTP client
-        let client = Client::new();
-
-        for log in ringbuffer {
-
-            let json = serde_json::to_string(&log).unwrap();
-            println!("JSON that will be sent: {}", json);
-
-            // Send the logs as JSON in the body of a POST request
-            let response = match client.post(url)
-                .header("Content-Type", "application/json")
-                .body(json)
-                .send()
-                .await {
-                    Ok(response) => response,
-                    Err(error) => {
-                        return Err(format!("{}", error))
-                }
-            };
-            println!("Response: {:?}", response);
-
-            match response.status().is_success() {
-                true => {
-                    println!("Logs sent successfully!");
-                }
-                false => {
-                    Err(format!("Request failed: {:?}", response.status()))?;
-                }
-            }
-        }
-        Ok(())
+    #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+    pub enum LogChannel {
+        Ada,
+        Sara,
     }
 
-    pub fn log(title: String, message: String, log_type: String, ringbuffer: &mut VecDeque<LogEntry>) {
+    #[derive(Serialize, Debug, Clone)]
+    pub struct HandshakeLog {
+        #[serde(rename = "type")]
+        pub log_type: String,
+        pub timestamp: String,
+    }
+
+    pub fn handshake_log(log_type: String) -> HandshakeLog {
+        let handshake_log = HandshakeLog {
+            log_type,
+            timestamp: get_time(),
+        };
+        println!("Handshake log: {:?}", handshake_log);
+        handshake_log
+    }
+
+    pub fn log(title: String, message: String, log_type: String) -> LogEntry {
         let log_entry = LogEntry {
             title,
             message,
@@ -60,7 +41,6 @@ pub mod logging {
             timestamp: get_time(),
         };
         println!("Log: {:?}", log_entry);
-        ringbuffer.push_back(log_entry);
+        log_entry
     }
-
 }
