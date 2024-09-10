@@ -25,7 +25,7 @@ pipeline {
             }
             post {
                 failure {
-                    echo 'run: npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,scss,md}" to fix'
+                    echo 'run: npx prettier --write "**/*.{js,jsx,ts,tsx,css,scss,md}" to fix'
                 }
             }
         }
