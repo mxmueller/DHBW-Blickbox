@@ -12,13 +12,9 @@ import redis
 import docker
 from docker.errors import ContainerError, APIError
 import os
-from flask_cors import CORS
+
 
 app = Flask(__name__)
-CORS(app, resources={r"/iot/api/*": {"origins": "*"}}, 
-     supports_credentials=True, 
-     allow_headers="*", 
-     methods=["GET", "POST"])
 
 
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
@@ -31,18 +27,40 @@ redis_client = redis.Redis(host='redis', port=6379, db=0)
 def redis_listener():
     print("Redis listener started")
     p = redis_client.pubsub()
-    p.subscribe(["backend"])
+    p.subscribe(["backend","valentin", "influx", "grafana"])
     for message in p.listen():
             if message['type'] == 'message':
-                if message['data'] == b'Restart':
-                    print("Restart command received")
-                    restart_container()
+                channel = message['channel'].decode('utf-8')
+                print(message)
+                print(channel)
+                data = json.loads(message['data'])
+                if(data['request']) == 'online':
+                    checkAliveness(channel)
+                if(data['request']) == 'restart':
+                    restart_container(channel)
 
-def restart_container():
+
+
+def checkAliveness(channel):
+    timestamp = datetime.now()
+    if channel == 'valentin':
+        if pingValentin():
+            payload = {"type": "online", "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S")}
+            redis_client.publish("valentin-logs", json.dumps(payload))
+    elif channel == 'influx':
+        if pingDB():
+            payload = {"type": "online", "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S")}
+            redis_client.publish("influx-logs", json.dumps(payload))
+    elif channel == 'grafana':
+        if pingGrafana():
+            payload = {"type": "online", "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S")}
+            redis_client.publish("grafana-logs", json.dumps(payload))
+    
+
+def restart_container(channel):
     try:
         client = docker.from_env()
-        container_id = os.getenv('HOSTNAME')
-        container = client.containers.get(container_id)
+        container = client.containers.get(getContainerName(channel))
         container.restart()
         print("Container restarted successfully")
     except ContainerError:
@@ -52,7 +70,16 @@ def restart_container():
     except Exception as e:
         print(f"Unexpected error while restarting container: {e}")
 
-
+def pingValentin():
+    try:
+        response = requests.get("http://valentin")
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except requests.exceptions.RequestException as e:
+        print(f"Valentin-Container ist nicht erreichbar: {e}")
+        return False
 
 def log(title, message, type):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -66,6 +93,13 @@ def return_response(message, value, status_code):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+def getContainerName(channel):
+    if channel == "valentin":
+        return "server-valentin-1"
+    elif channel == "influx":
+        return "server-influxdb-1"
+    elif channel == "grafana":
+        return "server-grafana-1"
 
 
 
