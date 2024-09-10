@@ -1,7 +1,7 @@
 pub mod redis {
     use std::collections::{HashMap, VecDeque};
     use std::env;
-    use std::process::Command;
+    use std::process::{Command, exit};
     use std::sync::Arc;
     use std::time::Duration;
 
@@ -106,7 +106,7 @@ pub mod redis {
         pub async fn subscribe(&self, channel: &str) -> Result<(), redis::RedisError> {
             let mut conn = self.pubsub_conn.lock().await;
             conn.subscribe(channel).await?;
-            println!("subscribing to {}", channel);
+            println!("subscribed to {}", channel);
             Ok(())
         }
 
@@ -120,18 +120,13 @@ pub mod redis {
 
                 println!("Received message on channel {}: {}", channel, payload);
 
-                if payload == "restart" {
+                if payload == "Restart" {
                     if channel.contains("ada") {
                         let restart_log = handshake_log(String::from("acknowledge"));
                         self.publish_handshake(String::from("ada-logs"), restart_log).await.expect("Could not send acknowledge to Redis... :(");
                         println!("Restarting ADA");
                         // TODO: Restart Logik
-                        //if let Err(e) = self.safe_restart().await {
-                        //    eprintln!("Failed to restart: {:?}", e);
-                        //    let error_log = log(String::from("ADA-Error"), String::from("Failed to restart ADA."), String::from("error"));
-                        //    self.log_to_channel(LogChannel::Ada, error_log).await;
-                        //    return Err(redis::RedisError::from((redis::ErrorKind::IoError, "Failed to restart ADA")));
-                        //}
+                        exit(0)
                     }
                     else {
                         println!("Sara has to be checked...")
@@ -151,31 +146,6 @@ pub mod redis {
             }
 
             Ok(())
-        }
-
-        pub async fn safe_restart(&self) -> Result<(), RedisError> {
-            let current_exe = env::current_exe()?;
-            println!("Current executable path: {:?}", current_exe);
-
-            // Spawnt neuen Prozess und wartet 2 Sekunden
-            let mut child = Command::new(current_exe)
-                .arg("--restarted")
-                .spawn()?;
-
-            tokio::time::sleep(Duration::from_secs(2)).await;
-
-            // Überprüft, ob der Child-Prozess läuft
-            match child.try_wait()? {
-                Some(status) => {
-                    println!("New process exited immediately with status: {:?}", status);
-                    return Err(redis::RedisError::from((redis::ErrorKind::IoError, "New process exited immediately.")));
-                }
-                None => {
-                    println!("New process started successfully");
-                    // Schließt aktuellen Prozess
-                    std::process::exit(0);
-                }
-            }
         }
     }
 

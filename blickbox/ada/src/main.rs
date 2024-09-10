@@ -35,6 +35,7 @@ pub struct SensorData {
 
 #[tokio::main]
 async fn main() {
+    println!("Starting ADA");
     // 10 Minuten
     let mut interval = time::interval(Duration::from_secs(10 * 60));
     let mut logs: HashMap<String, VecDeque<LogEntry>> = HashMap::new();
@@ -92,6 +93,7 @@ async fn main() {
                     handler.log_to_channel(LogChannel::Ada, error_log).await;
                 }
             }
+
             if let Err(error) = handler.publish_all().await {
                 eprintln!("Failed to publish logs: {}", error);
                 let error_log = log(String::from("Error"), format!("Failed to publish logs: {}", error), String::from("error"));
