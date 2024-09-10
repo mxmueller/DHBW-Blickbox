@@ -15,10 +15,15 @@ pipeline {
             }
         }
         stage('[VALENTIN] 💅 Code formating') {
-            steps {
+           steps {
                 dir('server/client/valentin') {
                     sh 'npm install prettier --save-dev'
-                    sh 'npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,scss,md}"'
+                    sh 'npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md}"'
+                }
+            }
+            post {
+                failure {
+                    echo '[ERROR] Prettier found formatting issues. Please review your code.'
                 }
             }
         }
