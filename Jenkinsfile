@@ -42,7 +42,7 @@ pipeline {
                 }
             }
         }
-        stage('[SECURITY] 👴 Retire.js Check') {
+        stage('[VALENTIN] 🛡️ Code Security Check') {
             steps {
                 dir('server/client/valentin') {
                     sh 'npm install retire --save-dev'
