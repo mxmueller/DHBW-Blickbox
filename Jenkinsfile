@@ -58,5 +58,27 @@ pipeline {
                 }
             }
         }
+        stage('[VALENTIN] 🔬 SonarQube Analysis') {
+            steps {
+                dir('server/client/valentin') {
+                    withSonarQubeEnv('SonarQube') {  // Stellen Sie sicher, dass dieser Name mit Ihrer SonarQube-Serverkonfiguration in Jenkins übereinstimmt
+                        sh """
+                            ${SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=valentin-project \
+                            -Dsonar.sources=. \
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                            -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts
+                        """
+                    }
+                }
+            }
+        }
+        stage('[VALENTIN] ⏳ Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 }
