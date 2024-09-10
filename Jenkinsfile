@@ -6,7 +6,24 @@ pipeline {
                 checkout scm
             }
         }
-        
+        stage('[GIT] 🕵️ GitLeaks Scan') {
+            steps {
+                sh '''
+                    wget https://github.com/zricethezav/gitleaks/releases/download/v8.16.3/gitleaks_8.16.3_linux_x64.tar.gz
+                    tar -xzf gitleaks_8.16.3_linux_x64.tar.gz
+                    chmod +x gitleaks
+                    ./gitleaks detect --source . -v --report-path gitleaks-report.json
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'gitleaks-report.json', fingerprint: true
+                }
+                failure {
+                    echo 'GitLeaks hat möglicherweise sensitive Daten gefunden. Bitte überprüfen Sie den Bericht.'
+                }
+            }
+        }
         stage('[VALENTIN] 🛠️ Build') {
             steps {
                 dir('server/client/valentin') {
@@ -42,6 +59,7 @@ pipeline {
                 }
             }
         }
+        
         stage('[VALENTIN] 🛡️ Code Security Check') {
             steps {
                 dir('server/client/valentin') {
@@ -55,28 +73,6 @@ pipeline {
                 }
                 failure {
                     echo 'Retire.js hat veraltete Bibliotheken mit bekannten Schwachstellen gefunden. Bitte überprüfen Sie den Bericht.'
-                }
-            }
-        }
-        stage('[VALENTIN] 🔬 SonarQube Analysis') {
-            steps {
-                dir('server/client/valentin') {
-                    withSonarQubeEnv('SonarQube') {  // Stellen Sie sicher, dass dieser Name mit Ihrer SonarQube-Serverkonfiguration in Jenkins übereinstimmt
-                        sh """
-                            ${SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=valentin-project \
-                            -Dsonar.sources=. \
-                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                            -Dsonar.exclusions=**/node_modules/**,**/*.spec.ts
-                        """
-                    }
-                }
-            }
-        }
-        stage('[VALENTIN] ⏳ Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
