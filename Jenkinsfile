@@ -1,14 +1,10 @@
 pipeline {
     agent any
     
-    environment {
-        CONTAINER_NAME = "git-stats-container-${BUILD_NUMBER}"
-    }
-    
     parameters {
-        string(name: 'COMPOSE_FILE_1', defaultValue: 'docker-compose.yml', description: 'Pfad zur ersten Docker Compose-Datei')
-        string(name: 'COMPOSE_FILE_2', defaultValue: 'docker-compose.override.yml', description: 'Pfad zur zweiten Docker Compose-Datei')
-        string(name: 'COMPOSE_FILE_3', defaultValue: 'docker-compose.prod.yml', description: 'Pfad zur dritten Docker Compose-Datei')
+        string(name: 'COMPOSE', defaultValue: 'docker-compose.yaml')
+        string(name: 'COMPOSE_PROD', defaultValue: 'compose.prod.yaml')
+        string(name: 'COMPOSE_OVERRIDE', defaultValue: 'compose.override.yaml')
     }
 
     stages {
