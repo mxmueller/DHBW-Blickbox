@@ -1,67 +1,69 @@
-// logstream.js
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import LogstreamItem from "./logstream.item.js";
 import { ChakraProvider, Box, Table, Tbody, AccordionPanel, TableContainer, Accordion, AccordionItem, AccordionButton, Text, AccordionIcon } from "@chakra-ui/react";
 
 const Logstream = () => {
   const [logstreamItems, setLogstreamItems] = useState([]);
-
-  Logstream.addItemToLogstream = (message) => {
-    setLogstreamItems(prevItems => [message, ...prevItems]);
-  };
-
-  const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState('Disconnected');
 
   useEffect(() => {
+    if (process.env.REACT_APP_USE_LOGSTREAM_MOCKS !== 'true') {
+      const ws = new WebSocket('wss://blickbox.maytastix.de/logs/');
 
-    const ws = new WebSocket('wss://dhbwapi.maytastix.de/log-stream');
+      ws.onopen = () => {
+        console.log('WebSocket connection established.');
+        setConnectionStatus('Connected');
+      };
 
-    ws.onopen = () => {
-      console.log('WebSocket connection established.');
-    };
+      ws.onmessage = (event) => {
+        try {
+          let correctedJsonString = event.data.replace(/'/g, '"');
+          let wsjson = JSON.parse(correctedJsonString);
 
-    ws.onmessage = (event) => {
-      try {
-        let correctedJsonString = event.data.replace(/'/g, '"');
-        let wsjson = JSON.parse(correctedJsonString);
+          console.log('Received message:', wsjson);
 
-        console.log(wsjson);
+          let wsmessagestate = 'blackAlpha';
 
-        let wsmessagestate = 'blackAlpha';
+          if (wsjson.type === "info") wsmessagestate = "yellow";
+          if (wsjson.type === "error") wsmessagestate = "red";
+          if (wsjson.type === "success") wsmessagestate = "green";
 
-        if (wsjson.type == "info")
-          wsmessagestate = "yellow"
+          setLogstreamItems(prevItems => [{
+            message: wsjson.message,
+            code: wsmessagestate,
+            type: "Websocket " + wsjson.title,
+            date: wsjson.timestamp
+          }, ...prevItems]);
 
-        if (wsjson.type == "error")
-          wsmessagestate = "red"
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
+          const currentDate = new Date();
+          setLogstreamItems(prevItems => [{
+            message: 'Fehler beim Parsen der empfangenen Daten:',
+            error,
+            type: "Websocket Error",
+            code: "red",
+            date: currentDate.toISOString()
+          }, ...prevItems]);
+        }
+      };
 
-        if (wsjson.type == "success")
-          wsmessagestate = "green"
+      ws.onclose = () => {
+        console.log('WebSocket connection closed.');
+        setConnectionStatus('Disconnected');
+      };
 
-        Logstream.addItemToLogstream({ message: wsjson.message, code: wsmessagestate, type: "Websocket " + wsjson.title, date: wsjson.timestamp });
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+        setConnectionStatus('Error');
+      };
 
-      } catch (error) {
-        const currentDate = new Date();
-        Logstream.addItemToLogstream({ message: 'Fehler beim Parsen der empfangenen Daten:', error, type: "Websocket Error", code: "red", date: currentDate.toISOString()});
-      }
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket connection closed.');
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    setSocket(ws);
-
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-    };
+      return () => {
+        if (ws) {
+          ws.close();
+        }
+      };
+    }
   }, []);
 
   return (
@@ -81,13 +83,11 @@ const Logstream = () => {
               <TableContainer>
                 <Box
                   maxHeight={'700px'}
-                  sx={
-                    {
-                      '::-webkit-scrollbar': {
-                        display: 'none'
-                      }
+                  sx={{
+                    '::-webkit-scrollbar': {
+                      display: 'none'
                     }
-                  }
+                  }}
                   display='block'
                   overflowY='scroll'
                   overflowX='scroll'
@@ -95,7 +95,8 @@ const Logstream = () => {
                   bg='white'
                   minHeight='90px'
                   width='100%'
-                  padding={5} >
+                  padding={5}
+                >
                   <Table variant="simple" size="sm">
                     <Tbody>
                       {logstreamItems.map((item, index) => (
@@ -114,7 +115,6 @@ const Logstream = () => {
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
-
       </Box>
     </ChakraProvider>
   );
