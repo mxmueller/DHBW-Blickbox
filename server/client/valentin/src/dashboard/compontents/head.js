@@ -1,5 +1,5 @@
 
-import {ChakraProvider, Text, Box, Image, Flex, HStack, Spacer} from "@chakra-ui/react"
+import {ChakraProvider, Text, Box, Flex, HStack, Spacer} from "@chakra-ui/react"
 import Settings from './settings/settings.js';
 
 function Head({ children }) {

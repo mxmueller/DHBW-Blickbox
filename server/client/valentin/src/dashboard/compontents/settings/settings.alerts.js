@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Checkbox } from '@chakra-ui/react';
 import Cookies from 'js-cookie';
-import dhbw from '../../icons/dhbw.png'; // Adjust the path to the icon accordingly
 
 const welcomeMessage = {
   title: 'Vielen Dank!',
@@ -17,7 +16,7 @@ function UserSettings() {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState('default');
   const [isCheckboxEnabled, setIsCheckboxEnabled] = useState(true);
-  const [isFirstTime, setIsFirstTime] = useState(true);
+  const [, setIsFirstTime] = useState(true);
 
   useEffect(() => {
     const notificationEnabled = Cookies.get('notificationEnabled');

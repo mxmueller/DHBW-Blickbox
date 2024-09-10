@@ -4,7 +4,7 @@ import { ChakraProvider, Box, Table, Tbody, AccordionPanel, TableContainer, Acco
 
 const Logstream = () => {
   const [logstreamItems, setLogstreamItems] = useState([]);
-  const [connectionStatus, setConnectionStatus] = useState('Disconnected');
+  const [, setConnectionStatus] = useState('Disconnected');
 
   useEffect(() => {
     if (process.env.REACT_APP_USE_LOGSTREAM_MOCKS !== 'true') {

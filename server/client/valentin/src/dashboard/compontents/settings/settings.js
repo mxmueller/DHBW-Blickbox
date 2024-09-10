@@ -14,7 +14,7 @@ import {
 
 import AlertSettings from './settings.alerts.js';
 
-function Settings({ }) {
+function Settings() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleMouseEnter = (event) => {
