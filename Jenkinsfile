@@ -16,7 +16,6 @@ pipeline {
                         ./gitleaks detect --source . -v --report-path gitleaks-report.json \
                         --exclude-files="**keys.json,**keys.txt" || true
                     ''', returnStatus: true)
-
                     if (gitleaksExitCode != 0) {
                         echo "GitLeaks may have found sensitive data. Please review the report."
                     }
@@ -77,6 +76,30 @@ pipeline {
                 }
                 failure {
                     echo 'Retire.js hat veraltete Bibliotheken mit bekannten Schwachstellen gefunden. Bitte überprüfen Sie den Bericht.'
+                }
+            }
+        }
+        
+        stage('[DOCKER] 🐳 Dockerfile Analysis') {
+            steps {
+                script {
+                    sh '''
+                        wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+                        mv hadolint-Linux-x86_64 hadolint
+                        chmod +x hadolint
+                    '''
+
+                    def dockerfiles = sh(script: 'find . -name Dockerfile', returnStdout: true).trim().split('\n')
+                    
+                    dockerfiles.each { dockerfile ->
+                        echo "Analyzing Dockerfile: ${dockerfile}"
+                        def hadolintExitCode = sh(script: "./hadolint ${dockerfile} || true", returnStatus: true)
+                        if (hadolintExitCode != 0) {
+                            echo "Hadolint found issues in ${dockerfile}. Please review the output above."
+                        } else {
+                            echo "${dockerfile} passed hadolint checks."
+                        }
+                    }
                 }
             }
         }
