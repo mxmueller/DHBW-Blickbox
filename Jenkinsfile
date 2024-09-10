@@ -6,34 +6,30 @@ pipeline {
                 checkout scm
             }
         }
-        stage('[GIT] 🔍 Install git-quick-stats') {
+        stage('[DOCKER] 🐳 Build and Run git-quick-stats') {
             steps {
-                sh '''
-                    # Install git-quick-stats
-                    sudo wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats
-                    sudo chmod +x /usr/local/bin/git-quick-stats
-                '''
-            }
-        }
-
-        stage('[GIT] 🔍 Run git-quick-stats') {
-            steps {
-                sh '''
-                    echo "=== General Statistics ==="
-                    git-quick-stats -T
+                script {
+                    def dockerfileContent = '''
+                        FROM alpine:latest
+                        RUN apk add --no-cache git bash curl wget
+                        RUN wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats && \
+                            chmod +x /usr/local/bin/git-quick-stats
+                        WORKDIR /repo
+                        COPY . .
+                        CMD ["sh", "-c", "git-quick-stats -T && git-quick-stats -R && git-quick-stats -c && git-quick-stats -b && git-quick-stats -D"]
+                    '''
+                    writeFile file: 'Dockerfile', text: dockerfileContent
+                   
+                    docker.build("git-quick-stats-image", ".")
                     
-                    echo "\n=== Detailed Report ==="
-                    git-quick-stats -R
+                    def output = sh(script: """
+                        docker run --rm git-quick-stats-image | tee git-stats-output.txt
+                    """, returnStdout: true).trim()
                     
-                    echo "\n=== Commit Activity by Hour ==="
-                    git-quick-stats -c
+                    echo output
                     
-                    echo "\n=== Commit Activity by Day ==="
-                    git-quick-stats -b
-                    
-                    echo "\n=== List of Authors ==="
-                    git-quick-stats -D
-                '''
+                    archiveArtifacts artifacts: 'git-stats-output.txt', fingerprint: true
+                }
             }
         }
         stage('[VALENTIN] 🛠️ Build') {
@@ -44,7 +40,7 @@ pipeline {
                 }
             }
         }
-        stage('[VALENTIN] 💅 Code formating') {
+        stage('[VALENTIN] 💅 Code formatting') {
            steps {
                 dir('server/client/valentin') {
                     sh 'npm install prettier --save-dev'
@@ -56,6 +52,12 @@ pipeline {
                     echo 'run: npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,scss,md}" to fix'
                 }
             }
+        }
+    }
+    post {
+        always {
+            // Clean up: remove the Dockerfile
+            sh 'rm -f Dockerfile'
         }
     }
 }
