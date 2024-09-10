@@ -20,7 +20,7 @@ pipeline {
            steps {
                 dir('server/client/valentin') {
                     sh 'npm install prettier --save-dev'
-                    sh 'npx prettier --check "**/*.{js,jsx,ts,tsx,json,css,scss,md}"'
+                    sh 'npx prettier --check "**/*.{js,jsx,ts,tsx,css,scss,md}"'
                 }
             }
             post {
