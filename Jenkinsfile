@@ -7,31 +7,40 @@ pipeline {
             }
         }
         stage('[DOCKER] 🐳 Build and Run git-quick-stats') {
+            agent {
+                docker {
+                    image 'alpine:latest'
+                    args '-v ${WORKSPACE}:/workspace'
+                }
+            }
             steps {
                 script {
-                    // Write Dockerfile content
-                    def dockerfileContent = '''
-                        FROM alpine:latest
-                        RUN apk add --no-cache git bash curl wget
-                        RUN wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats && \
-                            chmod +x /usr/local/bin/git-quick-stats
-                        WORKDIR /repo
-                        COPY . .
-                        CMD ["sh", "-c", "git-quick-stats -T && git-quick-stats -R && git-quick-stats -c && git-quick-stats -b && git-quick-stats -D"]
-                    '''
+                    // Install necessary tools
+                    sh 'apk add --no-cache git bash curl wget'
                     
-                    // Write Dockerfile
-                    writeFile file: 'Dockerfile', text: dockerfileContent
-                    
-                    // Build Docker image
-                    sh 'docker build -t git-quick-stats-image .'
-                    
-                    // Run Docker container and capture output
+                    // Install git-quick-stats
                     sh '''
-                        docker run --rm git-quick-stats-image | tee git-stats-output.txt
+                        wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats
+                        chmod +x /usr/local/bin/git-quick-stats
                     '''
                     
-                    // Archive the output file
+                    // Run git-quick-stats and capture output
+                    sh '''
+                        cd /workspace
+                        git-quick-stats -T > git-stats-output.txt
+                        echo "\n=== Detailed Report ===" >> git-stats-output.txt
+                        git-quick-stats -R >> git-stats-output.txt
+                        echo "\n=== Commit Activity by Hour ===" >> git-stats-output.txt
+                        git-quick-stats -c >> git-stats-output.txt
+                        echo "\n=== Commit Activity by Day ===" >> git-stats-output.txt
+                        git-quick-stats -b >> git-stats-output.txt
+                        echo "\n=== List of Authors ===" >> git-stats-output.txt
+                        git-quick-stats -D >> git-stats-output.txt
+                    '''
+                }
+            }
+            post {
+                success {
                     archiveArtifacts artifacts: 'git-stats-output.txt', fingerprint: true
                 }
             }
@@ -56,15 +65,6 @@ pipeline {
                     echo 'run: npx prettier --write "**/*.{js,jsx,ts,tsx,json,css,scss,md}" to fix'
                 }
             }
-        }
-    }
-    post {
-        always {
-            // Clean up: remove the Dockerfile and Docker image
-            sh '''
-                rm -f Dockerfile
-                docker rmi git-quick-stats-image || true
-            '''
         }
     }
 }
