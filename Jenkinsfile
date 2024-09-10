@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        CONTAINER_NAME = "git-stats-container-${BUILD_NUMBER}"
+    }
     stages {
         stage('[GIT] 🔍 Checkout') {
             steps {
@@ -7,34 +10,40 @@ pipeline {
             }
         }
         stage('[DOCKER] 🐳 Run git-quick-stats') {
-            agent {
-                docker {
-                    image 'alpine/git:latest'
-                    args '-v ${WORKSPACE}:/workspace:rw'
-                    reuseNode true
-                }
-            }
             steps {
                 script {
-                    sh '''
-                        cd /workspace
-                        wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats
-                        chmod +x /usr/local/bin/git-quick-stats
-                        git-quick-stats -T > git-stats-output.txt
-                        echo "\n=== Detailed Report ===" >> git-stats-output.txt
-                        git-quick-stats -R >> git-stats-output.txt
-                        echo "\n=== Commit Activity by Hour ===" >> git-stats-output.txt
-                        git-quick-stats -c >> git-stats-output.txt
-                        echo "\n=== Commit Activity by Day ===" >> git-stats-output.txt
-                        git-quick-stats -b >> git-stats-output.txt
-                        echo "\n=== List of Authors ===" >> git-stats-output.txt
-                        git-quick-stats -D >> git-stats-output.txt
-                    '''
+                    // Start a long-running container
+                    sh """
+                        docker run -d --name ${CONTAINER_NAME} \
+                            -v ${WORKSPACE}:/workspace \
+                            alpine/git:latest \
+                            tail -f /dev/null
+                    """
+                    
+                    // Install git-quick-stats and run commands
+                    sh """
+                        docker exec ${CONTAINER_NAME} sh -c '
+                            cd /workspace && \
+                            wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats && \
+                            chmod +x /usr/local/bin/git-quick-stats && \
+                            git-quick-stats -T > git-stats-output.txt && \
+                            echo "\\n=== Detailed Report ===" >> git-stats-output.txt && \
+                            git-quick-stats -R >> git-stats-output.txt && \
+                            echo "\\n=== Commit Activity by Hour ===" >> git-stats-output.txt && \
+                            git-quick-stats -c >> git-stats-output.txt && \
+                            echo "\\n=== Commit Activity by Day ===" >> git-stats-output.txt && \
+                            git-quick-stats -b >> git-stats-output.txt && \
+                            echo "\\n=== List of Authors ===" >> git-stats-output.txt && \
+                            git-quick-stats -D >> git-stats-output.txt
+                        '
+                    """
                 }
             }
             post {
-                success {
+                always {
                     archiveArtifacts artifacts: 'git-stats-output.txt', fingerprint: true
+                    sh "docker stop ${CONTAINER_NAME} || true"
+                    sh "docker rm ${CONTAINER_NAME} || true"
                 }
             }
         }
