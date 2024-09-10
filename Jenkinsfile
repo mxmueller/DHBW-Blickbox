@@ -10,20 +10,16 @@ pipeline {
             agent {
                 docker {
                     image 'alpine/git:latest'
-                    args '-v ${WORKSPACE}:/workspace'
+                    args '-v ${WORKSPACE}:/workspace:rw'
+                    reuseNode true
                 }
             }
             steps {
                 script {
-                    // Install git-quick-stats
-                    sh '''
-                        wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats
-                        chmod +x /usr/local/bin/git-quick-stats
-                    '''
-                    
-                    // Run git-quick-stats and capture output
                     sh '''
                         cd /workspace
+                        wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats
+                        chmod +x /usr/local/bin/git-quick-stats
                         git-quick-stats -T > git-stats-output.txt
                         echo "\n=== Detailed Report ===" >> git-stats-output.txt
                         git-quick-stats -R >> git-stats-output.txt
