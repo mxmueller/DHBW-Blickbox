@@ -6,18 +6,15 @@ pipeline {
                 checkout scm
             }
         }
-        stage('[DOCKER] 🐳 Build and Run git-quick-stats') {
+        stage('[DOCKER] 🐳 Run git-quick-stats') {
             agent {
                 docker {
-                    image 'alpine:latest'
+                    image 'alpine/git:latest'
                     args '-v ${WORKSPACE}:/workspace'
                 }
             }
             steps {
                 script {
-                    // Install necessary tools
-                    sh 'apk add --no-cache git bash curl wget'
-                    
                     // Install git-quick-stats
                     sh '''
                         wget -O /usr/local/bin/git-quick-stats https://raw.githubusercontent.com/arzzen/git-quick-stats/master/git-quick-stats
