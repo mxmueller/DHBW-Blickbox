@@ -37,6 +37,27 @@ pipeline {
                 }
             }
         }
+
+        stage('[ADA] 💅 Code formatting and liniting') {
+            steps {
+                dir('blickbox/ada') {
+                    sh '''
+                        export PATH="$HOME/.cargo/bin:$PATH"
+                        rustup component add clippy
+                        cargo clippy -- -D warnings
+                    '''
+                }
+            }
+            post {
+                failure {
+                    echo 'Clippy found issues. Please review the output above and fix the warnings/errors.'
+                }
+                success {
+                    echo 'Clippy check passed successfully.'
+                }
+            }
+        }
+        
         stage('[GIT] 🕵️ GitLeaks Scan') {
             steps {
                 script {
@@ -67,7 +88,7 @@ pipeline {
             }
         }
         
-        stage('[VALENTIN] 💅 Code formatting') {
+        stage('[VALENTIN] 💅 Code formatting and liniting') {
            steps {
                 dir('server/client/valentin') {
                     sh 'npm install prettier --save-dev'
