@@ -147,6 +147,26 @@ pipeline {
                 }
             }
         }
+
+        stage('[API] 🧪 Pytest'){
+            steps{
+                dir('server/deployment/tests'){
+                    sh '''
+                        pip install -r requirements.txt
+                        pytest --disable-warnings --junitxml=pytest-report.xml --noPing
+                    '''
+                }
+            }
+            post{
+                always {
+                    junit '**/pytest-report.xml'
+                    }
+                failure {
+                    echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
+                    }
+                }
+            }
+        }
         
         stage('[DOCKER] 🐳 Dockerfile Analysis') {
             steps {
