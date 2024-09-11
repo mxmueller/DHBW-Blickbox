@@ -11,7 +11,7 @@ def getURL(path):
     if(use_dev_container):
         return "http://localhost:5000/iot/api" + path
     else:
-        return "http://dhbwapi.maytastix.de/iot/api" + path
+        return "https://blickbox.maytastix.de/api/iot/api" + path
 
 
 session = requests.Session()

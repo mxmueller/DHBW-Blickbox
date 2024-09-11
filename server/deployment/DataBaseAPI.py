@@ -14,11 +14,14 @@ from docker.errors import ContainerError, APIError
 import os
 
 
+use_dev_container = os.getenv("API_USE_DEV_CONTAINER", "false").lower() == "true"
+
 app = Flask(__name__)
 
 
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
-redis_client = redis.Redis(host='redis', port=6379, db=0)
+if not use_dev_container:
+    redis_client = redis.Redis(host='redis', port=6379, db=0)
 
 
 
@@ -561,9 +564,10 @@ def sendEmail(subject, body):
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receiver_email, message.as_string())
 
-redis_thread = Thread(target=redis_listener)
-redis_thread.daemon = True
-redis_thread.start()
+if not use_dev_container:
+    redis_thread = Thread(target=redis_listener)
+    redis_thread.daemon = True
+    redis_thread.start()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
