@@ -22,6 +22,16 @@ pipeline {
                         export PATH="$HOME/.cargo/bin:$PATH"
                         rustc --version
                         cargo build --release
+                    '''
+                }
+            }
+        }
+        
+        stage('[ADA] 🧪 Test') {
+            steps {
+                dir('blickbox/ada') {
+                    sh '''
+                        export PATH="$HOME/.cargo/bin:$PATH"
                         cargo test
                     '''
                 }
