@@ -31,7 +31,9 @@ pipeline {
             steps{
                 dir('server/deployment/tests'){
                     sh '''
-                        pip3 install -r requirements.txt
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install -r requirements.txt
                         pytest --disable-warnings --junitxml=pytest-report.xml --noPing
                     '''
                 }
