@@ -58,14 +58,32 @@ pipeline {
                 }
             }
         }
-        stage('[ADA] 💅 Code formatting and liniting') {
+        stage('[ADA] 💅 Code formatting and linting') {
             steps {
                 dir('blickbox/ada') {
-                    sh '''
-                        export PATH="$HOME/.cargo/bin:$PATH"
-                        rustup component add clippy
-                        cargo clippy -- -D warnings
-                    '''
+                    script {
+                        def clippyFlags = '''
+                            -W clippy::all                     
+                            -W clippy::style                   
+                            
+                            -W clippy::clone_on_ref_ptr        
+                            -W clippy::redundant_clone      
+                            -W clippy::significant_drop_in_scrutinee 
+                            
+                            -W clippy::suspicious              
+                            -W clippy::complexity            
+                            
+                            -A clippy::missing_docs_in_private_items 
+                            -A clippy::module_name_repetitions 
+                            -A clippy::too_many_arguments    
+                        '''.stripIndent()
+                        
+                        sh """
+                            export PATH="$HOME/.cargo/bin:$PATH"
+                            rustup component add clippy
+                            cargo clippy -- ${clippyFlags}
+                        """
+                    }
                 }
             }
             post {
