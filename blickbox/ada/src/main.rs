@@ -65,7 +65,7 @@ async fn main() {
             let sensor_data = match handle_sensor_data(handler).await {
                 Ok(sensor_data) => Some(sensor_data),
                 Err(error) => {
-                    let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
+                    let error_log = log(String::from("Error"), error, String::from("error"));
                     let sara_log = log(String::from("Error"), String::from("Issue occurred while trying to connect to ADA"), String::from("error"));
                     handler.log_to_channel(LogChannel::Ada, error_log).await;
                     handler.log_to_channel(LogChannel::Sara, sara_log).await;
@@ -93,7 +93,7 @@ async fn main() {
                         }
                     }
                     Err(error) => {
-                        let error_log = log(String::from("Error"), String::from(error), String::from("error"));
+                        let error_log = log(String::from("Error"), error, String::from("error"));
                         handler.log_to_channel(LogChannel::Ada, error_log).await;
                     }
                 }
@@ -113,7 +113,6 @@ async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
     // Öffnet Datei in "append-mode" und erstellt sie, wenn sie nicht existiert
     let file = OpenOptions::new()
-        .write(true)
         .append(true)
         .create(true)
         .open("command_history.txt").unwrap();
@@ -160,8 +159,7 @@ async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
 pub fn get_time() -> String {
     let date_time_format: DateTime<Utc> = SystemTime::now().into();
-    let time = date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string();
-    return time;
+    date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string()
 }
 pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
         // Schreibt erhaltene Daten in Datei auf dem Pi

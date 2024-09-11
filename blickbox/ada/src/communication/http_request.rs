@@ -110,8 +110,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             temperature: sensor_data.temperature,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_humidity_json(sensor_data: &SensorData) -> String {
@@ -119,8 +118,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             air_humidity: sensor_data.humidity,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_wind_speed_json(sensor_data: &SensorData) -> String {
@@ -128,8 +126,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             wind_speed: sensor_data.wind_speed,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_wind_direction_json(sensor_data: &SensorData) -> String {
@@ -137,8 +134,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             wind_direction: sensor_data.wind_direction,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_rain_json(sensor_data: &SensorData) -> String {
@@ -146,8 +142,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             rain: sensor_data.rain,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_battery_level_json(sensor_data: &SensorData) -> String {
@@ -155,8 +150,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             battery_charge: sensor_data.battery_charge,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_battery_voltage_json(sensor_data: &SensorData) -> String {
@@ -164,7 +158,6 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             battery_voltage: sensor_data.battery_voltage,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 }
