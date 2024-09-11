@@ -9,10 +9,12 @@ pipeline {
         stage('[ADA] 🦀 Build') {
             steps {
                 dir('blickbox/ada') {
-                    sh 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y'
-                    sh 'source $HOME/.cargo/env'
-                    sh 'rustc --version'
-                    sh 'cargo build --release'
+                   sh '''
+                        curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+                        export PATH="$HOME/.cargo/bin:$PATH"
+                        rustc --version
+                        cargo build --release
+                    '''
                 }
             }
         }
