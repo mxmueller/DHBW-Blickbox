@@ -63,20 +63,20 @@ pipeline {
                 dir('blickbox/ada') {
                     script {
                         def clippyFlags = '''
-                    -W clippy::all
-                    -W clippy::style
-                    -W clippy::clone_on_ref_ptr
-                    -W clippy::redundant_clone
-                    -W clippy::suspicious
-                    -W clippy::complexity
-                    
-                    -A clippy::missing_docs_in_private_items
-                    -A clippy::module_name_repetitions
-                    -A clippy::too_many_arguments
-                    
-                    -A clippy::never_type_fallback
-                    -A clippy::let_unit_value
-                    -A clippy::uninlined_format_args
+                            -W clippy::all
+                            -W clippy::style
+                            -W clippy::clone_on_ref_ptr
+                            -W clippy::redundant_clone
+                            -W clippy::suspicious
+                            -W clippy::complexity
+                            
+                            -A clippy::missing_docs_in_private_items
+                            -A clippy::module_name_repetitions
+                            -A clippy::too_many_arguments
+                            
+                            -A clippy::never_type_fallback
+                            -A clippy::let_unit_value
+                            -A clippy::uninlined_format_args
                         '''.stripIndent()
                         
                         sh """
