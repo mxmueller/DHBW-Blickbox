@@ -63,22 +63,20 @@ pipeline {
                 dir('blickbox/ada') {
                     script {
                         def clippyFlags = '''
-                            -W clippy::all                     # Aktiviert alle Standard-Clippy-Lints
-                            -W clippy::style                   # Aktiviert Stil-bezogene Lints
-                            
-                            -W clippy::clone_on_ref_ptr        # Warnt vor unnötigen .clone() Aufrufen
-                            -W clippy::redundant_clone         # Warnt vor redundanten clone() Aufrufen
-                            
-                            -W clippy::suspicious              # Warnt vor verdächtigem Code
-                            -W clippy::complexity              # Warnt vor übermäßig komplexem Code
-                            
-                            -A clippy::missing_docs_in_private_items # Erlaubt fehlende Dokumentation in privaten Items
-                            -A clippy::module_name_repetitions # Erlaubt Modulnamenwiederholungen
-                            -A clippy::too_many_arguments      # Erlaubt Funktionen mit vielen Argumenten
-                            
-                            -A clippy::never_type_fallback     # Ignoriert Warnungen bezüglich des Never-Type-Fallbacks
-                            -A clippy::let_unit_value          # Ignoriert Warnungen für `let` Anweisungen mit Unit-Wert
-                            -A clippy::uninlined_format_args   # Ignoriert Warnungen für nicht-inline Format-Argumente
+                    -W clippy::all
+                    -W clippy::style
+                    -W clippy::clone_on_ref_ptr
+                    -W clippy::redundant_clone
+                    -W clippy::suspicious
+                    -W clippy::complexity
+                    
+                    -A clippy::missing_docs_in_private_items
+                    -A clippy::module_name_repetitions
+                    -A clippy::too_many_arguments
+                    
+                    -A clippy::never_type_fallback
+                    -A clippy::let_unit_value
+                    -A clippy::uninlined_format_args
                         '''.stripIndent()
                         
                         sh """
