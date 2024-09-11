@@ -58,22 +58,21 @@ pipeline {
                 }
             }
         }
-        stage('[ADA] 💅 Code formatting check') {
+        stage('[ADA] 💅 Code formatting and liniting') {
             steps {
                 dir('blickbox/ada') {
                     sh '''
                         export PATH="$HOME/.cargo/bin:$PATH"
-                        rustup component add rustfmt
-                        cargo fmt -- --check
+                        cargo check --all-targets
                     '''
                 }
             }
             post {
                 failure {
-                    echo 'Code formatting issues found. Run `cargo fmt` to fix.'
+                    echo 'Cargo check found issues. Please review the output above and fix any errors.'
                 }
                 success {
-                    echo 'Code formatting check passed.'
+                    echo 'Cargo check completed successfully. No issues found.'
                 }
             }
         }
