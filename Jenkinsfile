@@ -66,9 +66,10 @@ pipeline {
                             -A clippy::all
                             -D clippy::correctness
                             -W clippy::pedantic
-                            -A clippy::complexity
-                            -A clippy::style
-                            -A clippy::dependency_on_unit_never_type_fallback
+                            -A clippy::never_type_fallback
+                            -A clippy::dead_code
+                            -A clippy::unused_variables
+                            -A clippy::unused_imports
                         '''.stripIndent()
                         
                         sh """
