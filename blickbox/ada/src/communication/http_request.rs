@@ -3,8 +3,8 @@ pub mod http_request {
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
-    use crate::communication::logging::logging::{log, LogChannel, LogEntry};
-    use crate::communication::redis::redis::RedisHandler;
+    use crate::communication::logging::logging::{log, LogEntry};
+    
     use crate::SensorData;
 
     #[derive(Serialize, Clone, Debug)]

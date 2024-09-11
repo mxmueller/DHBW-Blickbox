@@ -1,6 +1,6 @@
 use std::collections::{HashMap, VecDeque};
 use std::fs::{File, OpenOptions};
-use std::io::{BufRead, Write};
+use std::io::{Write};
 use std::time::{Duration, SystemTime};
 
 use btleplug::api::Peripheral;
@@ -38,13 +38,12 @@ async fn main() {
     println!("Starting ADA");
     // 10 Minuten
     let mut interval = time::interval(Duration::from_secs(10 * 60));
-    let mut logs: HashMap<String, VecDeque<LogEntry>> = HashMap::new();
 
     let redis_handler = match initialize_redis("redis://localhost:6379/0").await {
         Ok(handler) => Some(handler),
         Err(error) => {
             eprintln!("Failed to initialize Redis: {}", error);
-            let error_log = log(String::from("Error"), format!("Failed to connect to Redis: {}", error), String::from("error"));
+            log(String::from("Error"), format!("Failed to connect to Redis: {}", error), String::from("error"));
             None
         }
     };
@@ -114,7 +113,7 @@ async fn main() {
 async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
     // Öffnet Datei in "append-mode" und erstellt sie, wenn sie nicht existiert
-    let mut file = OpenOptions::new()
+    let file = OpenOptions::new()
         .write(true)
         .append(true)
         .create(true)
