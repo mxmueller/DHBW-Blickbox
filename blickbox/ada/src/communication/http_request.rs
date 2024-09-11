@@ -1,8 +1,9 @@
 pub mod http_request {
+    use std::collections::VecDeque;
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
-    use crate::communication::logging::logging::{log, LogChannel};
+    use crate::communication::logging::logging::{log, LogChannel, LogEntry};
     use crate::communication::redis::redis::RedisHandler;
     use crate::SensorData;
 
@@ -42,7 +43,7 @@ pub mod http_request {
         battery_voltage: f32,
     }
 
-    pub async fn send_data(handler: &RedisHandler, url: &str, sensor_data: &SensorData) -> crate::Result<()> {
+    pub async fn send_data(url: &str, sensor_data: &SensorData) -> crate::Result<VecDeque<LogEntry>> {
 
         let base_url = url;
 
@@ -67,8 +68,10 @@ pub mod http_request {
         // Create a reqwest HTTP client
         let client = Client::new();
 
+        let mut buffer: VecDeque<LogEntry> = VecDeque::new();
+
         for data_type in data_types.clone() {
-            let url = format!("{}{}", base_url, data_type.0);
+            let url = format!("{}/{}", base_url, data_type.0);
 
             let json = data_type.1;
             println!("JSON: {} sent to <{:?}>", json, url);
@@ -90,18 +93,16 @@ pub mod http_request {
                 true => {
                     println!("Sensor data from {} sent successfully!", data_type.0);
                     let log_message = format!("ADA sent {}", data_type.0);
-                    let info_log = log(String::from("ADA"), log_message, String::from("info"));
-                    handler.log_to_channel(LogChannel::Ada, info_log).await;
+                    let log = log(String::from("ADA"), log_message, String::from("info"));
+                    buffer.push_back(log);
                 }
                 false => {
-                    let log_message = format!("ADA could not sent {}", data_type.0);
-                    let error_log = log(String::from("ADA"), log_message, String::from("error"));
-                    handler.log_to_channel(LogChannel::Ada, error_log).await;
                     Err(format!("Request failed: {:?}", response.status()))?;
                 }
-            }
+            };
         }
-        Ok(())
+        buffer.push_back(log(String::from("ADA"), String::from("Successfully sent batch of sensor data"), String::from("info")));
+        Ok(buffer)
     }
 
     pub fn get_temp_json(sensor_data: &SensorData) -> String {
