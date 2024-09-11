@@ -37,7 +37,25 @@ pipeline {
                 }
             }
         }
-
+        stage('[ADA] 🛡️ Rust Security Audit') {
+            steps {
+                dir('blickbox/ada') {
+                    sh '''
+                        export PATH="$HOME/.cargo/bin:$PATH"
+                        cargo install cargo-audit
+                        cargo audit
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo 'Rust security audit passed. No known vulnerabilities found.'
+                }
+                failure {
+                    echo 'Rust security audit failed. Please review the vulnerabilities and update the dependencies.'
+                }
+            }
+        }
         stage('[ADA] 💅 Code formatting and liniting') {
             steps {
                 dir('blickbox/ada') {
