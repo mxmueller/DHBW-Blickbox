@@ -10,7 +10,7 @@ pipeline {
             steps {
                 sh '''
                     sudo apt-get update
-                    sudo apt-get install -y build-essential pkg-config libssl-dev
+                    sudo -n apt-get install -y build-essential pkg-config libssl-dev libdbus-1-dev
                 '''
             }
         }
@@ -22,6 +22,7 @@ pipeline {
                         export PATH="$HOME/.cargo/bin:$PATH"
                         rustc --version
                         cargo build --release
+                        cargo test
                     '''
                 }
             }
