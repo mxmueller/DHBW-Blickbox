@@ -1,5 +1,5 @@
 /target
 .idea
+*.iml
 Cargo.lock
 command_history.txt
-!/target/debug/restart.sh
