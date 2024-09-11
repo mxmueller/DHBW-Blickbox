@@ -6,10 +6,18 @@ pipeline {
                 checkout scm
             }
         }
+        stage('[ADA] 🛠️ Setup Build Environment') {
+            steps {
+                sh '''
+                    sudo apt-get update
+                    sudo apt-get install -y build-essential pkg-config libssl-dev
+                '''
+            }
+        }
         stage('[ADA] 🦀 Build') {
             steps {
-                dir('blickbox/ada') {
-                   sh '''
+                dir('rust_project') {
+                    sh '''
                         curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                         export PATH="$HOME/.cargo/bin:$PATH"
                         rustc --version
