@@ -1,4 +1,3 @@
-use std::collections::{HashMap, VecDeque};
 use std::fs::{File, OpenOptions};
 use std::io::{Write};
 use std::time::{Duration, SystemTime};
@@ -10,7 +9,7 @@ use serde::Serialize;
 use tokio::time;
 
 use crate::communication::http_request::http_request::{send_data};
-use crate::communication::logging::logging::{log, LogChannel, LogEntry};
+use crate::communication::logging::logging::{log, LogChannel};
 use crate::communication::redis::redis::{initialize_redis, RedisHandler};
 use crate::sara::ble_weather_station::ble_weather_station::{connect_peripheral_device, get_data_ble};
 
@@ -94,7 +93,7 @@ async fn main() {
                         }
                     }
                     Err(error) => {
-                        let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
+                        let error_log = log(String::from("Error"), String::from(error), String::from("error"));
                         handler.log_to_channel(LogChannel::Ada, error_log).await;
                     }
                 }
