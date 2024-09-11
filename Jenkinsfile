@@ -6,6 +6,27 @@ pipeline {
                 checkout scm
             }
         }
+        stage('[GIT] 🕵️ GitLeaks Scan') {
+            steps {
+                script {
+                    def gitleaksExitCode = sh(script: '''
+                        wget https://github.com/zricethezav/gitleaks/releases/download/v8.16.3/gitleaks_8.16.3_linux_x64.tar.gz
+                        tar -xzf gitleaks_8.16.3_linux_x64.tar.gz
+                        chmod +x gitleaks
+                        ./gitleaks detect --source . -v --report-path gitleaks-report.json \
+                        --exclude-files="**keys.json,**keys.txt" || true
+                    ''', returnStatus: true)
+                    if (gitleaksExitCode != 0) {
+                        echo "GitLeaks may have found sensitive data. Please review the report."
+                    }
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'gitleaks-report.json', fingerprint: true
+                }
+            }
+        }
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
@@ -37,25 +58,6 @@ pipeline {
                 }
             }
         }
-        stage('[ADA] 🛡️ Rust Security Audit') {
-            steps {
-                dir('blickbox/ada') {
-                    sh '''
-                        export PATH="$HOME/.cargo/bin:$PATH"
-                        cargo install cargo-audit
-                        cargo audit
-                    '''
-                }
-            }
-            post {
-                success {
-                    echo 'Rust security audit passed. No known vulnerabilities found.'
-                }
-                failure {
-                    echo 'Rust security audit failed. Please review the vulnerabilities and update the dependencies.'
-                }
-            }
-        }
         stage('[ADA] 💅 Code formatting and liniting') {
             steps {
                 dir('blickbox/ada') {
@@ -75,25 +77,22 @@ pipeline {
                 }
             }
         }
-        
-        stage('[GIT] 🕵️ GitLeaks Scan') {
+        stage('[ADA] 🛡️ Rust Security Audit') {
             steps {
-                script {
-                    def gitleaksExitCode = sh(script: '''
-                        wget https://github.com/zricethezav/gitleaks/releases/download/v8.16.3/gitleaks_8.16.3_linux_x64.tar.gz
-                        tar -xzf gitleaks_8.16.3_linux_x64.tar.gz
-                        chmod +x gitleaks
-                        ./gitleaks detect --source . -v --report-path gitleaks-report.json \
-                        --exclude-files="**keys.json,**keys.txt" || true
-                    ''', returnStatus: true)
-                    if (gitleaksExitCode != 0) {
-                        echo "GitLeaks may have found sensitive data. Please review the report."
-                    }
+                dir('blickbox/ada') {
+                    sh '''
+                        export PATH="$HOME/.cargo/bin:$PATH"
+                        cargo install cargo-audit
+                        cargo audit
+                    '''
                 }
             }
             post {
-                always {
-                    archiveArtifacts artifacts: 'gitleaks-report.json', fingerprint: true
+                success {
+                    echo 'Rust security audit passed. No known vulnerabilities found.'
+                }
+                failure {
+                    echo 'Rust security audit failed. Please review the vulnerabilities and update the dependencies.'
                 }
             }
         }
