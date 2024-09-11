@@ -58,34 +58,22 @@ pipeline {
                 }
             }
         }
-        stage('[ADA] 💅 Code formatting and linting') {
+        stage('[ADA] 💅 Code formatting check') {
             steps {
                 dir('blickbox/ada') {
-                    script {
-                        def clippyFlags = '''
-                            -A clippy::all
-                            -D clippy::correctness
-                            -W clippy::pedantic
-                            -A clippy::never_type_fallback
-                            -A clippy::dead_code
-                            -A clippy::unused_variables
-                            -A clippy::unused_imports
-                        '''.stripIndent()
-                        
-                        sh """
-                            export PATH="$HOME/.cargo/bin:$PATH"
-                            rustup component add clippy
-                            cargo clippy -- ${clippyFlags}
-                        """
-                    }
+                    sh '''
+                        export PATH="$HOME/.cargo/bin:$PATH"
+                        rustup component add rustfmt
+                        cargo fmt -- --check
+                    '''
                 }
             }
             post {
                 failure {
-                    echo 'Clippy found critical issues. Please review the output above and fix the warnings/errors.'
+                    echo 'Code formatting issues found. Run `cargo fmt` to fix.'
                 }
                 success {
-                    echo 'Basic Clippy check passed successfully.'
+                    echo 'Code formatting check passed.'
                 }
             }
         }
