@@ -63,10 +63,12 @@ pipeline {
                 dir('blickbox/ada') {
                     script {
                         def clippyFlags = '''
-                            -W clippy::unused_variables
-                            -W clippy::unused_imports
-                            -W clippy::dead_code
                             -A clippy::all
+                            -D clippy::correctness
+                            -W clippy::pedantic
+                            -A clippy::complexity
+                            -A clippy::style
+                            -A clippy::dependency_on_unit_never_type_fallback
                         '''.stripIndent()
                         
                         sh """
