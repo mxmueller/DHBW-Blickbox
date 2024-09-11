@@ -27,12 +27,18 @@ pipeline {
                 }
             }
         }
+        stage('[API] 🛠️ Setup Build Environment') {
+            steps {
+                sh '''
+                    sudo -n apt-get update
+                    sudo -n apt-get install -y python python-pip
+                '''
+            }
+        }
         stage('[API] 🧪 Pytest'){
             steps{
                 dir('server/deployment/tests'){
                     sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
                         pip install -r requirements.txt
                         pytest --disable-warnings --junitxml=pytest-report.xml --noPing
                     '''
