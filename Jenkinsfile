@@ -63,25 +63,26 @@ pipeline {
                 dir('blickbox/ada') {
                     script {
                         def clippyFlags = '''
-                            -W clippy::all
+                            -W clippy::unused_variables
+                            -W clippy::unused_imports
+                            -W clippy::dead_code
                             -A clippy::all
-                            -A dependency_on_unit_never_type_fallback
-                            -A never_type_fallback
                         '''.stripIndent()
-                        
-                        def rustFlags = '-A warnings -A dependency_on_unit_never_type_fallback -A never_type_fallback'
                         
                         sh """
                             export PATH="$HOME/.cargo/bin:$PATH"
                             rustup component add clippy
-                            RUSTFLAGS="${rustFlags}" cargo clippy -- ${clippyFlags} || true
+                            cargo clippy -- ${clippyFlags}
                         """
                     }
                 }
             }
             post {
-                always {
-                    echo 'Clippy check completed. Any warnings were suppressed.'
+                failure {
+                    echo 'Clippy found critical issues. Please review the output above and fix the warnings/errors.'
+                }
+                success {
+                    echo 'Basic Clippy check passed successfully.'
                 }
             }
         }
