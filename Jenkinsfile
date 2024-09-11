@@ -9,8 +9,8 @@ pipeline {
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
-                    sudo apt-get update
-                    sudo -n apt-get install -y build-essential pkg-config libssl-dev libdbus-1-dev
+                    sudo -n apt-get update
+                    sudo -n apt-get install -y build-essential pkg-config libssl-dev libdbus-1-dev libudev-dev libdbus-glib-1-dev
                 '''
             }
         }
