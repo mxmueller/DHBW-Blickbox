@@ -31,7 +31,7 @@ pipeline {
             steps {
                 sh '''
                     sudo -n apt-get update
-                    sudo -n apt-get install -y python3 python3-pip
+                    sudo -n apt-get install -y python3 python3-pip python3.11-venv
                 '''
             }
         }
