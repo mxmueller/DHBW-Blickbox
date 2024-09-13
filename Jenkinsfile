@@ -42,7 +42,7 @@ pipeline {
                         python3 -m venv venv
                         . venv/bin/activate
                         pip3 install -r requirements.txt
-                        pytest --disable-warnings --junitxml=pytest-report.xml --noPing
+                        pytest API-Tests.py --disable-warnings --junitxml=pytest-report.xml --noPing
                     '''
                 }
             }
