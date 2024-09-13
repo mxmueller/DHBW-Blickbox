@@ -31,7 +31,7 @@ pipeline {
             steps {
                 sh '''
                     sudo -n apt-get update
-                    sudo -n apt-get install -y python python-pip
+                    sudo -n apt-get install -y python3 python3-pip
                 '''
             }
         }
@@ -39,7 +39,7 @@ pipeline {
             steps{
                 dir('server/deployment/tests'){
                     sh '''
-                        pip install -r requirements.txt
+                        pip3 install -r requirements.txt
                         pytest --disable-warnings --junitxml=pytest-report.xml --noPing
                     '''
                 }

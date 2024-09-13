@@ -10,11 +10,13 @@ import os
 from datetime import datetime, timedelta
 
 
-onlinestatus = {"Valentin-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
+onlinestatus = {
+                "Valentin-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
                 "Grafana-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
                 "Database-Online" : {"online" : False, "timestamp" : "1970-1-1 00:00:00"}, 
                 "ADA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"},
-                "SARA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"}}
+                "SARA-Online": {"online" : False, "timestamp" : "1970-1-1 00:00:00"}
+                }
 
 
 link = os.getenv("EMAIL_SMTP_SERVER")
@@ -82,7 +84,8 @@ async def send_logs_to_clients(data):
 def errorHandling(channel, data):
     logging.error(beautifyLog(channel,data))
     heading = f"Komponente {channel.replace('-logs', '')} hat einen fehler"
-    sendEmail(heading, data["message"])
+    if channel != 'api-logs':
+        sendEmail(heading, data["message"])
 
     handleRestart(channel)
 
@@ -152,6 +155,7 @@ async def aliveChecker():
                     "SARA-Last-Online" : onlinestatus['SARA-Online']['timestamp'] }
         await send_logs_to_clients(payload)
         await asyncio.sleep(60)
+
 async def update_online_status():
     global onlinestatus
     now = datetime.now()
