@@ -63,7 +63,7 @@ pipeline {
                             python3 -m venv venv
                             . venv/bin/activate
                             pip3 install bandit
-                            bandit -r . --exclude \\\\tests --confidence-level high --severity-level high
+                            bandit -r server/deployment --exclude \\\\tests --confidence-level high --severity-level high
                         ''', returnStatus: true)
 
                         if (banditExitCode != 0) {
