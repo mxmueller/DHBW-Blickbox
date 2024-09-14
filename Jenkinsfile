@@ -69,6 +69,7 @@ pipeline {
             post {
                 always {
                     archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true
+                    echo 'Written Artifacts'
                 }
                 failure {
                     echo 'Bandit found security vulnerabilities. Please review the report.'
