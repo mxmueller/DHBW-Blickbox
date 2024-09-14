@@ -62,9 +62,8 @@ pipeline {
                         def banditExitCode = sh(script: '''
                             python3 -m venv venv
                             . venv/bin/activate
-                            cd ../..
                             pip3 install bandit
-                            bandit -r server/deployment --exclude \\\\tests --confidence-level high --severity-level high
+                            bandit . -r --exclude tests,venv --confidence-level high --severity-level high
                         ''', returnStatus: true)
 
                         if (banditExitCode != 0) {
