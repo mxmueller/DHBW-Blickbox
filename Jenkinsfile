@@ -62,7 +62,7 @@ pipeline {
                         python3 -m venv venv
                         . venv/bin/activate
                         pip3 install bandit
-                        bandit server/deployment -r --exclude /venv,/tests --confidence-level high --severity-level high
+                        bandit server/deployment -r -f json -o bandit-report.json --exclude /venv,/tests --confidence-level high --severity-level high
                     ''', returnStatus: true)
 
                     if (banditExitCode != 0) {
@@ -72,6 +72,9 @@ pipeline {
             
             }
             post {
+                always {
+                    archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true
+                }
                 success {
                     echo 'Bandit security audit passed. No known vulnerabilities found.'
                 }
