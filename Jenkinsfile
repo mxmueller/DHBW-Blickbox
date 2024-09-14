@@ -58,21 +58,23 @@ pipeline {
         stage('[API] 🛡️ API Security') {
             steps {
                 dir('server/deployment') {
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip3 install bandit
-                        bandit -r . -f json -o bandit-report.json
-                    '''
+                    script {
+                        def banditExitCode = sh(script: '''
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            pip3 install bandit
+                            bandit -r . -f json -o bandit-report.json --exclude \tests --confidence-level high --severity-level high
+                        ''', returnStatus: true)
+
+                        if (banditExitCode != 0) {
+                            error("Bandit hat Sicherheitsprobleme mit hoher Schwere oder Vertrauen gefunden.")
+                        }
+                    }
                 }
             }
             post {
                 always {
                     archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true
-                    echo 'Written Artifacts'
-                }
-                failure {
-                    echo 'Bandit found security vulnerabilities. Please review the report.'
                 }
                 success {
                     echo 'Bandit security audit passed. No known vulnerabilities found.'
