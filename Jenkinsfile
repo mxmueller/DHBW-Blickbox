@@ -35,7 +35,7 @@ pipeline {
                 '''
             }
         }
-        stage('[API] 🧪 Pytest'){
+        stage('[API] 🧪 API-Tests'){
             steps{
                 dir('server/deployment/tests'){
                     sh '''
@@ -52,6 +52,29 @@ pipeline {
                 }
                 failure {
                     echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
+                }
+            }
+        }
+        stage('[API] 🛡️ API Security') {
+            steps {
+                dir('server/deployment') {
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install bandit
+                        bandit -r . -f json -o bandit-report.json
+                    '''
+                }
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true
+                }
+                failure {
+                    echo 'Bandit found security vulnerabilities. Please review the report.'
+                }
+                success {
+                    echo 'Bandit security audit passed. No known vulnerabilities found.'
                 }
             }
         }
