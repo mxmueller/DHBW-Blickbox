@@ -84,8 +84,10 @@ pipeline {
             steps {
                 dir('server/deployment/tests') {
                     sh '''
-                        pip install flake8
-                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install flake8
+                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv
                     '''
                 }
             }
