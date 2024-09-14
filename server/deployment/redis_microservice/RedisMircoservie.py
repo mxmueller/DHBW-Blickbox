@@ -37,7 +37,7 @@ publisherList = ["backend","valentin",  "ada", "sara", "grafana", "influx"]
 
 
 connected_clients = []
-
+onlinestatus_connected_clients = []
 
 async def websocket_server(websocket, path):
     connected_clients.append(websocket)
@@ -48,12 +48,20 @@ async def websocket_server(websocket, path):
 
         connected_clients.remove(websocket)
 
+
+async def onlinestatus_server(websocket, path):
+    onlinestatus_connected_clients.append(websocket)
+    try:
+        async for message in websocket:
+            pass  
+    finally:
+        onlinestatus_connected_clients.remove(websocket)
+
 async def redis_listener():
-
     start_server = websockets.serve(websocket_server, "0.0.0.0", 5001)
-    
-
     await start_server
+    onlinestatus_start_server = websockets.serve(onlinestatus_server, "0.0.0.0", 5002)
+    await onlinestatus_start_server
     
     asyncio.create_task(aliveChecker())
 
@@ -80,6 +88,11 @@ async def send_logs_to_clients(data):
     if connected_clients:
         message = json.dumps(data)
         await asyncio.gather(*[client.send(message) for client in connected_clients])
+
+async def send_online_status(data):
+    if onlinestatus_connected_clients:
+        message = json.dumps(data)
+        await asyncio.gather(*[client.send(message) for client in onlinestatus_connected_clients])
 
 def errorHandling(channel, data):
     logging.error(beautifyLog(channel,data))
@@ -153,7 +166,7 @@ async def aliveChecker():
                    "Database-Online": onlinestatus['Database-Online']['online'],
                    "ADA-Last-Online":onlinestatus['ADA-Online']['timestamp'],
                     "SARA-Last-Online" : onlinestatus['SARA-Online']['timestamp'] }
-        await send_logs_to_clients(payload)
+        await send_online_status(payload)
         await asyncio.sleep(60)
 
 async def update_online_status():
