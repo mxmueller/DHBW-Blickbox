@@ -63,11 +63,11 @@ pipeline {
                             python3 -m venv venv
                             . venv/bin/activate
                             pip3 install bandit
-                            bandit -r . -f json -o bandit-report.json --exclude \tests --confidence-level high --severity-level high
+                            bandit -r . -f json -o bandit-report.json --exclude \\tests --confidence-level high --severity-level high
                         ''', returnStatus: true)
 
                         if (banditExitCode != 0) {
-                            error("Bandit hat Sicherheitsprobleme mit hoher Schwere oder Vertrauen gefunden.")
+                            error("Bandit found Security HIGH security vulnerabilities. Please check the Report.")
                         }
                     }
                 }
