@@ -27,7 +27,7 @@ pipeline {
                 }
             }
         }
-        stage('[API] 🛠️ Setup Build Environment') {
+        stage('[API][MICROSERVICE] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
                     sudo -n apt-get update
@@ -42,20 +42,40 @@ pipeline {
                         python3 -m venv venv
                         . venv/bin/activate
                         pip3 install -r requirements.txt
-                        pytest API-Tests.py --disable-warnings --junitxml=pytest-report.xml --noPing
+                        pytest API-Tests.py --disable-warnings --junitxml=apitest-report.xml --noPing
                     '''
                 }
             }
             post{
                 always {
-                    junit '**/pytest-report.xml'
+                    junit '**/apitest-report.xml'
                 }
                 failure {
                     echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
                 }
             }
         }
-        stage('[API] 🛡️ API Security') {
+        stage('[MICROSERVICE] 🧪 Microservice-Tests'){
+            steps{
+                dir('server/deployment/tests'){
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install -r requirements.txt
+                        pytest Microservice-Tests.py --disable-warnings --junitxml=microservice-report.xml --noPing
+                    '''
+                }
+            }
+            post{
+                always {
+                    junit '**/microservice-report.xml'
+                }
+                failure {
+                    echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
+                }
+            }
+        }
+        stage('[API][MICROSERVICE] 🛡️ API Security') {
             steps {
                 script {
                     def banditExitCode = sh(script: '''
@@ -80,7 +100,7 @@ pipeline {
                 }
             }
         }
-        stage('[API] 💅 Code formatting and linting') {
+        stage('[API][MICROSERVICE] 💅 Code formatting and linting') {
             steps {
                 dir('server/deployment/tests') {
                     sh '''
