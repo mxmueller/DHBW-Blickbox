@@ -57,18 +57,19 @@ pipeline {
         }
         stage('[API] 🛡️ API Security') {
             steps {
-                dir('server/deployment') {
-                    script {
-                        def banditExitCode = sh(script: '''
-                            pip3 install bandit
-                            bandit . -r --exclude tests,venv --confidence-level high --severity-level high
-                        ''', returnStatus: true)
+                script {
+                    def banditExitCode = sh(script: '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install bandit
+                        bandit server/deployment -r --exclude tests,venv --confidence-level high --severity-level high
+                    ''', returnStatus: true)
 
-                        if (banditExitCode != 0) {
-                            error("Bandit found Security HIGH security vulnerabilities. Please check the Report.")
-                        }
+                    if (banditExitCode != 0) {
+                        error("Bandit found Security HIGH security vulnerabilities. Please check the Report.")
                     }
                 }
+            
             }
             post {
                 success {
