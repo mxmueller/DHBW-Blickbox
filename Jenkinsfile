@@ -80,6 +80,24 @@ pipeline {
                 }
             }
         }
+        stage('[API] 💅 Code formatting and linting') {
+            steps {
+                dir('server/deployment/tests') {
+                    sh '''
+                        pip install flake8
+                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                    '''
+                }
+            }
+            post {
+                failure {
+                    echo 'Flake8 found code style issues. Please fix them.'
+                }
+                success {
+                    echo 'Flake8 checks passed. No style issues found.'
+                }
+            }
+        }
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
