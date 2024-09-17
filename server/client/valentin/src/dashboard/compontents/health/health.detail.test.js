@@ -12,7 +12,6 @@ import React from "react";
 import { render } from "@testing-library/react";
 import DescDetail from "./health.detail.js";
 
-// Eine einfache Komponente, die das Test-Icon rendert
 const TestIconComponent = () => {
   return <img src={TestIcon} alt="Test Icon" />;
 };

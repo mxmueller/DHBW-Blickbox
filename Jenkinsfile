@@ -1,6 +1,7 @@
 pipeline {
     environment {
         DEPLOY_DIR = '/opt/blickbox/prod'
+        DEPLOY_DIR_SECRETS = '/opt/blickbox/secrets'
     }
     
     agent any
@@ -32,6 +33,30 @@ pipeline {
                 }
             }
         }
+      stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                    // deleting directory if it already exists
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
+                    // creating deployment directory
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    // copying repository to /opt/blickbox
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                   // copying key file
+                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
+                    // Decrypting Credentials
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up sops'
+                        sh 'chown jenkins:jenkins /opt/blickbox/prod/server/secrets/secrets.prod.env'
+                        sh 'chmod 755 /opt/blickbox/prod/server/secrets/secrets.prod.env'
+                    }
+                }
+            }
+        }  
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
@@ -273,19 +298,7 @@ pipeline {
                 }
             }
         }
-          stage('[DEPLOY] 📂 Copy to Deploy Directory') {
-            steps {
-                script {
-                     sh """
-                        if [ -d ${env.DEPLOY_DIR} ]; then
-                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
-                        fi
-                    """
-                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
-                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
-                }
-            }
-        }    
+  
         stage('[DEPLOY] 🚀 Launch!') {
             steps {
                 script {

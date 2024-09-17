@@ -18,8 +18,10 @@ import { SiGrafana } from "react-icons/si";
 import HealthDetail from "./health.detail.js";
 import { sendLogToBackendOnly } from "../logstream/logtobackend";
 
+// API-Endpunkt für Gesundheitschecks
 const API_URL = "https://blickbox.maytastix.de/api/iot/api/ping";
 
+// Konfiguration der zu überwachenden APIs
 const apis = [
   {
     key: "Blickbox",
@@ -28,7 +30,7 @@ const apis = [
     error: "Disconnected",
     delay: 300,
     duration: 500,
-    interval: 300000, // 5 minutes
+    interval: 300000, // 5 Minuten
     icon: GoContainer,
   },
   {
@@ -38,31 +40,34 @@ const apis = [
     error: "Disconnected",
     delay: 450,
     duration: 600,
-    interval: 300000, // 5 minutes
+    interval: 300000, // 5 Minuten
     icon: GoDatabase,
   },
   {
     key: "Grafana",
-    header: "Grafana Dashboard",
+    header: "Grafana",
     success: "Connected",
     error: "Disconnected",
     delay: 500,
     duration: 700,
-    interval: 300000, // 5 minutes
+    interval: 300000, // 5 Minuten
     icon: SiGrafana,
   },
 ];
 
 function Desc() {
+  // State-Variablen für verschiedene Aspekte der Komponente
   const [loading, setLoading] = useState(false);
   const [apiStatus, setApiStatus] = useState({});
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [lastOnline, setLastOnline] = useState(null);
 
+  // Prüft, ob Mock-Daten verwendet werden sollen
   const useHealthMocks = process.env.REACT_APP_USE_HEALTH_MOCKS === "true";
 
   useEffect(() => {
+    // Funktion zum Abrufen der Gesundheitsdaten
     const fetchData = async () => {
       const currentDate = new Date();
       const formattedDateTime = currentDate
@@ -75,6 +80,7 @@ function Desc() {
 
         let response;
         if (useHealthMocks) {
+          // Simuliert API-Antwort für Testzwecke
           await new Promise((resolve) => setTimeout(resolve, 1000));
           response = {
             status: 200,
@@ -86,6 +92,7 @@ function Desc() {
               }),
           };
         } else {
+          // Echter API-Aufruf mit Timeout
           response = await Promise.race([
             fetch(API_URL),
             new Promise((_, reject) =>
@@ -94,6 +101,7 @@ function Desc() {
           ]);
         }
 
+        // Loggt den Verbindungsversuch
         sendLogToBackendOnly({
           message: `Verbindungsaufbau: ${API_URL}.`,
           type: "Client Verbindungsversuch",
@@ -102,6 +110,7 @@ function Desc() {
         });
 
         if (response.status === 200) {
+          // Verarbeitet erfolgreiche Antwort
           const data = await response.json();
           setApiStatus({
             Blickbox: true,
@@ -117,6 +126,7 @@ function Desc() {
             date: formattedDateTime,
           });
         } else {
+          // Behandelt Fehlerfall
           setApiStatus({
             Blickbox: false,
             Database: false,
@@ -130,6 +140,7 @@ function Desc() {
           });
         }
       } catch (error) {
+        // Behandelt Netzwerkfehler oder Timeouts
         setApiStatus({
           Blickbox: false,
           Database: false,
@@ -147,15 +158,17 @@ function Desc() {
       }
     };
 
+    // Initialer Aufruf und Einrichtung des Intervalls
     fetchData();
-    const intervalId = setInterval(fetchData, 300000); // 5 minutes
+    const intervalId = setInterval(fetchData, 300000); // Alle 5 Minuten
 
+    // Event-Listener für Fenstergrößenänderungen
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-
     window.addEventListener("resize", handleResize);
 
+    // Aufräumen beim Unmounten der Komponente
     return () => {
       clearInterval(intervalId);
       window.removeEventListener("resize", handleResize);
@@ -175,6 +188,7 @@ function Desc() {
                   </Text>
                   <Flex>
                     {windowWidth < 768 ? (
+                      // Layout für schmale Bildschirme
                       <Box>
                         <Text
                           mt={0}
@@ -189,6 +203,7 @@ function Desc() {
                         </Code>
                       </Box>
                     ) : (
+                      // Layout für breite Bildschirme
                       <HStack>
                         <Text mt={0} color="blackAlpha.600" fontSize="sm">
                           Letzte Aktualisierung:
@@ -218,6 +233,7 @@ function Desc() {
               </AccordionButton>
             </h2>
             <AccordionPanel mb={0}>
+              {/* Raster mit Gesundheitsdetails für jede API */}
               <SimpleGrid
                 columns={{ sm: 1, md: 2, lg: 4 }}
                 minChildWidth="250px"
