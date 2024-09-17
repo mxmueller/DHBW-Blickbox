@@ -17,12 +17,15 @@ services:
         context: ./client/valentin
         dockerfile: Dockerfile
       restart: always 
+      
   python_app:
     build:
       context: ./deployment/
       dockerfile: Dockerfile
     networks:
       - redis_net
+      - influx_net
+      - grafana_net
     restart: always
     ports:
       - "3002:5000" 
@@ -34,6 +37,8 @@ services:
     image: influxdb:1.8.10-alpine
     container_name: influxdb
     restart: always
+    networks:
+      - influx_net
     env_file:
         - path: ./secrets/secrets.prod.env
           required: false
@@ -44,6 +49,8 @@ services:
     image: grafana/grafana:latest
     container_name: grafana-server
     restart: always
+    networks:
+      - influx_net
     env_file:
         - path: ./secrets/secrets.prod.env
           required: false  
@@ -55,6 +62,7 @@ services:
       - "3000:3000" 
     volumes:
       - /srv/blickbox/grafana_data:/var/lib/grafana:rw
+
   blickbox_redis:
     image: redis:7-alpine
     restart: always
@@ -91,4 +99,8 @@ networks:
       config:
         - subnet: 172.16.238.0/24
   redis_net:
+    driver: bridge
+  influx_net:
+    driver: bridge
+  grafana_net:
     driver: bridge
