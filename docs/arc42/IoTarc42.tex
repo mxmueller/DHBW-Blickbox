@@ -8,6 +8,7 @@
 \usepackage{lmodern}
 \usepackage{iftex}
 \usepackage{graphicx}
+\usepackage{float}
 
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -73,21 +74,39 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
-\title{\includegraphics{header.jpg} Template}
-\author{}
-\date{Januar 2023}
+\usepackage{geometry} 
 
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm
+} 
+
+\title{\includegraphics{header.jpg} arc42-Dokumentation IOT-Semesterprojekt}
+\author{}
+\date{Januar - März 2024}
+\usepackage{geometry} 
+
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm
+}
 \begin{document}
 \maketitle
 % DOCUMENT STARTS HERE
 \hypertarget{section-introduction-and-goals}{%
 \section{Einführung und Ziele}\label{section-introduction-and-goals}}
-Die Blickboxen vor der DHBW Heidenheim soll um smarte Features erweitert werden.
-Diese sollen dazu dienen die Blickbox attraktiver zu machen.
-Außerdem dient das Projekt als Basis für weitere Semesterprojekte der Informatikstudiengänge die Blickbox.
+Die Blickboxen vor der DHBW Heidenheim können im Umfang von Semesterprojekten um Austellungsstücke und smarte Features erweitert werden.
+Im IOT-Semesterprojekt wird die Blickbox und vorhandene Sensoren, um eine Wetterstation erweitert.
+Die Wettersensorik kann auch als Basis für weitere Semesterprojekte der Informatikstudiengänge der Blickbox dienen.
 Vor der Implementierung der Features wird eine ausführlich durchdachte Software-Design- und Architekturplanung stattfinden.
 
-Zu den smarten Features gehören:
+Zu der Implementierung der Wetterstation gehören folgende Features:
 \begin{itemize}
   \item Überwachung der Wetterdaten
   \item Übermittlung der Daten an zentrale Datenbank
@@ -97,14 +116,14 @@ Zu den smarten Features gehören:
 
 
 
-
+\newpage
 \hypertarget{_stakeholder}{%
 \subsection{Stakeholder}\label{_stakeholder}}
 Ein umfassender Überblick über die Stakeholder des Systems ist von entscheidender Bedeutung. Dies bezieht sich auf sämtliche Personen, Rollen oder Organisationen, die entweder die Architektur des Systems kennen sollten oder von dieser überzeugt werden müssen. Zu den Stakeholdern zählen auch jene, die aktiv mit der Architektur oder dem Code arbeiten, beispielsweise indem sie Schnittstellen nutzen. Ebenso gehören Personen dazu, die die Dokumentation der Architektur benötigen, um ihre eigene Arbeit effizient zu gestalten. Darüber hinaus sind Stakeholder involviert, die Entscheidungen über das System und dessen Entwicklung treffen.
 Die nachfolgende Analyse zeigt alle Stakeholder gebündelt in ihren Gewichtungen und Beziehungen.  
-\begin{figure}
+\begin{figure}[H]
   \centering
-  \includegraphics[width=1\textwidth]{./resources/stakeholderanalyse.drawio.png}
+  \includegraphics[width=160mm]{./resources/stakeholderanalyse.drawio.png}
   \caption{Stakeholder Analyse und Zusammenfassung in den Unterscheidungen: Einbindungsgrad, Interesse und Einflüsse. Das Entwicklungsteam geht deutlich als am stärksten partizipativ gekennzeichneten Stakeholder hevor. Am repressivsten zeigen sich die Stakeholder in Form der Fußgänger.}
   \label{fig:deine_label}
 \end{figure}
@@ -118,30 +137,27 @@ Zusammenhang mit der Umsetzung des Blickbox-Projekts.
   Funktionale Anforderungen beschreiben spezifisch die konkreten Zwecke, die das zu entwickelnde Produkt erfüllen soll.
 
 \subsection{Nicht funktionale Anforderungen (NFA)}
-Im Gegensatz zu funktionalen Anforderungen sind nicht-funktionale Anforderungen eher allgemein gehalten und betreen die gesamte Architektur und das Design des Produkts.
+Im Gegensatz zu funktionalen Anforderungen sind nicht-funktionale Anforderungen eher allgemein gehalten und betreffen die gesamte Architektur und das Design des Produkts.
 Sie können auf verschiedene Projekte angewendet werden.
-
-\subsection{Hyptohetische Anforderungen (HFA)}
-Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorherigen Abhängigkeiten definiert. Ihr Zweck besteht darin, mögliche Entscheidungen und Eventualitäten abzudecken, die eintreten können oder auch nicht.
-
 
 \begin{center}
   \begin{tabular}{|p{\linewidth}|}
     \hline
     \textbf{Datenerfassung und -übertragung (FA1)} \\
     Beschreibung: Das IOT-System muss in der Lage sein, kontinuierlich Sensordaten zu erfassen.
-    Diese Daten sollen in der Sensoreinheit eingelesen und im Raspberry PI gespeichert und verarbeitet werden.
-    Die Datenübertragung auf den Server erfolgt Event-gesteuert und drahtlos über einen http-Client.
-    Die Daten werden in festgelegten Intervallen im JSON-Format übertragen und in der Datenbank festgehalten. \\ \\
+    Diese Daten sollen in der Sensoreinheit eingelesen, an den Raspberry Pi geschickt, dort gespeichert und verarbeitet werden.
+    Die Datenübertragungen erfolgen Event-gesteuert und drahtlos.
+    Von der Sensoreinheit erfolgt die Übertragung über Bluetooth und zum Server über einen http-Client.
+    Die Daten werden in festgelegten Intervallen im JSON-Format an den Server übertragen und in der Datenbank festgehalten. \\ \\
     \hline
     \textbf{Interaktivität zu Dritten (FA2)} \\
-    Beschreibung: Der Blickbox soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
+    Beschreibung: Die Blickbox soll attraktiver werden und Fußgänger sollen mit ihm interagieren können.
     Das soll in Form eines Displays oder Ton und Licht geschehen.
     Ein Display soll in der Lage sein, Dritten aktuelle Daten aus der Datenbank wie etwa das Wetter anzuzeigen.
     Bei Dunkelheit sollen Bewegungsmelder Lichter aktivieren.\\ \\
     \hline
     \textbf{Containerisierung (FA3)} \\
-    Beschreibung: Die Anwendungen sollen in Containern gekapselt werden, um eine verbesserte Portabilität und Skalierbarkeit zu gewährleisten.
+    Beschreibung: Die Serveranwendungen sollen in Containern gekapselt werden, um eine verbesserte Portabilität und Skalierbarkeit zu gewährleisten.
     Es wird die Container-Technologien Docker verwendet werden, um die Anwendungen effizient zu verwalten und zu deployen. \\ \\
     \hline
   \end{tabular}
@@ -162,11 +178,11 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
     Beschreibung: Ein Standardprogramm auf dem Raspberry Pi soll die kontinuierliche Sicherung der Daten gewährleisten, um die ungestörte Funktionalität der Blickbox zu sichern.
     Die Daten puffern wir auf dem Pi, damit die Datenbank nur zur Darstellung in Grafana existiert.
     Die Daten sollen dazu auf dem Raspberry Pi in einer Datei gespeichert werden.
-    Das Risiko des Verlierens der Daten soll so minimiert werden.\\ \\
+    Das Risiko des Verlierens der zeitabhängigen Daten soll so minimiert werden.\\ \\
     \hline
     \textbf{Bereitstellung einer geeigneten Umgebung für die Hardware (NF4)} \\
-    Beschreibung: Die Hardware muss sowohl innerhalb als auch außerhalb der Blickbox an trockenen und sicheren Orten platziert werden.
-    Es sollen wetterfeste und isolierte Boxen verwendet werden, um die Hardware vor Umwelteinflüssen zu schützen und ihre Langlebigkeit zu gewährleisten.\\ \\
+    Beschreibung: Die Hardware muss sowohl innerhalb als auch außerhalb der Blickbox an einem trockenen und sicheren Ort platziert werden.
+    Es sollen wetterfeste und isolierte Boxen verwendet werden, um die Hardware vor Umwelteinflüssen zu schützen und ihre Langlebigkeit zu unterstützen.\\ \\
     \hline
     \textbf{Bereitstellung eines Dashboard (NF5)} \\
     Beschreibung: Die Daten der Datenbank sollen mit Grafana grafisch dargestellt werden.
@@ -177,9 +193,6 @@ Hypothetische Anforderungen werden aufgrund von unsicheren Ergebnissen und vorhe
   \end{tabular}
 \end{center}
 
-
-
-\newpage
 \section{Randbedingungen}
 \subsection{Technisch}
 \begin{longtable}[]{@{}
@@ -201,10 +214,10 @@ Aufteilung &
 Frontend und Backend werden strikt getrennt. \\
  &\\
 Fremdsoftware & 
-Opensource Bibiliotheken dürfen verwendet werden.\\
+Open Source Bibliotheken dürfen verwendet werden.\\
  &\\
 Wasserfestigkeit & 
-Jegliche Hardware muss Wasserfest implementiert werden.\\
+Jegliche Hardware muss wasserfest implementiert werden.\\
 \bottomrule
 \end{longtable}
 
@@ -226,20 +239,20 @@ Zeitplan &
 Der Zeitplan wird auf 2 Monate vom 01.02.2024 - 28.03.2024 festgelegt. \\
  &\\
 Projektmanagement & 
-Die Entwicklung folgt dem Scrum-Framework mit zweiwöchigen Sprints. \\
+Die Entwicklung folgt dem SCRUM-Framework mit zweiwöchigen Sprints. \\
 Definition of Done &
 Entwickler folgen der DoD auf dem Git-Repository. \\
 \bottomrule
 \end{longtable}
 
 
-\newpage
+
 \section{Kontextabgrenzung}
 \subsection{Fachlicher Kontext}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=140mm]{../c4/Business_Context.png}
-	\caption{Kontextdiagramm Blickbox }
+	\caption{Das C4-Modell bietet eine strukturierte Methode zur Visualisierung und Kommunikation von Softwarearchitektur, wobei der Fachkontext eine wichtige Rolle spielt. Die Kernkonzepte des Domänenwissens und die Interaktionen mit den technischen Komponenten mit den Akteuren wird beschrieben. Durch die Integration des Fachkontexts in das C4-Modell können Architekten und Entwickler eine ganzheitliche Sicht auf das System erhalten und die Umsetzung von Anforderungen in eine entsprechende technische Architektur erleichtern.}
 	\label{fig:Kontextdiagramm}
 \end{figure}  
 
@@ -255,23 +268,23 @@ Beschreibung
 \midrule
 \endhead
 Fußgänger &
-Fußgänger die sich die Blickbox anschauen und die Daten sehen. \\
+Fußgänger, die sich die Blickbox anschauen und die Daten sehen. \\
 Admin &
-Administriert Dashboards und stuert Blickbox manuell. \\
+Administriert Dashboards und steuert Blickbox manuell. \\
  & \\
 Blickbox & 
-Enthält Sensor Hardware und Anzeige der Daten. \\
+Enthält Sensor Hardware und Display. \\
  & \\
 Server &
-Externer Server der mit der Hardware der Blickbox kommuniziert. \\
+Externer Server, der mit der Hardware der Blickbox kommuniziert. \\
 \bottomrule
 \end{longtable}
-\newpage
+
 \subsection{Technischer Kontext}
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=125mm]{../c4/Technical_Context.png}
-	\caption{Kontextdiagramm Blickbox }
+	\caption{Im C4-Modell repräsentiert der technische Kontext die Ebene der technischen Details und Infrastruktur, die für die Implementierung und Bereitstellung der Softwareanwendung relevant sind. Dies umfasst Aspekte wie die Auswahl der Programmiersprachen, Frameworks, Datenbanken, APIs und anderen technischen Komponenten, die für die Realisierung der Systemarchitektur erforderlich sind. Eine klare Darstellung des technischen Kontexts im C4-Modell ermöglicht es den Entwicklern, die Abhängigkeiten und Interaktionen zwischen den technischen Komponenten zu verstehen und erleichtert die Kommunikation und Zusammenarbeit während des Entwicklungsprozesses.}
 	\label{fig:Kontextdiagramm}
 \end{figure}  
 
@@ -289,26 +302,25 @@ Beschreibung
 Lichtsystem &
 Beleuchtet die Blickbox. \\
 Sensorik &
-Hardware welche die Messdaten sammelt. \\
+Hardware, welche die Messdaten sammelt. \\
  &\\
-RaspberryPI & 
-Verarbeitet die Sensorik Daten und schickt diese an die Datenbank. \\
+Raspberry Pi &
+Verarbeitet die Sensordaten und schickt diese an die Datenbank. \\
 Visualisierung &
 Gesammelte Daten werden angezeigt. \\
 Datenbank &
 Speichert die Messdaten. \\
 Webserver & 
-Visualisiert die Messdaten und Stellt Frontend bereit. \\
+Visualisiert die Messdaten und stellt Frontend bereit. \\
 \bottomrule
 \end{longtable}
 
-
-
+\newpage
 \section{Lösungsstrategie}
 \begin{longtable}[]{@{}
   >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4500}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5000}}@{}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4000}}@{}}
 \toprule
 \begin{minipage}[b]{\linewidth}\raggedright
 Ziel / Requirement
@@ -321,44 +333,108 @@ Details
 \endhead
 Alle funktionalen Requirements &
 Eventgesteuerte Architektur &
-Sensorarchitektur sendet die Messdaten an dem PI. Der PI sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt diese im Frontend da.\\
+Sensorarchitektur sendet die Messdaten an den Raspberry Pi. Der Raspberry Pi sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. Der Webserver speichert diese ab und stellt sie im Frontend dar.\\
 & & \\
 Erweitbarkeit \& Wartung  &
 Modularer Projektaufbau und Tests &
-Damit Dritte, sei es irgendwelche Stakeholder oder neue Entwickler, sich in das Projekt leicht einarbeiten können, bauen wir das Projekt so auf, dass Codecomponenten voneinander getrennt aufgebaut sind, sich also in Modulen befinden. Zudem sind Funktionen getestet. \\
+Damit Dritte, wie etwa Stakeholder oder neue Entwickler, sich in das Projekt leicht einarbeiten können, bauen wir das Projekt so auf, dass Codekomponenten voneinander getrennt aufgebaut sind, sich also in Modulen befinden. Zudem sind Funktionen getestet. \\
 & & \\
 Sicherheit  &
 Https-Verbindung, Containerisierung \& Reverse-Proxy &
-Über den Reverse-Proxy sind die Verschiedenen Server-Apps nicht direkt dem Internet Exposed. Durch die Containersierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
+Über den Reverse-Proxy sind die verschiedenen Server-Apps nicht direkt dem Internet offengelegt. Durch die Containerisierung können die Komponenten innerhalb des Containers kommunizieren. Die verschiedenen Ports können also verschlossen sein. \\
 & & \\
 Wiederherstellung und -erhaltung der Daten  &
  &
-Auf dem Pi werden in einer history file, die daten abgelegt, damit man sollte die verbindung abbrechen, die noch seperat auf dem Pi sind. \\
+Auf dem Raspberry Pi werden in einer history file die Daten abgelegt, damit sie bei einer unterbrochenen Verbindung noch separat gespeichert werden. \\
 & & \\
 Bereitstellung einer geeigneten Umgebung für die Hardware  &
-Box &
-SARA wird in einer Box einbaut, welche Wasserdicht ist. Durch eine eigene Batterie ist sie Autak und braucht keine Spannung von außen. Die Sensoren werden über Kabelverschraubung in den Innenraum der Box gebraucht dadurch ist sie Wasserdicht. \\
+Wasserdichte Box &
+SARA wird in einer Box eingebaut. Durch eine eigene Batterie ist sie autark und braucht keine Spannung von außen. Die Sensoren werden über Kabelverschraubungen in den Innenraum der Box gebracht, wodurch sie wasserdicht ist. \\
 & & \\
 Bereitstellung eines Dashboard  &
-Grafana als Open-Source Fertiglösung &
-Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
+Grafana als Open Source Fertiglösung &
+Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbankanbindung, sowie eine einfache Verknüpfung mit dem Frontend. \\
 \bottomrule
 \end{longtable}
+
 \section{Bausteinsicht}
-Erstmal nur bis hier
+
+\subsection{Native React App}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=160mm]{resources/BausteinsichtValentin.drawio.png}
+	\caption{Die Bausteinsicht des C4-Modells für eine React-App umfasst die verschiedenen Komponenten und ihre Beziehungen innerhalb der Anwendung.}
+	\label{fig:BausteinFrontend}
+\end{figure}  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=160mm]{resources/fecomponentsdiagr.drawio.png}
+	\caption{Ein Komponentendiagramm für das React-Frontend einer Softwareanwendung bietet eine detaillierte Darstellung der verschiedenen Elemente, aus denen die Benutzeroberfläche besteht, sowie deren Beziehungen zueinander. Die Komponenten werden hierarchisch erfasst.}
+	\label{fig:CPFrontent}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=140mm]{resources/reactpatternfe.drawio.png}
+	\caption{Ein Diagramm für React-Patterns könnte die Darstellung gängiger Muster wie Container-Komponenten zur Datenverwaltung, Präsentationskomponenten für rein visuelle Darstellungen und Higher-Order Components (HOCs) zur gemeinsamen Funktionalitätsweitergabe enthalten. Zusätzlich könnten Render Props, Context-API und Hooks als weitere Muster dargestellt werden, um den Austausch von Daten und Funktionalitäten zwischen Komponenten zu erleichtern. Das Diagramm würde die Beziehungen zwischen diesen Patterns veranschaulichen und ihre Verwendung zur Lösung spezifischer Probleme in React-Anwendungen verdeutlichen.}
+	\label{fig:ReactPattern}
+\end{figure}
+
+\subsection{Raspberry Pi}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=90mm]{resources/ADABausteinsicht.png}
+	\caption{Die Bausteinsicht des C4-Modells für die ADA-Anwendung auf dem Raspberry Pi stellt auf Ebene 1 die Kommunikation mit dem Server und SARA dar. Auf Ebene 2 werden die einzelnen Komponenten weiter in ihre Bestandteile unterteilt.}
+	\label{fig:BausteinRaspberry}
+\end{figure}  
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=70mm]{resources/erDiagram-sensordaten-datenhaltung.png}
+	\caption{Die Datenhaltung der Sensordaten wird in einem Entity-Relationship-Diagramm dargestellt. Der logische Aufbau der verschiedenen Sensordaten wird in Verbindung mit der Speicherung angegeben.}
+	\label{fig:Datenhaltung}
+\end{figure}  
+
+
+\subsection{Sensorik}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=130mm]{resources/Bausteinschicht_Sara.png}
+	\caption{Beschreibt die Bausteinsicht der Sensorik. Dabei wird in Ebene 1 zwischen der Bluetooth Low Energy Kommunikation, der Daten Acquisition und der Seriellen Kommunikation unterschieden. Die BLE Kommunikation steht als kabellose Schnittstelle für ein Edge Device zur Verfügung, da keine Kabelverbindung möglich ist. Die Serielle Kommunikation wird für die Anwendungsentwicklung, als auch für das Debugging verwendet. Die Datenacquisition nutzt Bibliotheken, um auf die General Purpose Input/Output und den analogen Schnittstellen die Sensordaten zu erfassen. Der Batteriemanager auf der Ebene 2 liest die Batterie aus und steuert Energiesparmaßnahmen. Die DHT 22 API greift über das OneWire Protokoll auf die Daten des DHT Temperatur- und Luftfeutigkeitssensors zu, während die SparkFun Weather Meter API Daten der Wetterstation hält. Diese löst je nach Umweltgegebenheiten ein Interrupt aus, welcher die Daten innerhalb der API verändert.}
+	\label{fig:BausteinSensorik}
+\end{figure}  
+\subsection{Server}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=130mm]{resources/Bausteinsicht_Server.png}
+	\caption{Die Bausteinsicht im C4-Modell für den Server bietet eine strukturierte Darstellung der verschiedenen Bausteine und deren Beziehungen innerhalb der Serverarchitektur. Sie umfasst typischerweise Komponenten wie Datenbanken, APIs, Services und externe Schnittstellen, um die Funktionalität und Struktur des Serversystems zu veranschaulichen.}
+	\label{fig:BausteinServer}
+\end{figure}  
 
 \section{Laufzeitsicht}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=160mm]{resources/Laufzeitsicht.png}
+	\caption{Oben Laufzeitsicht aus der Sicht der Sensorik, unten aus der Sicht des Frontends. Wird die Sensorik aktiv, adversioniert diese ihre Bluetooth Services, die von anderen Geräten wahrgenommen werden können. Der Raspberry Pi liest die BLE Services aus. Wenn die Bluetooth Services die richtigen Identifikationsnummern haben werden die Charakteristiken, welche von diesen Services gehalten werden abgefragt. Die Charakteristiken enthalten hierbei die Sensor- und Statusdaten der Wetterstation. Nachdem die Daten von der Sensorik empfangen wurden, werden sie an eine API gesendet, welche die erhaltenen Daten in der Datenbank speichert. Öffnet ein Nutzer die Frontend-App, frägt diese zuerst die "Health" Daten der Systeme ab. Diese werden vom Health Controller innhalb der API verwaltet. Der Raspberry PI übermittelt beim Start eine online Mitteilung an die API. Anschließend werden die eingebetteten iframes von Grafana geladen. Grafana lädt hierfür die Daten aus der Datenbank, erstellt eine Virtualisierung und stellt diese dar.}
+	\label{fig:Laufzeitsicht}
+\end{figure}  
 
 \section{Verteilungssicht}
 
-\section{Querschnittliche Konzepte}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=170mm]{resources/Verteilungssicht_Deployment.png}
+	\caption{Zeigt die Verteilung der einzelnen Komponenten. Der Nutzer interagiert hier mit dem Valentin Frontend, welches auf einem Debian Server gehostet wird. Der Raspberry Pi ist für die Sensordaten zuständig und sendet diese an den Server. Die Sensork nutzt den Arduino 33 BLE als Hardware Plattform und Sensoren für die Acquisition der Daten. Der Raspberry Pi kann die Daten über Bluetooth BLE abrufen. Die Anwendungen werden auf dem Server mithilfe von Docker werden die Anwendungen virtualisiert.}
+	\label{fig:Qualitätsbaum}
+\end{figure}  
 
 \section{Architekturentscheidungen}
 \subsection{Evaluation zur Wahl des Frontend-Frameworks des Clients}
 
 Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitstitel \textit{Valentin} (Komposita aus \textit{Value} und \textit{Notification}) geführt. Vor der Initialisierung von \textit{Valentin} muss ein geeignetes Framework gewählt werden. Die nachfolgende Nutzwertanalyse dient dafür als Entscheidungsgrundlage. 
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{./resources/techevaluationfe.png}
   \caption{Nutzwertanalyse zur Entscheidung eines geeigneten Frameworks gemessen an der Popularität, der Entwickler Awarness (Welches Framework enthält welchen Support), den Vorkenntnissen des Entwicklungsteams und der Rendergeschwindigkeit auf den Systemen der Clients.}
@@ -367,11 +443,65 @@ Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem Arbeitsti
 
 Die Auswahl zum Framework innerhalb des \textit{Valentin} Client Aufbaus viel auf \textit{React}. \textit{React} ist eine JavaScript-Bibliothek von Facebook für die Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen. Sie ermöglicht eine effiziente Aktualisierung des DOM und eine verbesserte Leistung durch die Verwendung einer virtuellen DOM-Repräsentation.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=160mm]{resources/femockup-1.jpg}
+	\caption{Ein Frontend-Mockup wurde konzipiert, um eine grobe Planung des Dashboards zu ermöglichen. Das Mockup wurde mittels manueller Zeichnung erstellt und in den Entwicklungsprozess integriert, um die Positionierung der einzelnen Komponenten zu beschreiben. Das erstellte Mockup fungiert als visuelle Darstellung, die es ermöglicht, die Platzierung und Interaktion der verschiedenen Komponenten innerhalb des Dashboards zu skizzieren, um eine klare Vorstellung von der späteren Anordnung zu vermitteln.}
+	\label{fig:FrontendMockup}
+\end{figure}  
+
+\subsection{Evaluation zur Wahl des Technologie-Stacks der Hardware}
+
+Die Hardware zur Sensordatenauslesung und Weiterleitung wird unter dem Arbeitstitel \textit{SARA} (Sensor Appliance and Remote Analysis) und \textit{ADA} (Automatic Digital Aggregator) geführt. Vor der Implementierung von \textit{SARA} und \textit{ADA} muss ein geeigneter Hardwarestack ausgewählt werden. Die nachfolgenden Analysen dienen dabei als Entscheidungsgrundlage.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./resources/AuswahlRust.png}
+    \caption{Analyse zur Entscheidung einer geeigneten Technologie für \textit{ADA} gemessen an der Energieeffizienz, der Zeit und der Speichereffizienz.}
+    \label{fig:deine_label}
+\end{figure}
+
+Die Auswahl zur Programmiersprache \textit{Rust} für die \textit{ADA}-Anwendung wird aufgrund der beschränkten Ressourcen einer autark laufenden Applikation, gewählt.
+Da die Anwendung in der mit Solarenergie betriebenen Blickbox installiert werden soll, ist vor allem die Energieeffizienz ausschlaggebend für die Auswahl.
+
+Die Auswahl zur Programmiersprache \textit{C++} für die \textit{SARA}-Anwendung beruht auf dem bereits vorhandenen und verwendeten Framework \textit{Arduino}, als auch an den Bibliotheken \textit{DHT}- und \textit{SparkFun\_Weather\_Meter\_Kit\_Arduino} für die Auslesung der Sensoren. Diese basieren auf \textit{C++}.
+\subsection{Evaluation zur Wahl der Technologie der API}
+Für die API wird als Programmiersprache Python verwendet. Python wird aufgrund der einfachkeit, der großen Anzahl an Frameworks und der großen Community verwendet. Die nachfolgende Grafik erläutert die Auswahl des Frameworks.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./resources/ArchitekturAPI.png}
+    \caption{Eine Analyse wurde durchgeführt, um die Entscheidung für das geeignete Framework zur Entwicklung der API zu treffen. Dabei wurden die Vor- und Nachteile von Flask und Django gegenübergestellt und verglichen.}
+    \label{fig:deine_label}
+\end{figure}
+
 \section{Qualitätsanforderungen}
-\subsection{Qualitätsbaum}
-\subsection{Qualitätsszenarien}
+Qualitätsanforderungen im Softwareengineering sind definierte Spezifikationen und Merkmale, die die Qualität eines Softwareprodukts oder -systems bestimmen.
+Diese Anforderungen umfassen typischerweise Kriterien wie Funktionalität, Leistung, Zuverlässigkeit, Benutzerfreundlichkeit, Wartbarkeit und Sicherheit.
+Sie dienen dazu, sicherzustellen, dass das entwickelte Softwareprodukt die Bedürfnisse und Erwartungen der Benutzer erfüllt und den spezifizierten Standards und Anforderungen entspricht.
+Dabei ist es entscheidend, dass die Qualitätsanforderungen während des gesamten Softwareentwicklungsprozesses berücksichtigt werden, angefangen bei der Anforderungsanalyse über das Design, die Implementierung und das Testen bis hin zur Wartung und Aktualisierung des Systems.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=160mm]{resources/Qualitätsbaum.drawio.png}
+	\caption{Das vorliegende Diagramm veranschaulicht die Qualitätsanforderungen in Form eines "Baums der Qualitäten", wobei spezifische Qualitäten, Aspekte der Qualität und mögliche Szenarien dargestellt sind. Die Struktur des Diagramms zeigt eine hierarchische Darstellung der Qualitätsanforderungen, beginnend mit allgemeinen Qualitätsmerkmalen und sich auf spezifischere Aspekte und Szenarien hinunterbewegend. Jede Ebene des Baumes repräsentiert eine zunehmende Spezifität der Qualitätsanforderungen, wodurch eine klarere und detailliertere Definition der erforderlichen Qualitätsmerkmale erreicht wird.}
+	\label{fig:Verteilungssicht}
+\end{figure}  
 
 \section{Risiken und Teschnische Schulden}
-\section{Glossar}
+\subsection{Risiken}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=160mm]{resources/Risiken.png}
+	\caption{Risiken im Softwareengineering können verschiedene Formen annehmen, darunter technische Herausforderungen wie unvorhergesehene Komplexität in der Implementierung, sowie organisatorische Risiken wie Verzögerungen im Zeitplan.}
+	\label{fig:Risiken}
+\end{figure}
+\section{Technische Schulden}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=80mm]{resources/technischeSchulden.drawio.png}
+	\caption{Technische Schulden im Softwareengineering bezeichnen die Konsequenzen von Entscheidungen, die kurzfristig zu schnellern Entwicklungszeiten führen, langfristig jedoch zu erhöhten Wartungskosten, verminderten Leistungen und erschwerten Erweiterungen führen können.
+    Diese Schulden entstehen beispielsweise durch die Verwendung von ineffizienten oder unsauberen Programmierpraktiken, unzureichende Dokumentation, nicht ausreichendes Refactoring oder das Ignorieren von Best Practices während der Entwicklung.
+    Während technische Schulden manchmal bewusst eingegangen werden, um kurzfristige Ziele zu erreichen, ist es wichtig, sie kontinuierlich zu überwachen und zu reduzieren, um die langfristige Gesundheit und Nachhaltigkeit des Softwareprodukts zu gewährleisten.}
+	\label{fig:TechnischeSchulden}
+\end{figure}  
 
 \end{document}
