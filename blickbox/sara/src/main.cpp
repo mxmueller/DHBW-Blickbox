@@ -1,10 +1,10 @@
 #include <Arduino.h>
+#include <DHT.h>
+#include <FireTimer.h>
 #include <SerialLogger.hpp>
 #include <SparkFun_Weather_Meter_Kit_Arduino_Library.h>
-#include <DHT.h>
-#include <sara_data.hpp>
 #include <sara_battery.hpp>
-#include <FireTimer.h>
+#include <sara_data.hpp>
 
 #if defined(NRF52_SERIES)
   #include <SaraBLE.hpp>
