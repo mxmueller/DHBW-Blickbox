@@ -1,17 +1,24 @@
-# Welcome to MkDocs
+---
+date: Januar 2023
+title: "Blickbox Dokumentation"
+---
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+# Einführung und Ziele {#section-introduction-and-goals}
 
-## Commands
+Die Blickboxen vor der DHBW Heidenheim soll um smarte Features erweitert
+werden. Diese sollen dazu dienen die Blickbox attraktiver zu machen.
+Außerdem dient das Projekt als Basis für weitere Semesterprojekte der
+Informatikstudiengänge die Blickbox. Vor der Implementierung der
+Features wird eine ausführlich durchdachte Software-Design- und
+Architekturplanung stattfinden.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+Zu den smarten Features gehören:
 
-## Project layout
+-   Überwachung der Wetterdaten
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+-   Übermittlung der Daten an zentrale Datenbank
+
+-   Visualisierung der Daten zur Interaktion mit Dritten
+
+-   Überwachen des Akkustandes
+
