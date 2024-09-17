@@ -11,28 +11,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('[PREPARE] 📂 Copy to Deploy Directory') {
-            steps {
-                script {
-                     sh """
-                        if [ -d ${env.DEPLOY_DIR} ]; then
-                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
-                        fi
-                    """
-                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
-                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
-                }
-            }
-        }    
-        stage('Build and Deploy') {
-            steps {
-                script {
-                    dir("${env.DEPLOY_DIR}/server/") {
-                        sh 'docker compose -f compose.prod.yaml up -d --build'
-                    }
-                }
-            }
-        }
         stage('[GIT] 🕵️ GitLeaks Scan') {
             steps {
                 script {
@@ -51,99 +29,6 @@ pipeline {
             post {
                 always {
                     archiveArtifacts artifacts: 'gitleaks-report.json', fingerprint: true
-                }
-            }
-        }
-        stage('[API][MICROSERVICE] 🛠️ Setup Build Environment') {
-            steps {
-                sh '''
-                    sudo -n apt-get update
-                    sudo -n apt-get install -y python3 python3-pip python3.11-venv
-                '''
-            }
-        }
-        stage('[API] 🧪 API-Tests'){
-            steps{
-                dir('server/deployment/tests'){
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip3 install -r requirements.txt
-                        pytest API-Tests.py --disable-warnings --junitxml=apitest-report.xml --noPing
-                    '''
-                }
-            }
-            post{
-                always {
-                    junit '**/apitest-report.xml'
-                }
-                failure {
-                    echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
-                }
-            }
-        }
-        stage('[MICROSERVICE] 🧪 Microservice-Tests'){
-            steps{
-                dir('server/deployment/tests'){
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip3 install -r requirements.txt
-                        pytest Microservice-Tests.py --disable-warnings --junitxml=microservice-report.xml --noPing
-                    '''
-                }
-            }
-            post{
-                always {
-                    junit '**/microservice-report.xml'
-                }
-                failure {
-                    echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
-                }
-            }
-        }
-        stage('[API][MICROSERVICE] 🛡️ API Security') {
-            steps {
-                script {
-                    def banditExitCode = sh(script: '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip3 install bandit
-                        bandit server/deployment -r -f json -o bandit-report.json --exclude /venv,/tests --confidence-level high --severity-level high
-                    ''', returnStatus: true)
-
-                    if (banditExitCode != 0) {
-                        error("Bandit found Security HIGH security vulnerabilities. Please check the Report.")
-                    }
-                }
-            
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true
-                }
-                success {
-                    echo 'Bandit security audit passed. No known vulnerabilities found.'
-                }
-            }
-        }
-        stage('[API][MICROSERVICE] 💅 Code formatting and linting') {
-            steps {
-                dir('server/deployment/tests') {
-                    sh '''
-                        python3 -m venv venv
-                        . venv/bin/activate
-                        pip3 install flake8
-                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv
-                    '''
-                }
-            }
-            post {
-                failure {
-                    echo 'Flake8 found code style issues. Please fix them.'
-                }
-                success {
-                    echo 'Flake8 checks passed. No style issues found.'
                 }
             }
         }
@@ -215,6 +100,100 @@ pipeline {
                 }
             }
         }
+        stage('[BACKEND] 🛠️ Setup Build Environment') {
+            steps {
+                sh '''
+                    sudo -n apt-get update
+                    sudo -n apt-get install -y python3 python3-pip python3.11-venv
+                '''
+            }
+        }
+        stage('[BACKEND] 🧪 API-Tests'){
+            steps{
+                dir('server/deployment/tests'){
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install -r requirements.txt
+                        pytest API-Tests.py --disable-warnings --junitxml=apitest-report.xml --noPing
+                    '''
+                }
+            }
+            post{
+                always {
+                    junit '**/apitest-report.xml'
+                }
+                failure {
+                    echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
+                }
+            }
+        }
+        stage('[BACKEND] 🧪 Microservice-Tests'){
+            steps{
+                dir('server/deployment/tests'){
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install -r requirements.txt
+                        pytest Microservice-Tests.py --disable-warnings --junitxml=microservice-report.xml --noPing
+                    '''
+                }
+            }
+            post{
+                always {
+                    junit '**/microservice-report.xml'
+                }
+                failure {
+                    echo 'pytest hat Fehler gefunden. Bitte die Testergebnisse überprüfen.'
+                }
+            }
+        }
+        stage('[BACKEND] 🛡️ API Security') {
+            steps {
+                script {
+                    def banditExitCode = sh(script: '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install bandit
+                        bandit server/deployment -r -f json -o bandit-report.json --exclude /venv,/tests --confidence-level high --severity-level high
+                    ''', returnStatus: true)
+
+                    if (banditExitCode != 0) {
+                        error("Bandit found Security HIGH security vulnerabilities. Please check the Report.")
+                    }
+                }
+            
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'bandit-report.json', fingerprint: true
+                }
+                success {
+                    echo 'Bandit security audit passed. No known vulnerabilities found.'
+                }
+            }
+        }
+        stage('[BACKEND] 💅 Code formatting and linting') {
+            steps {
+                dir('server/deployment/tests') {
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install flake8
+                        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv
+                    '''
+                }
+            }
+            post {
+                failure {
+                    echo 'Flake8 found code style issues. Please fix them.'
+                }
+                success {
+                    echo 'Flake8 checks passed. No style issues found.'
+                }
+            }
+        }
+        
         stage('[VALENTIN] 🛠️ Build') {
             steps {
                 dir('server/client/valentin') {
@@ -290,6 +269,28 @@ pipeline {
                         } else {
                             echo "${dockerfile} passed hadolint checks."
                         }
+                    }
+                }
+            }
+        }
+          stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                }
+            }
+        }    
+        stage('[DEPLOY] 🚀 Launch!') {
+            steps {
+                script {
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up -d --build'
                     }
                 }
             }

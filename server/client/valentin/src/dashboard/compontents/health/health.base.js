@@ -43,7 +43,7 @@ const apis = [
   },
   {
     key: "Grafana",
-    header: "Grafana",
+    header: "Grafana Dashboard",
     success: "Connected",
     error: "Disconnected",
     delay: 500,
