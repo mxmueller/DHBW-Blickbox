@@ -51,8 +51,6 @@ pipeline {
                     // Decrypting Credentials
                     dir("${env.DEPLOY_DIR}/server/") {
                         sh 'docker compose -f compose.prod.yaml up sops'
-                        sh 'chown jenkins:jenkins /opt/blickbox/prod/server/secrets/secrets.prod.env'
-                        sh 'chmod 755 /opt/blickbox/prod/server/secrets/secrets.prod.env'
                     }
                 }
             }
