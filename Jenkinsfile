@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        DEPLOY_DIR = '/opt/blickbox/test/'
+        DEPLOY_DIR = '/opt/blickbox/prod'
     }
     
     agent any
@@ -14,6 +14,11 @@ pipeline {
         stage('[PREPARE] 📂 Copy to Deploy Directory') {
             steps {
                 script {
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
                     sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
                     sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
                 }
