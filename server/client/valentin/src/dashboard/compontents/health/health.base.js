@@ -96,7 +96,7 @@ function Desc() {
           response = await Promise.race([
             fetch(API_URL),
             new Promise((_, reject) =>
-              setTimeout(() => reject(new Error("Timeout")), 4000)
+              setTimeout(() => reject(new Error("Timeout")), 4000),
             ),
           ]);
         }
@@ -263,7 +263,7 @@ function Desc() {
                       icon={icon}
                       interval={interval}
                     />
-                  )
+                  ),
                 )}
               </SimpleGrid>
             </AccordionPanel>
