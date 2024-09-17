@@ -36,15 +36,18 @@ pipeline {
       stage('[DEPLOY] 📂 Copy to Deploy Directory') {
             steps {
                 script {
+                    // deleting directory if it already exists
                      sh """
                         if [ -d ${env.DEPLOY_DIR} ]; then
                             sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
                         fi
                     """
+                    // creating deployment directory
                     sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
-                    // copying key file
-                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
+                    // copying repository to /opt/blickbox
                     sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                   // copying key file
+                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
                 }
             }
         }  
