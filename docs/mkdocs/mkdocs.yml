@@ -1,11 +1,9 @@
 site_name: 'IoT Blickbox Dokumentation'
-theme: 'readthedocs'
+theme: 'material'
 
 nav:
   - Zusammenfassung: index.md
   - Dokumentation: Dokumentation/documentation.md
-  - Developer Journey:
-    - Setup: dev-journey/setup.md
-    - Testing: dev-journey/test.md
-
-
+  - Auswahl von Libraries: Dokumentation/mermaid.md
+  - Setup: dev-journey/setup.md
+  - Testing: dev-journey/test.md
