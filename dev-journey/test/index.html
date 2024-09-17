@@ -59,6 +59,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#testen-in-ada" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -224,26 +229,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../Dokumentation/mermaid/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Auswahl von Libraries
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../setup/" class="md-nav__link">
         
   
@@ -271,6 +256,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -280,6 +276,56 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#testen-in-ada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testen in ADA
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testen in ADA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#programm-im-dev-modus-ausfuhren" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programm im Dev-Modus ausführen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unittests-in-rust" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unittests in Rust
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -303,6 +349,47 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#testen-in-ada" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testen in ADA
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testen in ADA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#programm-im-dev-modus-ausfuhren" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programm im Dev-Modus ausführen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unittests-in-rust" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unittests in Rust
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -318,7 +405,18 @@
 
   <h1>Testing</h1>
 
-
+<h2 id="testen-in-ada">Testen in ADA</h2>
+<h3 id="programm-im-dev-modus-ausfuhren">Programm im Dev-Modus ausführen</h3>
+<p>Sollte die Wetterstation nicht angebunden sein, kann man generierte Mock-Sensordaten verwenden, um unabhängig von der Wetterstation ADA auszuführen.
+Der Code wird dabei mit folgender Konfiguration gestartet:</p>
+<pre><code class="language-bash">cargo run --features &quot;mock&quot;
+</code></pre>
+<h3 id="unittests-in-rust">Unittests in Rust</h3>
+<p>Die Unittests testen die Logik von ADA, die die eingehenden Sensordaten verarbeitet.
+Unittests befinden sich in dem Modul blickbox/ada/src/tests.
+Um alle Tests auszuführen, führt man folgenden Befehl aus dem ada-Ordner aus:</p>
+<pre><code class="language-bash"> cargo test
+</code></pre>
 
 
 
