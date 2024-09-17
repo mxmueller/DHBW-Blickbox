@@ -33,6 +33,21 @@ pipeline {
                 }
             }
         }
+      stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    // copying key file
+                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                }
+            }
+        }  
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
@@ -274,21 +289,7 @@ pipeline {
                 }
             }
         }
-          stage('[DEPLOY] 📂 Copy to Deploy Directory') {
-            steps {
-                script {
-                     sh """
-                        if [ -d ${env.DEPLOY_DIR} ]; then
-                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
-                        fi
-                    """
-                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
-                    // copying key file
-                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
-                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
-                }
-            }
-        }    
+  
         stage('[DEPLOY] 🚀 Launch!') {
             steps {
                 script {
