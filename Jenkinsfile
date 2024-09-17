@@ -84,7 +84,7 @@ pipeline {
                         . venv/bin/activate
 
                         # Perform code formatting and linting with clang-tidy
-                        clang-tidy **/*.cpp --checks=* --config="{Checks: '*, -clang-analyzer-alpha*, -clang-analyzer-security-*'}"
+                        pio check
                     '''
                 }
             }
