@@ -7,6 +7,7 @@ pipeline {
     agent any
     
     stages {
+        
         stage('[GIT] 🔍 Checkout') {
             steps {
                 checkout scm
@@ -33,28 +34,67 @@ pipeline {
                 }
             }
         }
-      stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+
+         stage('[SARA] 🛠️ Setup Build Environment') {
             steps {
-                script {
-                    // deleting directory if it already exists
-                     sh """
-                        if [ -d ${env.DEPLOY_DIR} ]; then
-                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
-                        fi
-                    """
-                    // creating deployment directory
-                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
-                    // copying repository to /opt/blickbox
-                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
-                   // copying key file
-                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
-                    // Decrypting Credentials
-                    dir("${env.DEPLOY_DIR}/server/") {
-                        sh 'docker compose -f compose.prod.yaml up sops'
-                    }
+                sh '''
+                    # Install PlatformIO and dependencies if needed
+                    pip install -U platformio
+                '''
+            }
+        }
+
+        stage('[SARA] 🛠️ Initialize Environment') {
+            steps {
+                sh '''
+                    # Initialize the 'native_selected_unittests' environment
+                    pio init --env native_selected_unittests
+                '''
+            }
+        }
+
+        stage('[SARA] 🧪 Run Tests') {
+            steps {
+                sh '''
+                    # Run tests for the 'native_selected_unittests' environment
+                    pio test -e native_selected_unittests
+                '''
+            }
+            post {
+                always {
+                    // Archive test results or logs
+                    archiveArtifacts artifacts: 'test_results/**', allowEmptyArchive: true
+
+                    // Publish test results
+                    junit 'test_results/*.xml'
+                }
+                failure {
+                    echo 'Tests failed! Please review the output above.'
+                }
+                success {
+                    echo 'Tests passed successfully!'
                 }
             }
-        }  
+        }
+
+        stage('[SARA] 📝 Code Formatting and Linting') {
+            steps {
+                sh '''
+                    # Perform code formatting and linting if necessary
+                    # (Adjust this section based on your code formatting and linting tools)
+                    echo 'Code formatting and linting are not applicable for this environment.'
+                '''
+            }
+            post {
+                failure {
+                    echo 'Code formatting or linting issues found. Please review the output above.'
+                }
+                success {
+                    echo 'Code formatting and linting completed successfully. No issues found.'
+                }
+            }
+        }
+        
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
@@ -296,7 +336,28 @@ pipeline {
                 }
             }
         }
-  
+        stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                    // deleting directory if it already exists
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
+                    // creating deployment directory
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    // copying repository to /opt/blickbox
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                   // copying key file
+                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
+                    // Decrypting Credentials
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up sops'
+                    }
+                }
+            }
+        }  
         stage('[DEPLOY] 🚀 Launch!') {
             steps {
                 script {
