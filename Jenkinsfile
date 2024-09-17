@@ -47,7 +47,6 @@ pipeline {
                         pip install platformio
                         
                         # Initialize the environment and install clang-tidy
-                        pio init --env native_selected_unittests
                         sudo apt-get update
                         sudo apt-get install -y clang-tidy
                     '''
