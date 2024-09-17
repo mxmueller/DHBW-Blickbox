@@ -2,7 +2,7 @@ version: '3.6'
 services:
   sops:
     image: mozilla/sops:latest
-    user: "${UID}:${GID}"
+    user: "1005:1005"
     volumes:
       - "./secrets:/secrets"
     environment:
