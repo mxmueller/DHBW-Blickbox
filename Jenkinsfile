@@ -42,40 +42,9 @@ pipeline {
                     python3 -m venv venv
                     . venv/bin/activate
                     pip3 install platformio
-                '''
-            }
-        }
-
-        stage('[SARA] 🛠️ Initialize Environment') {
-            steps {
-                sh '''
-                    # Initialize the 'native_selected_unittests' environment
                     pio init --env native_selected_unittests
-                '''
-            }
-        }
-
-        stage('[SARA] 🧪 Run Tests') {
-            steps {
-                sh '''
-                    # Run tests for the 'native_selected_unittests' environment
                     pio test -e native_selected_unittests
                 '''
-            }
-            post {
-                always {
-                    // Archive test results or logs
-                    archiveArtifacts artifacts: 'test_results/**', allowEmptyArchive: true
-
-                    // Publish test results
-                    junit 'test_results/*.xml'
-                }
-                failure {
-                    echo 'Tests failed! Please review the output above.'
-                }
-                success {
-                    echo 'Tests passed successfully!'
-                }
             }
         }
 
