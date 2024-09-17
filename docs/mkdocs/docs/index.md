@@ -3,16 +3,19 @@ date: Januar 2023
 title: "Blickbox Dokumentation"
 ---
 
-# Einführung und Ziele {#section-introduction-and-goals}
+# Einführung und Ziele
 
-Die Blickboxen vor der DHBW Heidenheim soll um smarte Features erweitert
-werden. Diese sollen dazu dienen die Blickbox attraktiver zu machen.
-Außerdem dient das Projekt als Basis für weitere Semesterprojekte der
-Informatikstudiengänge die Blickbox. Vor der Implementierung der
-Features wird eine ausführlich durchdachte Software-Design- und
-Architekturplanung stattfinden.
+<div style="text-align: center;">
+  <img src="../resources/blickbox-bild.jpg" alt="Blickbox Beispiel" width="500px">
+  <p><em>Blickbox vor der DHBW Heidenheim</em></p>
+</div>
+Die Blickboxen vor der DHBW Heidenheim können im Umfang von Semesterprojekten um Austellungsstücke und smarte Features erweitert werden.
+Im IOT-Semesterprojekt wird die Blickbox und vorhandene Sensoren, um eine Wetterstation erweitert.
+Die Wettersensorik kann auch als Basis für weitere Semesterprojekte der Informatikstudiengänge der Blickbox dienen.
+Vor der Implementierung der Features wird eine ausführlich durchdachte Software-Design- und Architekturplanung stattfinden.
 
-Zu den smarten Features gehören:
+
+Zu der Implementierung der Wetterstation gehören folgende Features:
 
 -   Überwachung der Wetterdaten
 
