@@ -2,13 +2,15 @@ import { ChakraProvider, Text, Box, VStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
+// Hauptkomponente für Grafana-Validierung
 function GrafanaValidation({ children }) {
+  // State für Mock-Modus und Dashboard-URL
   const [isMockEnabled, setIsMockEnabled] = useState(false);
   const [dashboardUrl, setDashboardUrl] = useState("");
 
+  // Effekt zum Setzen des States basierend auf Umgebungsvariablen
   useEffect(() => {
     setIsMockEnabled(process.env.REACT_APP_MOCK_GRAFANA === "true");
-
     if (process.env.REACT_APP_GRAFANA_DEV_URL) {
       setDashboardUrl(process.env.REACT_APP_GRAFANA_DEV_URL);
     } else if (process.env.REACT_APP_GRAFANA_URL) {
@@ -20,6 +22,7 @@ function GrafanaValidation({ children }) {
     }
   }, []);
 
+  // Mock-Komponente für Testansicht
   const MockComponent = () => {
     const data = [
       { name: "Gruppe A", value: 400 },
@@ -67,9 +70,11 @@ function GrafanaValidation({ children }) {
   return (
     <ChakraProvider>
       {children}
+      {/* Container für Dashboard oder Mock */}
       <Box boxShadow="xl" bg="blackAlpha.100" p={5} mt={10} borderRadius={25}>
         <Box bg="#f4f5f5" borderRadius={25}>
           <Box padding={15}>
+            {/* Bedingte Rendering-Logik */}
             {isMockEnabled ? (
               <MockComponent />
             ) : (
