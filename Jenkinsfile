@@ -38,8 +38,10 @@ pipeline {
          stage('[SARA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
-                    # Install PlatformIO and dependencies if needed
-                    pip install -U platformio
+                    # Creating Enviroment
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip3 install platformio
                 '''
             }
         }
