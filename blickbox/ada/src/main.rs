@@ -1,6 +1,5 @@
-use std::collections::{HashMap, VecDeque};
 use std::fs::{File, OpenOptions};
-use std::io::{BufRead, Write};
+use std::io::{Write};
 use std::time::{Duration, SystemTime};
 
 use btleplug::api::Peripheral;
@@ -10,7 +9,7 @@ use serde::Serialize;
 use tokio::time;
 
 use crate::communication::http_request::http_request::{send_data};
-use crate::communication::logging::logging::{log, LogChannel, LogEntry};
+use crate::communication::logging::logging::{log, LogChannel};
 use crate::communication::redis::redis::{initialize_redis, RedisHandler};
 use crate::sara::ble_weather_station::ble_weather_station::{connect_peripheral_device, get_data_ble};
 
@@ -38,13 +37,12 @@ async fn main() {
     println!("Starting ADA");
     // 10 Minuten
     let mut interval = time::interval(Duration::from_secs(10 * 60));
-    let mut logs: HashMap<String, VecDeque<LogEntry>> = HashMap::new();
 
     let redis_handler = match initialize_redis("redis://localhost:6379/0").await {
         Ok(handler) => Some(handler),
         Err(error) => {
             eprintln!("Failed to initialize Redis: {}", error);
-            let error_log = log(String::from("Error"), format!("Failed to connect to Redis: {}", error), String::from("error"));
+            log(String::from("Error"), format!("Failed to connect to Redis: {}", error), String::from("error"));
             None
         }
     };
@@ -67,7 +65,7 @@ async fn main() {
             let sensor_data = match handle_sensor_data(handler).await {
                 Ok(sensor_data) => Some(sensor_data),
                 Err(error) => {
-                    let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
+                    let error_log = log(String::from("Error"), error, String::from("error"));
                     let sara_log = log(String::from("Error"), String::from("Issue occurred while trying to connect to ADA"), String::from("error"));
                     handler.log_to_channel(LogChannel::Ada, error_log).await;
                     handler.log_to_channel(LogChannel::Sara, sara_log).await;
@@ -88,9 +86,16 @@ async fn main() {
             });
 
             if let Some(data) = sensor_data {
-                if let Err(error) = send_data(handler, "https://blickbox.maytastix.de/api/iot/api/insert/", &data).await {
-                    let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
-                    handler.log_to_channel(LogChannel::Ada, error_log).await;
+                match send_data("https://blickbox.maytastix.de/api/iot/api/insert", &data).await {
+                    Ok(logs) => {
+                        for log in logs {
+                            handler.log_to_channel(LogChannel::Ada, log).await;
+                        }
+                    }
+                    Err(error) => {
+                        let error_log = log(String::from("Error"), error, String::from("error"));
+                        handler.log_to_channel(LogChannel::Ada, error_log).await;
+                    }
                 }
             }
 
@@ -107,8 +112,7 @@ async fn main() {
 async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
     // Öffnet Datei in "append-mode" und erstellt sie, wenn sie nicht existiert
-    let mut file = OpenOptions::new()
-        .write(true)
+    let file = OpenOptions::new()
         .append(true)
         .create(true)
         .open("command_history.txt").unwrap();
@@ -155,8 +159,7 @@ async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
 pub fn get_time() -> String {
     let date_time_format: DateTime<Utc> = SystemTime::now().into();
-    let time = date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string();
-    return time;
+    date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string()
 }
 pub fn write_to_file(mut file: &File, sensor_data: &SensorData) {
         // Schreibt erhaltene Daten in Datei auf dem Pi

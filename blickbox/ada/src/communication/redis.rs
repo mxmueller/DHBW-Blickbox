@@ -1,15 +1,15 @@
 pub mod redis {
     use std::collections::{HashMap, VecDeque};
-    use std::env;
-    use std::process::{Command, exit};
+    
+    use std::process::{exit};
     use std::sync::Arc;
     use std::time::Duration;
 
     use futures_util::StreamExt;
-    use redis::{AsyncCommands, RedisError};
+    use redis::{AsyncCommands};
     use tokio::sync::Mutex;
 
-    use crate::communication::logging::logging::{handshake_log, HandshakeLog, log, LogChannel, LogEntry};
+    use crate::communication::logging::logging::{handshake_log, HandshakeLog, LogChannel, LogEntry};
 
     #[derive(Clone)]
     pub struct RedisHandler {
