@@ -2,7 +2,8 @@ version: '3.6'
 services:
   sops:
     image: mozilla/sops:latest
-    user: "${UID}:${GID}"
+    # Using jenkins user for decrypting the secretsfile
+    user: "1005:1005"
     volumes:
       - "./secrets:/secrets"
     environment:
