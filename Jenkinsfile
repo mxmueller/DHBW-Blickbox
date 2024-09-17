@@ -1,9 +1,36 @@
 pipeline {
+    environment {
+        DEPLOY_DIR = '/opt/blickbox/prod'
+    }
+    
     agent any
+    
     stages {
         stage('[GIT] 🔍 Checkout') {
             steps {
                 checkout scm
+            }
+        }
+        stage('[PREPARE] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                }
+            }
+        }    
+        stage('Build and Deploy') {
+            steps {
+                script {
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up -d --build'
+                    }
+                }
             }
         }
         stage('[GIT] 🕵️ GitLeaks Scan') {
