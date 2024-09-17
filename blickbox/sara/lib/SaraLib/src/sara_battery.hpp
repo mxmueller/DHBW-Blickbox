@@ -5,6 +5,7 @@
 #include <stubs/ArduinoStubs.hpp>
 #include <makros/ArdunioMakros.hpp>
 #include <mock/SerialLoggerMock.hpp>
+#include <cstdint>
 #else
 #include <Arduino.h>
 #include <SerialLogger.hpp>
