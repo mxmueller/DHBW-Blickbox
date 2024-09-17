@@ -39,30 +39,69 @@ pipeline {
             steps {
                 dir('blickbox/sara') {
                     sh '''
-                        # Creating Enviroment
+                        # Create and activate Python virtual environment
                         python3 -m venv venv
                         . venv/bin/activate
-                        pip3 install platformio
+
+                        # Install PlatformIO
+                        pip install platformio
+                        
+                        # Initialize the environment and install clang-tidy
+                        pio init --env native_selected_unittests
+                        sudo apt-get update
+                        sudo apt-get install -y clang-tidy
+                    '''
+                }
+            }
+        }
+
+        stage('[SARA] 🧪 Run Tests') {
+            steps {
+                dir('blickbox/sara') {
+                    sh '''
+                        # Activate virtual environment
+                        . venv/bin/activate
+
+                        # Run tests for the 'native_selected_unittests' environment
                         pio test -e native_selected_unittests
                     '''
+                }
+            }
+            post {
+                always {
+                    // Archive test results or logs
+                    archiveArtifacts artifacts: 'test_results/**', allowEmptyArchive: true
+
+                    // Publish test results
+                    junit 'test_results/*.xml'
+                }
+                failure {
+                    echo 'Tests failed! Please review the output above.'
+                }
+                success {
+                    echo 'Tests passed successfully!'
                 }
             }
         }
 
         stage('[SARA] 📝 Code Formatting and Linting') {
             steps {
-                sh '''
-                    # Perform code formatting and linting if necessary
-                    # (Adjust this section based on your code formatting and linting tools)
-                    echo 'Code formatting and linting are not applicable for this environment.'
-                '''
+                dir('blickbox/sara') {
+                    sh '''
+                        # Activate virtual environment
+                        . venv/bin/activate
+
+                        # Perform code formatting and linting with clang-tidy
+                        clang-tidy **/*.cpp --checks=* --config="{Checks: '*, -clang-analyzer-alpha*, -clang-analyzer-security-*'}"
+                    '''
+                }
             }
             post {
                 failure {
-                    echo 'Code formatting or linting issues found. Please review the output above.'
+                    echo 'Clang-tidy found issues. Please review the output above and fix any errors.'
                 }
                 success {
-                    echo 'Code formatting and linting completed successfully. No issues found.'
+                    echo 'Clang-tidy completed successfully. No issues found.'
                 }
             }
         }
