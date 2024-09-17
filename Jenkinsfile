@@ -1,11 +1,24 @@
 pipeline {
+    environment {
+        DEPLOY_DIR = '/opt/blickbox/test/'
+    }
+    
     agent any
+    
     stages {
         stage('[GIT] 🔍 Checkout') {
             steps {
                 checkout scm
             }
         }
+        stage('[PREPARE] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                    sh "mkdir -p ${env.DEPLOY_DIR}"
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                }
+            }
+        }    
         stage('[GIT] 🕵️ GitLeaks Scan') {
             steps {
                 script {
