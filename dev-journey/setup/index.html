@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#setup-developer-journey" class="md-skip">
+        <a href="#mkdocs-mit-github-pages" class="md-skip">
           Skip to content
         </a>
       
@@ -257,8 +257,6 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -287,8 +285,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -297,20 +293,62 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#voraussetzungen" class="md-nav__link">
+  <a href="#mkdocs-mit-github-pages" class="md-nav__link">
     <span class="md-ellipsis">
-      Voraussetzungen
+      MkDocs mit GitHub Pages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MkDocs mit GitHub Pages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mkdocs-projekt-erstellen" class="md-nav__link">
+    <span class="md-ellipsis">
+      MkDocs-Projekt erstellen
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#schritte-zur-einrichtung" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#dokumentation-deployen" class="md-nav__link">
     <span class="md-ellipsis">
-      Schritte zur Einrichtung:
+      Dokumentation deployen
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aktualisierungen-vornehmen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aktualisierungen vornehmen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lokale-entwicklung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lokale Entwicklung
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weitere-informationen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Weitere Informationen
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -359,8 +397,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -369,20 +405,62 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#voraussetzungen" class="md-nav__link">
+  <a href="#mkdocs-mit-github-pages" class="md-nav__link">
     <span class="md-ellipsis">
-      Voraussetzungen
+      MkDocs mit GitHub Pages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MkDocs mit GitHub Pages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mkdocs-projekt-erstellen" class="md-nav__link">
+    <span class="md-ellipsis">
+      MkDocs-Projekt erstellen
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#schritte-zur-einrichtung" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#dokumentation-deployen" class="md-nav__link">
     <span class="md-ellipsis">
-      Schritte zur Einrichtung:
+      Dokumentation deployen
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aktualisierungen-vornehmen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aktualisierungen vornehmen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lokale-entwicklung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lokale Entwicklung
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weitere-informationen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Weitere Informationen
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -401,21 +479,45 @@
                   
 
 
-<h1 id="setup-developer-journey">Setup - Developer Journey</h1>
-<p>In diesem Abschnitt wird die Entwicklerumgebung für das Blickbox-Projekt beschrieben.</p>
-<h2 id="voraussetzungen">Voraussetzungen</h2>
+  <h1>Setup</h1>
+
+<h2 id="mkdocs-mit-github-pages">MkDocs mit GitHub Pages</h2>
+<p>Dieses Repository enthält die Dokumentation für DHBW-Blickbox, erstellt mit MkDocs und gehostet auf GitHub Pages.</p>
+<p>Folgen Sie diesen Schritten, um das Projekt einzurichten und die Dokumentation zu deployen:</p>
+<h3 id="mkdocs-projekt-erstellen">MkDocs-Projekt erstellen</h3>
+<pre><code class="language-bash"># MkDocs installieren
+pip install mkdocs
+
+# In das Projektverzeichnis wechseln
+cd docs/mkdocs/
+</code></pre>
+<h3 id="dokumentation-deployen">Dokumentation deployen</h3>
+<pre><code class="language-bash">mkdocs gh-deploy
+</code></pre>
+<h3 id="aktualisierungen-vornehmen">Aktualisierungen vornehmen</h3>
 <ul>
-<li>Docker</li>
-<li>Raspberry Pi</li>
-<li>Grafana</li>
+<li>Nehmen Sie Änderungen an Ihren Markdown-Dateien vor</li>
+<li>Committen und pushen Sie die Änderungen:</li>
 </ul>
-<h2 id="schritte-zur-einrichtung">Schritte zur Einrichtung:</h2>
-<ol>
-<li>Raspberry Pi vorbereiten</li>
-<li>Docker-Container einrichten</li>
-<li>Grafana Dashboard konfigurieren</li>
-<li>Datenübertragung testen</li>
-</ol>
+<pre><code class="language-bash">git add .
+git commit -m &quot;Update documentation&quot;
+git push
+</code></pre>
+<ul>
+<li>Deployen Sie die aktualisierten Seiten:</li>
+</ul>
+<pre><code class="language-bash">mkdocs gh-deploy
+</code></pre>
+<h3 id="lokale-entwicklung">Lokale Entwicklung</h3>
+<p>Um die Dokumentation lokal zu testen, führen Sie folgenden Befehl aus:</p>
+<pre><code class="language-bash">mkdocs serve
+</code></pre>
+<p>Öffnen Sie dann http://127.0.0.1:8000/ in Ihrem Browser.</p>
+<h3 id="weitere-informationen">Weitere Informationen</h3>
+<ul>
+<li><a href="https://www.mkdocs.org/">MkDocs Dokumentation</a></li>
+<li><a href="https://docs.github.com/en/pages">GitHub Pages Dokumentation</a></li>
+</ul>
 <p><a href="../../">Zurück zur Hauptseite</a></p>
 
 
