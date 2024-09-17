@@ -24,6 +24,15 @@ pipeline {
                 }
             }
         }    
+        stage('Build and Deploy') {
+            steps {
+                script {
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up -d --build'
+                    }
+                }
+            }
+        }
         stage('[GIT] 🕵️ GitLeaks Scan') {
             steps {
                 script {
