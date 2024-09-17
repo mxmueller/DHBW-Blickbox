@@ -26,6 +26,8 @@ services:
     build:
       context: ./deployment/
       dockerfile: Dockerfile
+    networks:
+      - redis_net
     restart: always
     ports:
       - "3002:5000" 
@@ -60,10 +62,11 @@ services:
     volumes:
       - /srv/blickbox/grafana_data:/var/lib/grafana:rw
 
-  redis:
+  blickbox_redis:
     image: redis:7-alpine
     restart: always
     networks:
+        redis_net: {}
         app_net:
           ipv4_address: 172.16.238.10
     env_file:
@@ -77,6 +80,8 @@ services:
       context: ./deployment/redis_microservice
       dockerfile: Dockerfile
     restart: always
+    networks:
+      - redis_net
     env_file:
       - path: ./secrets/secrets.prod.env
         required: false
@@ -94,4 +99,6 @@ networks:
   app_net:
     ipam:
       config:
-        - subnet: 172.16.238.0/24
+        - sub net: 172.16.238.0/24
+  redis_net:
+    driver: bridge
