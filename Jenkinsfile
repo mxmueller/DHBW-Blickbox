@@ -47,8 +47,8 @@ pipeline {
                         pip install platformio
                         
                         # Initialize the environment and install clang-tidy
-                        sudo apt-get update
-                        sudo apt-get install -y clang-tidy
+                        sudo -n apt-get update
+                        sudo -n apt-get install -y clang-tidy
                     '''
                 }
             }
