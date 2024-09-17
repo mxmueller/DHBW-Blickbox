@@ -1,16 +1,19 @@
-#include <unity.h>
+#include <math.h>
 #include <sara_battery.hpp>
+#include <unity.h>
 
 using namespace sara_battery;
 
-#define BATTERY_PIN 6
+enum {
+BATTERY_PIN = 6
+};
 SaraBatteryManager battery_manager (BATTERY_PIN);
 
 
-void setUp(void) {
+void setUp() {
 }
 
-void tearDown(void) {
+void tearDown() {
 }
 
 void test_correct_ADC_units(){
@@ -30,7 +33,7 @@ void test_battery_map_voltage() {
     TEST_ASSERT_EQUAL_INT8(battery_percent, -5);
 }
 
-int main( int argc, char **argv) {
+auto main( int  /*argc*/, char ** /*argv*/) -> int {
     UNITY_BEGIN();
 
     RUN_TEST(test_correct_ADC_units);
