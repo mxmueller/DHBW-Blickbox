@@ -1,0 +1,1452 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../mermaid/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+    
+    
+      
+        <title>Blickbox Dokumentation - IoT Blickbox Dokumentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dokumentation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="IoT Blickbox Dokumentation" class="md-header__button md-logo" aria-label="IoT Blickbox Dokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            IoT Blickbox Dokumentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Blickbox Dokumentation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="IoT Blickbox Dokumentation" class="md-nav__button md-logo" aria-label="IoT Blickbox Dokumentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    IoT Blickbox Dokumentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Zusammenfassung
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Dokumentation
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Dokumentation
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stakeholder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stakeholder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anforderungskonzept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Anforderungskonzept
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anforderungskonzept">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#funktionale-anforderungen-fa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Funktionale Anforderungen (FA)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nicht-funktionale-anforderungen-nfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nicht funktionale Anforderungen (NFA)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randbedingungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Randbedingungen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Randbedingungen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technisch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technisch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organisatorisch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Organisatorisch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kontextabgrenzung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kontextabgrenzung
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kontextabgrenzung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fachlicher-kontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fachlicher Kontext
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technischer-kontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technischer Kontext
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#losungsstrategie" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lösungsstrategie
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bausteinsicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bausteinsicht
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bausteinsicht">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#native-react-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Native React App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raspberry-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raspberry Pi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sensorik" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sensorik
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#laufzeitsicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laufzeitsicht
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verteilungssicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verteilungssicht
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architekturentscheidungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architekturentscheidungen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architekturentscheidungen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-zur-wahl-des-frontend-frameworks-des-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation zur Wahl des Frontend-Frameworks des Clients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-zur-wahl-des-technologie-stacks-der-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation zur Wahl des Technologie-Stacks der Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-zur-wahl-der-technologie-der-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation zur Wahl der Technologie der API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qualitatsanforderungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Qualitätsanforderungen
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risiken-und-teschnische-schulden" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risiken und Teschnische Schulden
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risiken und Teschnische Schulden">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#risiken" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risiken
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technische-schulden" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technische Schulden
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mermaid/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Auswahl von Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev-journey/setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev-journey/test/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stakeholder" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stakeholder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anforderungskonzept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Anforderungskonzept
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anforderungskonzept">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#funktionale-anforderungen-fa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Funktionale Anforderungen (FA)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nicht-funktionale-anforderungen-nfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nicht funktionale Anforderungen (NFA)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randbedingungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Randbedingungen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Randbedingungen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technisch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technisch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organisatorisch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Organisatorisch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kontextabgrenzung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kontextabgrenzung
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kontextabgrenzung">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fachlicher-kontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fachlicher Kontext
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technischer-kontext" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technischer Kontext
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#losungsstrategie" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lösungsstrategie
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bausteinsicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bausteinsicht
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bausteinsicht">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#native-react-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Native React App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raspberry-pi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raspberry Pi
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sensorik" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sensorik
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#laufzeitsicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laufzeitsicht
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verteilungssicht" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verteilungssicht
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architekturentscheidungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architekturentscheidungen
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architekturentscheidungen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-zur-wahl-des-frontend-frameworks-des-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation zur Wahl des Frontend-Frameworks des Clients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-zur-wahl-des-technologie-stacks-der-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation zur Wahl des Technologie-Stacks der Hardware
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-zur-wahl-der-technologie-der-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation zur Wahl der Technologie der API
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qualitatsanforderungen" class="md-nav__link">
+    <span class="md-ellipsis">
+      Qualitätsanforderungen
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risiken-und-teschnische-schulden" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risiken und Teschnische Schulden
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risiken und Teschnische Schulden">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#risiken" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risiken
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technische-schulden" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technische Schulden
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="dokumentation">Dokumentation</h1>
+<h2 id="stakeholder">Stakeholder</h2>
+<p>Ein umfassender Überblick über die Stakeholder des Systems ist von entscheidender Bedeutung. 
+Dies bezieht sich auf sämtliche Personen, Rollen oder Organisationen, die entweder die Architektur des Systems kennen sollten oder von dieser überzeugt werden müssen. Zu den Stakeholdern zählen auch jene, die aktiv mit der Architektur oder dem Code arbeiten, beispielsweise indem sie Schnittstellen nutzen. Ebenso gehören Personen dazu, die die Dokumentation der Architektur benötigen, um ihre eigene Arbeit effizient zu gestalten. Darüber hinaus sind Stakeholder involviert, die Entscheidungen über das System und dessen Entwicklung treffen.
+Die nachfolgende Analyse zeigt alle Stakeholder gebündelt in ihren Gewichtungen und Beziehungen.</p>
+<div style="text-align: left;">
+  <img src="../../resources/stakeholderanalyse.drawio.png" alt="Stakeholder Analyse" width="800px">
+  <p>Stakeholder Analyse und Zusammenfassung in den Unterscheidungen: Einbindungsgrad, Interesse und Einflüsse. Das Entwicklungsteam geht deutlich als am stärksten partizipativ gekennzeichneten Stakeholder hevor. Am repressivsten zeigen sich die Stakeholder in Form der Fußgänger.</p>
+</div>
+
+<h2 id="anforderungskonzept">Anforderungskonzept</h2>
+<p>Die Anforderungen an die Umsetzung des Blickbox-Projekts werden in die Kategorien funktionale, nicht funktionale und hypothetische Anforderungen unterteilt.
+Diese Differenzierung ermöglicht eine umfassende Abdeckung aller Aufgabenstellungen im
+Zusammenhang mit der Umsetzung des Blickbox-Projekts.</p>
+<h3 id="funktionale-anforderungen-fa">Funktionale Anforderungen (FA)</h3>
+<p>Funktionale Anforderungen beschreiben spezifisch die konkreten Zwecke, die das zu entwickelnde Produkt erfüllen soll.</p>
+<h3 id="nicht-funktionale-anforderungen-nfa">Nicht funktionale Anforderungen (NFA)</h3>
+<p>Im Gegensatz zu funktionalen Anforderungen sind nicht-funktionale Anforderungen eher allgemein gehalten und betreffen die gesamte Architektur und das Design des Produkts.
+Sie können auf verschiedene Projekte angewendet werden.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Anforderung</strong></th>
+<th><strong>Beschreibung</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Datenerfassung und -übertragung (FA1)</strong></td>
+<td>Das IOT-System muss in der Lage sein, kontinuierlich Sensordaten zu erfassen. <br> Diese Daten sollen in der Sensoreinheit eingelesen, an den Raspberry Pi geschickt, dort gespeichert und verarbeitet werden. <br> Die Datenübertragungen erfolgen Event-gesteuert und drahtlos. <br> Von der Sensoreinheit erfolgt die Übertragung über Bluetooth und zum Server über einen http-Client. <br> Die Daten werden in festgelegten Intervallen im JSON-Format an den Server übertragen und in der Datenbank festgehalten</td>
+</tr>
+<tr>
+<td><strong>Interaktivität zu Dritten (FA2)</strong></td>
+<td>Die Blickbox soll attraktiver werden und Fußgänger sollen mit ihm interagieren können. <br> Das soll in Form eines Displays oder Ton und Licht geschehen. <br> Ein Display soll in der Lage sein, Dritten aktuelle Daten aus der Datenbank wie etwa das Wetter anzuzeigen. <br> Bei Dunkelheit sollen Bewegungsmelder Lichter aktivieren.</td>
+</tr>
+<tr>
+<td><strong>Containerisierung (FA3)</strong></td>
+<td>Die Serveranwendungen sollen in Containern gekapselt werden, um eine verbesserte Portabilität und Skalierbarkeit zu gewährleisten. <br> Es wird die Container-Technologien Docker verwendet werden, um die Anwendungen effizient zu verwalten und zu deployen.</td>
+</tr>
+<tr>
+<td><strong>Erweiterbarkeit und Wartung (NF1)</strong></td>
+<td>Die Architektur und Dokumentation des Systems sollen leicht zugänglich sein, um Erweiterungen und Verbesserungen der Features zu erleichtern. <br> Eine klare Dokumentation sowie ein vereinfachter Hardwareaufbau sollen die Wartung und Erweiterbarkeit des Systems unterstützen.</td>
+</tr>
+<tr>
+<td><strong>Sicherheit (NF2)</strong></td>
+<td>Die Verbindung zum Server soll verschlüsselt sein, um die Sicherheit der übertragenen Daten zu gewährleisten. <br> Es müssen geeignete Verschlüsselungsprotokolle und Sicherheitsmaßnahmen implementiert werden, um die Vertraulichkeit und Integrität der Daten zu schützen.</td>
+</tr>
+<tr>
+<td><strong>Datenwiederherstellung und -erhaltung (NF3)</strong></td>
+<td>Ein Standardprogramm auf dem Raspberry Pi soll die kontinuierliche Sicherung der Daten gewährleisten, um die ungestörte Funktionalität der Blickbox zu sichern. <br> Die Daten puffern wir auf dem Pi, damit die Datenbank nur zur Darstellung in Grafana existiert. <br> Die Daten sollen dazu auf dem Raspberry Pi in einer Datei gespeichert werden. <br> Das Risiko des Verlierens der zeitabhängigen Daten soll so minimiert werden.</td>
+</tr>
+<tr>
+<td><strong>Bereitstellung einer geeigneten Umgebung (NF4)</strong></td>
+<td>Die Hardware muss sowohl innerhalb als auch außerhalb der Blickbox an trockenen und sicheren Orten platziert werden. <br> Es sollen wetterfeste und isolierte Boxen verwendet werden, um die Hardware vor Umwelteinflüssen zu schützen und ihre Langlebigkeit zu unterstützen.</td>
+</tr>
+<tr>
+<td><strong>Bereitstellung eines Dashboards (NF5)</strong></td>
+<td>Die Daten der Datenbank sollen mit Grafana grafisch dargestellt werden. <br> Auf dem Dashboard sollen die Grafana-Grafen visualisiert werden und den Verbindungsstatus zur Datenbank sowie zur Blickbox angegeben werden. <br> Es soll nutzerfreundlich sein, um die Datenvisualisierung für Benutzer intuitiv zugänglich zu machen.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="randbedingungen">Randbedingungen</h2>
+<h3 id="technisch">Technisch</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Randbedingungen</strong></th>
+<th><strong>Beschreibung</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Datenbank</strong></td>
+<td>Zur Datenbankpersistenz wird eine NoSQL-Datenbank wie InfluxDB verwendet.</td>
+</tr>
+<tr>
+<td><strong>Datenübertragung</strong></td>
+<td>Die Wetterstation wird über das Internet (WLAN) mit einer API kommunizieren.</td>
+</tr>
+<tr>
+<td><strong>Aufteilung</strong></td>
+<td>Frontend und Backend werden strikt getrennt.</td>
+</tr>
+<tr>
+<td><strong>Fremdsoftware</strong></td>
+<td>Open Source Bibliotheken dürfen verwendet werden.</td>
+</tr>
+<tr>
+<td><strong>Wasserfestigkeit</strong></td>
+<td>Jegliche Hardware muss Wasserfest installiert werden.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="organisatorisch">Organisatorisch</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Randbedingungen</strong></th>
+<th><strong>Beschreibung</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Team</strong></td>
+<td>Vivian Berger, Maylis Grune, Max Müller und Aron Seidl.</td>
+</tr>
+<tr>
+<td><strong>Zeitplan</strong></td>
+<td>Der Zeitplan wird auf 2 Monate vom 01.02.2024 - 28.03.2024 und 2 Monate von 09.08.2024 - 24.09.2024 festgelegt.</td>
+</tr>
+<tr>
+<td><strong>Projektmanagement</strong></td>
+<td>Die Entwicklung folgt dem Scrum-Framework mit zweiwöchigen Sprints.</td>
+</tr>
+<tr>
+<td><strong>Definition of Done</strong></td>
+<td>Entwickler folgen der DoD auf dem Git-Repository.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="kontextabgrenzung">Kontextabgrenzung</h2>
+<h3 id="fachlicher-kontext">Fachlicher Kontext</h3>
+<div style="text-align: left;">
+  <img src="../../resources/Business_Context.png" alt="Business Context" width="800px">
+  <p>Das -Modell bietet eine strukturierte Methode zur Visualisierung und
+Kommunikation von Softwarearchitektur, wobei der Fachkontext eine
+wichtige Rolle spielt. Die Kernkonzepte des Domänenwissens und die
+Interaktionen mit den technischen Komponenten mit den Akteuren wird
+beschrieben. Durch die Integration des Fachkontexts in das -Modell
+können Architekten und Entwickler eine ganzheitliche Sicht auf das
+System erhalten und die Umsetzung von Anforderungen in eine
+entsprechende technische Architektur
+erleichtern.</p>
+</div>
+
+<table>
+<thead>
+<tr>
+<th><strong>Knoten</strong></th>
+<th><strong>Beschreibung</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fußgänger</strong></td>
+<td>Fußgänger die sich die Blickbox anschauen und die Daten sehen.</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Administriert Dashboards und steuert Blickbox manuell.</td>
+</tr>
+<tr>
+<td><strong>Blickbox</strong></td>
+<td>Enthält Sensor Hardware und Anzeige der Daten.</td>
+</tr>
+<tr>
+<td><strong>Server</strong></td>
+<td>Externer Server der mit der Hardware der Blickbox kommuniziert.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="technischer-kontext">Technischer Kontext</h3>
+<div style="text-align: left;">
+  <img src="../../resources/Technical_Context.png" alt="Technical Context" width="800px">
+  <p>Im -Modell repräsentiert der technische Kontext die Ebene der
+technischen Details und Infrastruktur, die für die Implementierung und
+Bereitstellung der Softwareanwendung relevant sind. Dies umfasst Aspekte
+wie die Auswahl der Programmiersprachen, Frameworks, Datenbanken, APIs
+und anderen technischen Komponenten, die für die Realisierung der
+Systemarchitektur erforderlich sind. Eine klare Darstellung des
+technischen Kontexts im -Modell ermöglicht es den Entwicklern, die
+Abhängigkeiten und Interaktionen zwischen den technischen Komponenten zu
+verstehen und erleichtert die Kommunikation und Zusammenarbeit während
+des Entwicklungsprozesses.</p>
+</div>
+
+<table>
+<thead>
+<tr>
+<th><strong>Knoten</strong></th>
+<th><strong>Beschreibung</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Lichtsystem</strong></td>
+<td>Beleuchtet die Blickbox.</td>
+</tr>
+<tr>
+<td><strong>Sensorik</strong></td>
+<td>Hardware, welche die Messdaten sammelt.</td>
+</tr>
+<tr>
+<td><strong>RaspberryPI</strong></td>
+<td>Verarbeitet die Sensorik Daten und schickt diese an die Datenbank.</td>
+</tr>
+<tr>
+<td><strong>Visualisierung</strong></td>
+<td>Gesammelte Daten werden angezeigt.</td>
+</tr>
+<tr>
+<td><strong>Datenbank</strong></td>
+<td>Speichert die Messdaten.</td>
+</tr>
+<tr>
+<td><strong>Webserver</strong></td>
+<td>Visualisiert die Messdaten und Stellt Frontend bereit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="losungsstrategie">Lösungsstrategie</h2>
+<table>
+<thead>
+<tr>
+<th><strong>Ziel/Requirement</strong></th>
+<th><strong>Lösungsstrategie</strong></th>
+<th><strong>Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Alle funktionalen Requirements</strong></td>
+<td>Eventgesteuerte Architektur</td>
+<td>Sensorarchitektur sendet die Messdaten an dem PI. <br>Der PI sendet die Daten an den Webserver über das Internet, da LoraWan ineffizient ist. <br> Der Webserver speichert diese ab und stellt diese im Frontend da.</td>
+</tr>
+<tr>
+<td><strong>Erweiterbarkeit &amp; Wartung</strong></td>
+<td>Modularer Projektaufbau und Tests</td>
+<td>Damit Dritte (Stakeholder, neue Entwickler, etc.), sich in das Projekt leicht einarbeiten können: <br> Codekomponenten sind voneinander getrennt aufgebaut. <br> Sie befinden sich in Modulen. <br> Zudem sind Funktionen getestet.</td>
+</tr>
+<tr>
+<td><strong>Sicherheit</strong></td>
+<td>Https-Verbindung, Containerisierung &amp; Reverse-Proxy</td>
+<td>Über den Reverse-Proxy sind die Verschiedenen Server-Apps nicht direkt dem Internet Exposed. <br>Durch die Containerisierung können die Komponenten innerhalb des Containers kommunizieren. <br> Die verschiedenen Ports können also verschlossen sein.</td>
+</tr>
+<tr>
+<td><strong>Wiederherstellung und -erhaltung der Daten</strong></td>
+<td></td>
+<td>Auf dem Pi werden in einer history file, die daten abgelegt, damit man sollte die verbindung abbrechen, die noch seperat auf dem Pi sind.</td>
+</tr>
+<tr>
+<td><strong>Bereitstellung einer geeigneten Umgebung für die Hardware</strong></td>
+<td>Box</td>
+<td>SARA wird in einer Box einbaut, welche Wasserdicht ist. <br>Durch eine eigene Batterie ist sie Autak und braucht keine Spannung von außen. <br> Die Sensoren werden über Kabelverschraubung in den Innenraum der Box gebraucht dadurch ist sie Wasserdicht.</td>
+</tr>
+<tr>
+<td><strong>Bereitstellung eines Dashboard</strong></td>
+<td>Grafana als Open-Source Fertiglösung</td>
+<td>Das erlaubt eine einfache Darstellung der Messdaten mit direkter Datenbank-anbindung, sowie eine einfache Verknüpfung mit dem Frontend.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bausteinsicht">Bausteinsicht</h2>
+<h3 id="native-react-app">Native React App</h3>
+<div style="text-align: left;">
+  <img src="../../resources/BausteinsichtValentin.drawio.png" alt="Baustein Frontend" width="800px">
+  <p>Die Bausteinsicht des -Modells für eine React-App umfasst die
+verschiedenen Komponenten und ihre Beziehungen innerhalb der
+Anwendung.</p>
+</div>
+
+<div style="text-align: left;">
+  <img src="../../resources/fecomponentsdiagr.drawio.png" alt="CP Frontend" width="800px">
+  <p>Ein Komponentendiagramm für das React-Frontend einer Softwareanwendung
+bietet eine detaillierte Darstellung der verschiedenen Elemente, aus
+denen die Benutzeroberfläche besteht, sowie deren Beziehungen
+zueinander. Die Komponenten werden hierarchisch
+erfasst.</p>
+</div>
+
+<div style="text-align: left;">
+  <img src="../../resources/reactpatternfe.drawio.png" alt="React Pattern" width="800px">
+  <p>Ein Diagramm für React-Patterns könnte die Darstellung gängiger Muster
+wie Container-Komponenten zur Datenverwaltung, Präsentationskomponenten
+für rein visuelle Darstellungen und Higher-Order Components (HOCs) zur
+gemeinsamen Funktionalitätsweitergabe enthalten. Zusätzlich könnten
+Render Props, Context-API und Hooks als weitere Muster dargestellt
+werden, um den Austausch von Daten und Funktionalitäten zwischen
+Komponenten zu erleichtern. Das Diagramm würde die Beziehungen zwischen
+diesen Patterns veranschaulichen und ihre Verwendung zur Lösung
+spezifischer Probleme in React-Anwendungen
+verdeutlichen.</p>
+</div>
+
+<h3 id="raspberry-pi">Raspberry Pi</h3>
+<div style="text-align: left;">
+  <img src="../../resources/ADABausteinsicht.png" alt="Baustein Raspberry Pi" width="800px">
+  <p>Die Bausteinsicht des -Modells für die ADA-Anwendung auf dem
+Raspberry Pi stellt auf Ebene 1 die Kommunikation mit dem Server und
+SARA dar. Auf Ebene 2 werden die einzelnen Komponenten weiter in ihre
+Bestandteile unterteilt.</p>
+</div>
+
+<div style="text-align: left;">
+  <img src="../../resources/erDiagram-sensordaten-datenhaltung.png" alt="Datenhaltung" width="800px">
+  <p>Die Datenhaltung der Sensordaten wird in einem
+Entity-Relationship-Diagramm dargestellt. Der logische Aufbau der
+verschiedenen Sensordaten wird in Verbindung mit der Speicherung
+angegeben.</p>
+</div>
+
+<h3 id="sensorik">Sensorik</h3>
+<div style="text-align: left;">
+  <img src="../../resources/Bausteinschicht_Sara.png" alt="Baustein Sensorik" width="800px">
+  <p>Beschreibt die Bausteinsicht der Sensorik. Dabei wird in Ebene 1
+zwischen der Bluetooth Low Energy Kommunikation, der Daten Acquisition
+und der seriellen Kommunikation unterschieden. Die BLE Kommunikation
+steht als kabellose Schnittstelle für ein Edge Device zur Verfügung, da
+keine Kabelverbindung möglich ist. Die Serielle Kommunikation wird für
+die Anwendungsentwicklung, als auch für das Debugging verwendet. Die
+Datenacquisition nutzt Bibliotheken, um auf die General Purpose
+Input/Output und den analogen Schnittstellen die Sensordaten zu
+erfassen. Der Batteriemanager auf der Ebene 2 liest die Batterie aus und
+steuert Energiesparmaßnahmen. Die DHT 22 API greift über das OneWire
+Protokoll auf die Daten des DHT Temperatur- und Luftfeutigkeitssensors
+zu, während die SparkFun Weather Meter API Daten der Wetterstation hält.
+Diese löst je nach Umweltgegebenheiten ein Interrupt aus, welcher die
+Daten innerhalb der API
+verändert.</p>
+</div>
+
+<h3 id="server">Server</h3>
+<div style="text-align: left;">
+  <img src="../../resources/Bausteinsicht_Server.png" alt="Baustein Server" width="800px">
+  <p>Die Bausteinsicht im -Modell für den Server bietet eine
+strukturierte Darstellung der verschiedenen Bausteine und deren
+Beziehungen innerhalb der Serverarchitektur. Sie umfasst typischerweise
+Komponenten wie Datenbanken, APIs, Services und externe Schnittstellen,
+um die Funktionalität und Struktur des Serversystems zu
+veranschaulichen.</p>
+</div>
+
+<h3 id="laufzeitsicht">Laufzeitsicht</h3>
+<div style="text-align: left;">
+  <img src="../../resources/Laufzeitsicht.png" alt="Laufsteinsicht" width="800px">
+  <p>Oben Laufzeitsicht aus der Sicht der Sensorik, unten aus der Sicht des
+Frontends. Wird die Sensorik aktiv, adversioniert diese ihre Bluetooth
+Services, die von anderen Geräten wahrgenommen werden können. Der
+Raspberry Pi liest die BLE Services aus. Wenn die Bluetooth Services die
+richtigen Identifikationsnummern haben werden die Charakteristiken,
+welche von diesen Services gehalten werden abgefragt. Die
+Charakteristiken enthalten hierbei die Sensor- und Statusdaten der
+Wetterstation. Nachdem die Daten von der Sensorik empfangen wurden,
+werden sie an eine API gesendet, welche die erhaltenen Daten in der
+Datenbank speichert. Öffnet ein Nutzer die Frontend-App, frägt diese
+zuerst die \"Health\" Daten der Systeme ab. Diese werden vom Health
+Controller innhalb der API verwaltet. Der Raspberry PI übermittelt beim
+Start eine online Mitteilung an die API. Anschließend werden die
+eingebetteten iframes von Grafana geladen. Grafana lädt hierfür die
+Daten aus der Datenbank, erstellt eine Virtualisierung und stellt diese
+dar.</p>
+</div>
+
+<h2 id="verteilungssicht">Verteilungssicht</h2>
+<div style="text-align: left;">
+  <img src="../../resources/Verteilungssicht_Deployment.png" alt="Qualitätsbaum" width="800px">
+  <p>Zeigt die Verteilung der einzelnen Komponenten. Der Nutzer interagiert
+hier mit dem Valentin Frontend, welches auf einem Debian Server gehostet
+wird. Der Raspberry Pi ist für die Sensordaten zuständig und sendet
+diese an den Server. Die Sensork nutzt den Arduino 33 BLE als Hardware
+Plattform und Sensoren für die Acquisition der Daten. Der Raspberry Pi
+kann die Daten über Bluetooth BLE abrufen. Die Anwendungen werden auf
+dem Server mithilfe von Docker werden die Anwendungen
+virtualisiert.</p>
+</div>
+
+<h2 id="architekturentscheidungen">Architekturentscheidungen</h2>
+<h3 id="evaluation-zur-wahl-des-frontend-frameworks-des-clients">Evaluation zur Wahl des Frontend-Frameworks des Clients</h3>
+<p>Der Client zur Anzeige und Aufbereitung der Sensordaten wird unter dem
+Arbeitstitel <em>Valentin</em> (Komposita aus <em>Value</em> und <em>Notification</em>)
+geführt. Vor der Initialisierung von <em>Valentin</em> muss ein geeignetes
+Framework gewählt werden. Die nachfolgende Nutzwertanalyse dient dafür
+als Entscheidungsgrundlage.</p>
+<div style="text-align: left;">
+  <img src="../../resources/techevaluationfe.png" alt="FE" width="800px">
+  <p>Nutzwertanalyse zur Entscheidung eines geeigneten Frameworks gemessen
+an der Popularität, der Entwickler Awareness (Welches Framework enthält
+welchen Support), den Vorkenntnissen des Entwicklungsteams und der
+Rendergeschwindigkeit auf den Systemen der
+Clients.</p>
+</div>
+
+<p>Die Auswahl zum Framework innerhalb des <em>Valentin</em> Client Aufbaus viel
+auf <em>React</em>. <em>React</em> ist eine JavaScript-Bibliothek von Facebook für die
+Entwicklung von interaktiven, komponentenbasierten Benutzeroberflächen.
+Sie ermöglicht eine effiziente Aktualisierung des DOM und eine
+verbesserte Leistung durch die Verwendung einer virtuellen
+DOM-Repräsentation.</p>
+<div style="text-align: left;">
+  <img src="../../resources/femockup-1.jpg" alt="FE" width="800px">
+  <p>Ein Frontend-Mockup wurde konzipiert, um eine grobe Planung des
+Dashboards zu ermöglichen. Das Mockup wurde mittels manueller Zeichnung
+erstellt und in den Entwicklungsprozess integriert, um die
+Positionierung der einzelnen Komponenten zu beschreiben. Das erstellte
+Mockup fungiert als visuelle Darstellung, die es ermöglicht, die
+Platzierung und Interaktion der verschiedenen Komponenten innerhalb des
+Dashboards zu skizzieren, um eine klare Vorstellung von der späteren
+Anordnung zu vermitteln.</p>
+</div>
+
+<h3 id="evaluation-zur-wahl-des-technologie-stacks-der-hardware">Evaluation zur Wahl des Technologie-Stacks der Hardware</h3>
+<p>Die Hardware zur Sensordatenauslesung und Weiterleitung wird unter dem
+Arbeitstitel <em>SARA</em> (Sensor Appliance and Remote Analysis) und <em>ADA</em>
+(Automatic Digital Aggregator) geführt. Vor der Implementierung von
+<em>SARA</em> und <em>ADA</em> muss ein geeigneter Hardwarestack ausgewählt werden.
+Die nachfolgenden Analysen dienen dabei als Entscheidungsgrundlage.</p>
+<div style="text-align: left;">
+  <img src="../../resources/AuswahlRust.png" alt="Auswahl von Rust" width="800px">
+  <p>Analyse zur Entscheidung einer geeigneten Technologie für *ADA*
+gemessen an der Energieeffizienz, der Zeit und der
+Speichereffizienz.</p>
+</div>
+
+<p>Die Auswahl zur Programmiersprache <em>Rust</em> für die <em>ADA</em>-Anwendung wird
+aufgrund der beschränkten Ressourcen einer autark laufenden Applikation,
+gewählt. Da die Anwendung in der mit Solarenergie betriebenen Blickbox
+installiert werden soll, ist vor allem die Energieeffizienz
+ausschlaggebend für die Auswahl.</p>
+<p>Die Auswahl zur Programmiersprache <em>C++</em> für die <em>SARA</em>-Anwendung beruht
+auf dem bereits vorhandenen und verwendeten Framework <em>Arduino</em>, als
+auch an den Bibliotheken <em>DHT</em>- und <em>SparkFun_Weather_Meter_Kit_Arduino</em>
+für die Auslesung der Sensoren. Diese basieren auf <em>C++</em>.</p>
+<h3 id="evaluation-zur-wahl-der-technologie-der-api">Evaluation zur Wahl der Technologie der API</h3>
+<p>Für die API wird als Programmiersprache Python verwendet. Python wird
+aufgrund der einfachkeit, der großen Anzahl an Frameworks und der großen
+Community verwendet. Die nachfolgende Grafik erläutert die Auswahl des
+Frameworks.</p>
+<div style="text-align: left;">
+  <img src="../../resources/ArchitekturAPI.png" alt="Auswahl von API" width="800px">
+  <p>Eine Analyse wurde durchgeführt, um die Entscheidung für das geeignete
+Framework zur Entwicklung der API zu treffen. Dabei wurden die Vor- und
+Nachteile von Flask und Django gegenübergestellt und
+verglichen.</p>
+</div>
+
+<h2 id="qualitatsanforderungen">Qualitätsanforderungen</h2>
+<p>Qualitätsanforderungen im Softwareengineering sind definierte
+Spezifikationen und Merkmale, die die Qualität eines Softwareprodukts
+oder -systems bestimmen. Diese Anforderungen umfassen typischerweise
+Kriterien wie Funktionalität, Leistung, Zuverlässigkeit,
+Benutzerfreundlichkeit, Wartbarkeit und Sicherheit. Sie dienen dazu,
+sicherzustellen, dass das entwickelte Softwareprodukt die Bedürfnisse
+und Erwartungen der Benutzer erfüllt und den spezifizierten Standards
+und Anforderungen entspricht. Dabei ist es entscheidend, dass die
+Qualitätsanforderungen während des gesamten
+Softwareentwicklungsprozesses berücksichtigt werden, angefangen bei der
+Anforderungsanalyse über das Design, die Implementierung und das Testen
+bis hin zur Wartung und Aktualisierung des Systems.</p>
+<div style="text-align: left;">
+  <img src="../../resources/Qualitätsbaum.drawio.png" alt="Verteilungssicht" width="800px">
+  <p>Das vorliegende Diagramm veranschaulicht die Qualitätsanforderungen in
+Form eines \"Baums der Qualitäten\", wobei spezifische Qualitäten,
+Aspekte der Qualität und mögliche Szenarien dargestellt sind. Die
+Struktur des Diagramms zeigt eine hierarchische Darstellung der
+Qualitätsanforderungen, beginnend mit allgemeinen Qualitätsmerkmalen und
+sich auf spezifischere Aspekte und Szenarien hinunterbewegend. Jede
+Ebene des Baumes repräsentiert eine zunehmende Spezifität der
+Qualitätsanforderungen, wodurch eine klarere und detailliertere
+Definition der erforderlichen Qualitätsmerkmale erreicht
+wird.</p>
+</div>
+
+<h2 id="risiken-und-teschnische-schulden">Risiken und Teschnische Schulden</h2>
+<h3 id="risiken">Risiken</h3>
+<div style="text-align: left;">
+  <img src="../../resources/Risiken.png" alt="Risiken" width="800px">
+  <p>Risiken im Softwareengineering können verschiedene Formen annehmen,
+darunter technische Herausforderungen wie unvorhergesehene Komplexität
+in der Implementierung, sowie organisatorische Risiken wie Verzögerungen
+im Zeitplan.</p>
+</div>
+
+<h3 id="technische-schulden">Technische Schulden</h3>
+<div style="text-align: left;">
+  <img src="../../resources/technischeSchulden.drawio.png" alt="Technische Schulden" width="800px">
+  <p>Technische Schulden im Softwareengineering bezeichnen die Konsequenzen
+von Entscheidungen, die kurzfristig zu schnellern Entwicklungszeiten
+führen, langfristig jedoch zu erhöhten Wartungskosten, verminderten
+Leistungen und erschwerten Erweiterungen führen können. Diese Schulden
+entstehen beispielsweise durch die Verwendung von ineffizienten oder
+unsauberen Programmierpraktiken, unzureichende Dokumentation, nicht
+ausreichendes Refactoring oder das Ignorieren von Best Practices während
+der Entwicklung. Während technische Schulden manchmal bewusst
+eingegangen werden, um kurzfristige Ziele zu erreichen, ist es wichtig,
+sie kontinuierlich zu überwachen und zu reduzieren, um die langfristige
+Gesundheit und Nachhaltigkeit des Softwareprodukts zu
+gewährleisten.</p>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      
+    
+  </body>
+</html>
