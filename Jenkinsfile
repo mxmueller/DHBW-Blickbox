@@ -51,6 +51,8 @@ pipeline {
                     // Decrypting Credentials
                     dir("${env.DEPLOY_DIR}/server/") {
                         sh 'docker compose -f compose.prod.yaml up sops'
+                        sh 'chown jenkins:jenkins ${env.DEPLOY_DIR_SECRETS}/secrets.prod.env'
+                        sh 'chmod 755 ${env.DEPLOY_DIR_SECRETS}/secrets.prod.env'
                     }
                 }
             }
