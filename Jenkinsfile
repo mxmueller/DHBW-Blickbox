@@ -48,6 +48,10 @@ pipeline {
                     sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
                    // copying key file
                     sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
+                    // Decrypting Credentials
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up sops'
+                    }
                 }
             }
         }  
