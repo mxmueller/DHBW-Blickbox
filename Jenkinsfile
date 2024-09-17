@@ -14,7 +14,7 @@ pipeline {
         stage('[PREPARE] 📂 Copy to Deploy Directory') {
             steps {
                 script {
-                    sh "sudo -U jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
                     sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
                 }
             }
