@@ -67,13 +67,6 @@ pipeline {
                 }
             }
             post {
-                always {
-                    // Archive test results or logs
-                    archiveArtifacts artifacts: 'test_results/**', allowEmptyArchive: true
-
-                    // Publish test results
-                    junit 'test_results/*.xml'
-                }
                 failure {
                     echo 'Tests failed! Please review the output above.'
                 }
