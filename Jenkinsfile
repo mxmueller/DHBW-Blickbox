@@ -1,6 +1,7 @@
 pipeline {
     environment {
         DEPLOY_DIR = '/opt/blickbox/prod'
+        DEPLOY_DIR_SECRETS = '/opt/blickbox/secrets'
     }
     
     agent any
@@ -282,6 +283,8 @@ pipeline {
                         fi
                     """
                     sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    // copying key file
+                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
                     sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
                 }
             }
