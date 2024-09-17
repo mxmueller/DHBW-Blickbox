@@ -42,10 +42,10 @@ pipeline {
                     python3 -m venv venv
                     . venv/bin/activate
                     pip3 install platformio
-                    dir('blickbox/sara') {
-                        pio test -e native_selected_unittests
-                    }
                 '''
+                dir('blickbox/sara') {
+                    sh '''pio test -e native_selected_unittests'''
+                }
             }
         }
 
