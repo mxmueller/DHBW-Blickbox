@@ -25,7 +25,7 @@ password = os.getenv("EMAIL_SMTP_PASSWORD")
 
 
 
-r = redis.Redis(host='redis', port=6379, db=0)                                                          # Verbindung zur Redis-Datenbank
+r = redis.Redis(host='blickbox_redis', port=6379, db=0)                                                          # Verbindung zur Redis-Datenbank
 p = r.pubsub()                                                                                          # Publisher/Subscriber System von Redis
 logging.getLogger('websockets').setLevel(logging.ERROR)                                                 # Fehler aus der Websocket Libary werden unterdrückt (es sollen nur unsere Logs angezeigt werden)
 logging.getLogger('asyncio').setLevel(logging.ERROR)                                                    # Fehler aus der AsyncIO Libary werden unterdrückt   (es sollen nur unsere Logs angezeigt werden)

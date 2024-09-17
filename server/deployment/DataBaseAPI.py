@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')                                          # Verbindung zur Influx Datenbank herstellen
 if not use_dev_container:
-    redis_client = redis.Redis(host='redis', port=6379, db=0)                                                      # Verbindung zum Redis Server herstellen (wenn nicht getestet wird)              
+    redis_client = redis.Redis(host='blickbox_redis', port=6379, db=0)                                                      # Verbindung zum Redis Server herstellen (wenn nicht getestet wird)              
 
 
 
