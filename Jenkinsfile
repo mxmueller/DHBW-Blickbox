@@ -37,13 +37,14 @@ pipeline {
 
          stage('[SARA] 🛠️ Setup Build Environment') {
             steps {
-                sh '''
-                    # Creating Enviroment
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip3 install platformio
-                '''
                 dir('blickbox/sara') {
+                    sh '''
+                        # Creating Enviroment
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip3 install platformio
+                    '''
+                    
                     sh '''pio test -e native_selected_unittests'''
                 }
             }
