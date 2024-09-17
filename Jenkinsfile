@@ -43,9 +43,8 @@ pipeline {
                         python3 -m venv venv
                         . venv/bin/activate
                         pip3 install platformio
+                        pio test -e native_selected_unittests
                     '''
-                    
-                    sh '''pio test -e native_selected_unittests'''
                 }
             }
         }
