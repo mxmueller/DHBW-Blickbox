@@ -99,6 +99,9 @@ Der Code wird dabei mit folgender Konfiguration gestartet:
 cargo run --features "mock"
 ```
 
+Dabei werden Mock-Daten verwendet und diese an die API gesendet.
+
+
 ### Unittests in Rust
 
 Die Unittests testen die Logik von ADA, die die eingehenden Sensordaten verarbeitet.
@@ -108,3 +111,6 @@ Um alle Tests auszuführen, führt man folgenden Befehl aus dem ada-Ordner aus:
 ``` bash
  cargo test
 ```
+
+Beim Testen werden die _dev-dependencies_ aus der Cargo.toml genutzt.
+Da nur in den Tests das Crate _mockito_ genutzt wird, wird es nur in Tests kompiliert.

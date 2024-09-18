@@ -38,7 +38,6 @@ async fn main() {
     println!("Starting ADA");
     // 10 Minuten
     let mut interval = time::interval(Duration::from_secs(10 * 60));
-    let mut logs: HashMap<String, VecDeque<LogEntry>> = HashMap::new();
 
     let redis_handler = match initialize_redis("redis://localhost:6379/0").await {
         Ok(handler) => Some(handler),
@@ -87,6 +86,7 @@ async fn main() {
                 battery_voltage: 3.7,
             });
 
+            // Wenn Sensordaten vorhanden sind, werden diese an API gesendet und Logs erstellt
             if let Some(data) = sensor_data {
                 if let Err(error) = send_data(handler, "https://blickbox.maytastix.de/api/iot/api/insert/", &data).await {
                     let error_log = log(String::from("Error"), format!("{}", error), String::from("error"));
@@ -94,6 +94,7 @@ async fn main() {
                 }
             }
 
+            // Sendet alle Logs
             if let Err(error) = handler.publish_all().await {
                 eprintln!("Failed to publish logs: {}", error);
                 let error_log = log(String::from("Error"), format!("Failed to publish logs: {}", error), String::from("error"));
@@ -103,7 +104,7 @@ async fn main() {
     }
 }
 
-
+// Verarbeitet Sensordaten (Datei erstellen und Daten später hineinschreiben, Struct erstellen, zu Sara verbinden und Daten erhalten)
 async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
     // Öffnet Datei in "append-mode" und erstellt sie, wenn sie nicht existiert
@@ -153,6 +154,7 @@ async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
     Ok(sensor_data)
 }
 
+// Aktuelle Zeit als String, um sie API zu senden
 pub fn get_time() -> String {
     let date_time_format: DateTime<Utc> = SystemTime::now().into();
     let time = date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string();
