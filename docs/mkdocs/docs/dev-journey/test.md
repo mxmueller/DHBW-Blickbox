@@ -2,8 +2,45 @@
 FEHLT -> May
 
 ## Backend-Service & Monitoring-Service
-FEHLT -> ARON
+### Vorbereiteung
+Im Verzeichnis ```/server/deployment/tests ``` führen Sie folgenden Befehl aus:
+```bash
+ pip install -r requirements.txt
+```
 
+### Tests ausführen
+Im Verzeichnis ```/server/deployment/tests ``` führen Sie folgenden Befehl aus:
+```bash
+pytest API-Tests.py -v --junitxml=report.xml <optionale Parameter>
+```
+
+-v steht für verbose um mehr Informationen anzeigen zu lassen <br>
+--junitxml=report.xml erstellt einen Test-Report
+
+Zu den Optionalen Parametern gehören:
+
+
+-  **--noPing** | Tests werden ohne die Ping-Logik ausgeführt
+
+-  **--noTemp** | Tests werden ohne die Temperatur-Route ausgeführt
+
+-  **--noHumid** | Tests werden ohne die Luftfeuchtigkeit-Route ausgeführt
+
+-  **--noWindDir** | Tests werden ohne die Windrichtungs-Route ausgeführt
+
+-  **--noWindSpeed** | Tests werden ohne die Windgeschwindigkeits-Route ausgeführt
+
+-  **--noRain** | Tests werden ohne die Niederschlag-Route ausgeführt
+
+-  **--noBatteryC** | Tests werden ohne die Batterieladung-Route ausgeführt
+-  **--noBatteryV** | Tests werden ohne die Batteriespannung-Route ausgeführt
+
+Bei der Test Ausführung können entweder die Production Routen, oder die lokalen Developer Routen getestet werden.
+Um lokal zu testen müssen Sie Docker installieren und in einer ``` .env ```-Datei folgende Umgebungsvariable setzen: 
+``` API_USE_DEV_CONTAINER = true```
+
+### Tests schreiben
+Um Tests zu schreiben kann die ```API-Tests.py``` erweitert werden. Funktionen die im Test-Prozess beachtet werden sollen müssen mit ```test_``` beginnen.
 ## Valentin Dashboard
 Dieses Projekt wurde mit [Create React App](https://github.com/facebook/create-react-app) erstellt. \
 Im Projektverzeichnis können Sie folgende Befehle ausführen:
