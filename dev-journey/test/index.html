@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
     
     
       
@@ -306,6 +306,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Backend-Service & Monitoring-Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vorbereiteung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vorbereiteung
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-ausfuhren" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tests ausführen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-schreiben" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tests schreiben
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -319,7 +352,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tests-ausfuhren" class="md-nav__link">
+  <a href="#tests-ausfuhren_1" class="md-nav__link">
     <span class="md-ellipsis">
       Tests ausführen
     </span>
@@ -328,7 +361,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tests-schreiben" class="md-nav__link">
+  <a href="#tests-schreiben_1" class="md-nav__link">
     <span class="md-ellipsis">
       Tests schreiben
     </span>
@@ -431,6 +464,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Backend-Service & Monitoring-Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vorbereiteung" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vorbereiteung
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-ausfuhren" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tests ausführen
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-schreiben" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tests schreiben
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -444,7 +510,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tests-ausfuhren" class="md-nav__link">
+  <a href="#tests-ausfuhren_1" class="md-nav__link">
     <span class="md-ellipsis">
       Tests ausführen
     </span>
@@ -453,7 +519,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tests-schreiben" class="md-nav__link">
+  <a href="#tests-schreiben_1" class="md-nav__link">
     <span class="md-ellipsis">
       Tests schreiben
     </span>
@@ -528,20 +594,59 @@
 <h2 id="sara-datenerfassung">SARA (Datenerfassung)</h2>
 <p>FEHLT -&gt; May</p>
 <h2 id="backend-service-monitoring-service">Backend-Service &amp; Monitoring-Service</h2>
-<p>FEHLT -&gt; ARON</p>
+<h3 id="vorbereiteung">Vorbereiteung</h3>
+<p>Im Verzeichnis <code>/server/deployment/tests</code> führen Sie folgenden Befehl aus:</p>
+<pre><code class="language-bash"> pip install -r requirements.txt
+</code></pre>
+<h3 id="tests-ausfuhren">Tests ausführen</h3>
+<p>Im Verzeichnis <code>/server/deployment/tests</code> führen Sie folgenden Befehl aus:</p>
+<pre><code class="language-bash">pytest API-Tests.py -v --junitxml=report.xml &lt;optionale Parameter&gt;
+</code></pre>
+<p>-v steht für verbose um mehr Informationen anzeigen zu lassen <br>
+--junitxml=report.xml erstellt einen Test-Report</p>
+<p>Zu den Optionalen Parametern gehören:</p>
+<ul>
+<li>
+<p><strong>--noPing</strong> | Tests werden ohne die Ping-Logik ausgeführt</p>
+</li>
+<li>
+<p><strong>--noTemp</strong> | Tests werden ohne die Temperatur-Route ausgeführt</p>
+</li>
+<li>
+<p><strong>--noHumid</strong> | Tests werden ohne die Luftfeuchtigkeit-Route ausgeführt</p>
+</li>
+<li>
+<p><strong>--noWindDir</strong> | Tests werden ohne die Windrichtungs-Route ausgeführt</p>
+</li>
+<li>
+<p><strong>--noWindSpeed</strong> | Tests werden ohne die Windgeschwindigkeits-Route ausgeführt</p>
+</li>
+<li>
+<p><strong>--noRain</strong> | Tests werden ohne die Niederschlag-Route ausgeführt</p>
+</li>
+<li>
+<p><strong>--noBatteryC</strong> | Tests werden ohne die Batterieladung-Route ausgeführt</p>
+</li>
+<li><strong>--noBatteryV</strong> | Tests werden ohne die Batteriespannung-Route ausgeführt</li>
+</ul>
+<p>Bei der Test Ausführung können entweder die Production Routen, oder die lokalen Developer Routen getestet werden.
+Um lokal zu testen müssen Sie Docker installieren und in einer <code>.env</code>-Datei folgende Umgebungsvariable setzen: 
+<code>API_USE_DEV_CONTAINER = true</code></p>
+<h3 id="tests-schreiben">Tests schreiben</h3>
+<p>Um Tests zu schreiben kann die <code>API-Tests.py</code> erweitert werden. Funktionen die im Test-Prozess beachtet werden sollen müssen mit <code>test_</code> beginnen.</p>
 <h2 id="valentin-dashboard">Valentin Dashboard</h2>
 <p>Dieses Projekt wurde mit <a href="https://github.com/facebook/create-react-app">Create React App</a> erstellt. \
 Im Projektverzeichnis können Sie folgende Befehle ausführen:</p>
 <pre><code class="language-bash"> npm test
 </code></pre>
-<h3 id="tests-ausfuhren">Tests ausführen</h3>
+<h3 id="tests-ausfuhren_1">Tests ausführen</h3>
 <p>Dieses Projekt verwendet Jest für Tests. So führen Sie die Tests aus:</p>
 <ol>
 <li>Stellen Sie sicher, dass alle Abhängigkeiten installiert sind, indem Sie <code>npm install</code> ausführen</li>
 <li>Führen Sie <code>npm test</code> aus, um den Testrunner im Watch-Modus zu starten</li>
 <li>Drücken Sie <code>a</code>, um alle Tests auszuführen</li>
 </ol>
-<h3 id="tests-schreiben">Tests schreiben</h3>
+<h3 id="tests-schreiben_1">Tests schreiben</h3>
 <ul>
 <li>Tests befinden sich im <code>__tests__</code>-Verzeichnis oder neben den Komponenten mit der Erweiterung <code>.test.js</code> oder <code>.spec.js</code></li>
 <li>Verwenden Sie <code>describe</code>, um zusammengehörige Tests zu gruppieren</li>
@@ -619,7 +724,7 @@ Um alle Tests auszuführen, führt man folgenden Befehl aus dem ada-Ordner aus:<
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
