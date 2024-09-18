@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
     
     
       
@@ -297,6 +297,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Grafana (Datenerfassung)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#erstellen-eines-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Erstellen eines Dashboards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -306,6 +321,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Backend-Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entwickeln" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entwickeln
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starten
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -314,6 +353,30 @@
       Monitoring-Service
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Monitoring-Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entwickeln_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entwickeln
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starten_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starten
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -661,6 +724,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Grafana (Datenerfassung)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#erstellen-eines-dashboards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Erstellen eines Dashboards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -670,6 +748,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Backend-Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entwickeln" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entwickeln
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starten" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starten
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -678,6 +780,30 @@
       Monitoring-Service
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Monitoring-Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entwickeln_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entwickeln
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starten_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starten
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -970,11 +1096,29 @@
 <h2 id="sops">SOPS</h2>
 <p>FEHLT -&gt; May</p>
 <h2 id="grafana-datenerfassung">Grafana (Datenerfassung)</h2>
-<p>FEHLT -&gt; Aron</p>
+<h3 id="erstellen-eines-dashboards">Erstellen eines Dashboards</h3>
+<ol>
+<li>Öffnen Sie https://maytastix.de/grafana</li>
+<li>Melden Sie sich mit den gesetzten Credentials an</li>
+<li>Navigieren Sie zu Dashboards</li>
+<li>Legen Sie ein neues Diagramm an</li>
+</ol>
 <h2 id="backend-service">Backend-Service</h2>
-<p>FEHLT -&gt; ARON</p>
+<h3 id="entwickeln">Entwickeln</h3>
+<p>Um Änderungen an der API-Vorzunehmen bearbeiten sie die <code>DataBaseAPI.py</code> im Verzeichnis <code>/server/deployment</code>. </p>
+<h3 id="starten">Starten</h3>
+<p>Um die API zu starten führen Sie im Verzeichnis <code>/server</code> folgenden Command aus:</p>
+<pre><code class="language-bash">docker-compose up python_app --build
+</code></pre>
+<p>Die API ist dann standardmäßig über http://localhost:5000 erreichbar. </p>
 <h2 id="monitoring-service">Monitoring-Service</h2>
-<p>FEHLT -&gt; ARON</p>
+<h3 id="entwickeln_1">Entwickeln</h3>
+<p>Um Änderungen an der API-Vorzunehmen bearbeiten sie die <code>RedisMircoservie.py</code> im Verzeichnis <code>/server/deployment/redis_microservice</code>. </p>
+<h3 id="starten_1">Starten</h3>
+<p>Um die API zu starten führen Sie im Verzeichnis <code>/server</code> folgenden Command aus:</p>
+<pre><code class="language-bash">docker-compose up redis_microservice --build
+</code></pre>
+<p>Die beiden Websockets sind standardmäßig über ws://localhost:5001 &amp; ws://localhost:5002 erreichbar. </p>
 <h2 id="nginx">NGINX</h2>
 <p>FEHLT -&gt; May</p>
 <h2 id="jenknins-pipline">Jenknins Pipline</h2>
@@ -1262,7 +1406,7 @@ Dieser kann wie folgt aufgerufen werden:
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
