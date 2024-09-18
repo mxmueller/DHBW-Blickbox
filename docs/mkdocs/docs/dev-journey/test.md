@@ -13,6 +13,13 @@ Im Verzeichnis ```/server/deployment/tests ``` führen Sie folgenden Befehl aus:
 ```bash
 pytest API-Tests.py -v --junitxml=report.xml <optionale Parameter>
 ```
+<br>
+oder
+<br>
+
+```bash
+pytest Microservice-Tests.py -v --junitxml=report.xml
+```
 
 -v steht für verbose um mehr Informationen anzeigen zu lassen <br>
 --junitxml=report.xml erstellt einen Test-Report

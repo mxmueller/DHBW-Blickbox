@@ -5,13 +5,33 @@ FEHLT -> May
 FEHLT -> May
 
 ## Grafana (Datenerfassung)
-FEHLT -> Aron
+### Erstellen eines Dashboards
+1. Öffnen Sie https://maytastix.de/grafana
+2. Melden Sie sich mit den gesetzten Credentials an
+3. Navigieren Sie zu Dashboards
+4. Legen Sie ein neues Diagramm an
 
 ## Backend-Service
-FEHLT -> ARON
+### Entwickeln
+Um Änderungen an der API-Vorzunehmen bearbeiten sie die ```DataBaseAPI.py``` im Verzeichnis ```/server/deployment```. 
+### Starten
+Um die API zu starten führen Sie im Verzeichnis ```/server``` folgenden Command aus:
+```bash
+docker-compose up python_app --build
+```
+
+Die API ist dann standardmäßig über http://localhost:5000 erreichbar. 
 
 ## Monitoring-Service
-FEHLT -> ARON
+### Entwickeln
+Um Änderungen an der API-Vorzunehmen bearbeiten sie die ```RedisMircoservie.py``` im Verzeichnis ```/server/deployment/redis_microservice```. 
+
+### Starten
+Um die API zu starten führen Sie im Verzeichnis ```/server``` folgenden Command aus:
+```bash
+docker-compose up redis_microservice --build
+```
+Die beiden Websockets sind standardmäßig über ws://localhost:5001 & ws://localhost:5002 erreichbar. 
 
 ## NGINX
 FEHLT -> May
