@@ -11,8 +11,8 @@ function GrafanaValidation({ children }) {
   // Effekt zum Setzen des States basierend auf Umgebungsvariablen
   useEffect(() => {
     setIsMockEnabled(process.env.REACT_APP_MOCK_GRAFANA === "true");
-    if (process.env.REACT_APP_GRAFANA_DEV_URL) {
-      setDashboardUrl(process.env.REACT_APP_GRAFANA_DEV_URL);
+    if (process.env.REACT_APP_GRAFANA_URL) {
+      setDashboardUrl(process.env.REACT_APP_GRAFANA_URL);
     } else if (process.env.REACT_APP_GRAFANA_URL) {
       setDashboardUrl(process.env.REACT_APP_GRAFANA_URL);
     } else {
