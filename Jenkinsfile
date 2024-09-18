@@ -7,6 +7,7 @@ pipeline {
     agent any
     
     stages {
+        
         stage('[GIT] 🔍 Checkout') {
             steps {
                 checkout scm
@@ -33,28 +34,70 @@ pipeline {
                 }
             }
         }
-      stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+
+         stage('[SARA] 🛠️ Setup Build Environment') {
             steps {
-                script {
-                    // deleting directory if it already exists
-                     sh """
-                        if [ -d ${env.DEPLOY_DIR} ]; then
-                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
-                        fi
-                    """
-                    // creating deployment directory
-                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
-                    // copying repository to /opt/blickbox
-                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
-                   // copying key file
-                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
-                    // Decrypting Credentials
-                    dir("${env.DEPLOY_DIR}/server/") {
-                        sh 'docker compose -f compose.prod.yaml up sops'
-                    }
+                dir('blickbox/sara') {
+                    sh '''
+                        # Create and activate Python virtual environment
+                        python3 -m venv venv
+                        . venv/bin/activate
+
+                        # Install PlatformIO
+                        pip install platformio
+                        
+                        # Initialize the environment and install clang-tidy
+                        sudo -n apt-get update
+                        sudo -n apt-get install -y clang-tidy
+                    '''
                 }
             }
-        }  
+        }
+
+        stage('[SARA] 🧪 Run Tests') {
+            steps {
+                dir('blickbox/sara') {
+                    sh '''
+                        # Activate virtual environment
+                        . venv/bin/activate
+
+                        # Run tests for the 'native_selected_unittests' environment
+                        pio test -e native_selected_unittests
+                    '''
+                }
+            }
+            post {
+                failure {
+                    echo 'Tests failed! Please review the output above.'
+                }
+                success {
+                    echo 'Tests passed successfully!'
+                }
+            }
+        }
+
+        stage('[SARA] 📝 Code Formatting and Linting') {
+            steps {
+                dir('blickbox/sara') {
+                    sh '''
+                        # Activate virtual environment
+                        . venv/bin/activate
+
+                        # Perform code formatting and linting with clang-tidy
+                        pio check
+                    '''
+                }
+            }
+            post {
+                failure {
+                    echo 'Clang-tidy found issues. Please review the output above and fix any errors.'
+                }
+                success {
+                    echo 'Clang-tidy completed successfully. No issues found.'
+                }
+            }
+        }
+        
         stage('[ADA] 🛠️ Setup Build Environment') {
             steps {
                 sh '''
@@ -296,7 +339,28 @@ pipeline {
                 }
             }
         }
-  
+        stage('[DEPLOY] 📂 Copy to Deploy Directory') {
+            steps {
+                script {
+                    // deleting directory if it already exists
+                     sh """
+                        if [ -d ${env.DEPLOY_DIR} ]; then
+                            sudo -u jenkins rm -rf ${env.DEPLOY_DIR}
+                        fi
+                    """
+                    // creating deployment directory
+                    sh "sudo -u jenkins mkdir -p ${env.DEPLOY_DIR}"
+                    // copying repository to /opt/blickbox
+                    sh "cp -R ${WORKSPACE}/* ${env.DEPLOY_DIR}"
+                   // copying key file
+                    sh "cp ${env.DEPLOY_DIR_SECRETS}/key.txt ${env.DEPLOY_DIR}/server/secrets"
+                    // Decrypting Credentials
+                    dir("${env.DEPLOY_DIR}/server/") {
+                        sh 'docker compose -f compose.prod.yaml up sops'
+                    }
+                }
+            }
+        }  
         stage('[DEPLOY] 🚀 Launch!') {
             steps {
                 script {
