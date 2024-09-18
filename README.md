@@ -1,8 +1,6 @@
-## Links
-Sprint-Board:
-https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog
-Dokumentation & Setup:
-https://mxmueller.github.io/DHBW-Blickbox/
+### Sprint-Board: [Taiga Projektboard: Gruppe 1 IoT](https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog)
+
+### Dokumentation & Setup: [DHBW-Blickbox GitHub Pages](https://mxmueller.github.io/DHBW-Blickbox/)
 
 ## Git Workflow
 1. **Sprint-basierte Entwicklung:**
