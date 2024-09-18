@@ -13,9 +13,6 @@ FEHLT -> ARON
 ## Monitoring-Service
 FEHLT -> ARON
 
-## Backend-Service
-FEHLT -> May
-
 ## NGINX
 FEHLT -> May
 
@@ -170,7 +167,7 @@ cd docs/mkdocs/
 ```bash
 git add .
 # Richter Branche
-git commit -m "Update documentation" # Richter Branche
+git commit -m "Update documentation" # Richtiger Branche
 git push
 ```
 
