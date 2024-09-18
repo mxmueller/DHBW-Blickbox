@@ -9,7 +9,7 @@ pub mod weather_station {
 
         let mut serial_buf: Vec<u8> = vec![0; 100];
 
-        // here data is requested
+        // hier werden Daten über Kommando angefragt
         if command == "h\n" || command == "t\n" || command == "ws\n" || command == "wd\n" || command == "rfm\n" {
             port.write_all(command.as_ref()).expect("Failed to send command");
         }
@@ -34,8 +34,8 @@ pub mod weather_station {
     }
 
     pub fn interpret_data(data: &[u8]) -> String {
-        /// no error handling lol, no risk no fun
-        // here i am interpreting the received string before returning it :)
+        /// fehlendes Error-Handling, no risk no fun
+        // Interpretiert erhaltenen String
         // : als Seperator zwischen Key und Value der Werte und String wird mit \n beendet und weitere cases werden abgedeckt
         let mut string = String::from_utf8_lossy(data).to_string();
 
@@ -51,8 +51,7 @@ pub mod weather_station {
 
         let separated_string_by_colon = string.split(':').collect::<Vec<&str>>();
 
-        // if there would be more commands in the received_data
-        // ...I'm not sure it would catch the correct data as interpreted_data everytime
+        // Könnte Fehler enthalten
         if separated_string_by_colon.len() == 2 {
             println!("Interpreted data: {:?}", separated_string_by_colon[1].to_string());
             return separated_string_by_colon[1].to_string()
@@ -60,7 +59,7 @@ pub mod weather_station {
             println!("Interpreted data: {:?}", separated_string_by_colon[separated_string_by_colon.len() - 1].to_string());
             return separated_string_by_colon[separated_string_by_colon.len() - 1].to_string()
         } else {
-            // no clue what the received data could be in this case
+            // unklar, mit welchen Daten man hier hinkommt
             println!("damn, didnt work");
             return String::new()
         }

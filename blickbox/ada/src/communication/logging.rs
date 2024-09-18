@@ -24,6 +24,7 @@ pub mod logging {
         pub timestamp: String,
     }
 
+    // Erstellt simples Log-Struct für Handshake-Logik
     pub fn handshake_log(log_type: String) -> HandshakeLog {
         let handshake_log = HandshakeLog {
             log_type,
@@ -33,6 +34,7 @@ pub mod logging {
         handshake_log
     }
 
+    // Erstellt generelle Log-Struct
     pub fn log(title: String, message: String, log_type: String) -> LogEntry {
         let log_entry = LogEntry {
             title,
