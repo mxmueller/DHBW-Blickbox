@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.06209087.min.css">
       
       
 
@@ -297,6 +297,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="SARA (Datenerfassung)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unittests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unittests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting-und-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linting und Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -455,6 +479,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="SARA (Datenerfassung)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unittests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unittests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linting-und-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linting und Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -592,7 +640,20 @@
   <h1>Testing</h1>
 
 <h2 id="sara-datenerfassung">SARA (Datenerfassung)</h2>
-<p>FEHLT -&gt; May</p>
+<p>PlatformIO wird für das Dependancy Mangement, Libraries, Flashing und Compilation der Anwendung verwendet.</p>
+<p>Dies ist eine Python-Anwendung, die über <code>pip</code> installiert werden kann. </p>
+<pre><code class="language-bash">pip install platformio
+</code></pre>
+<p>Dabei übernimmt die Anwendung alle Aufgaben, lädt die bnötigten Libraries herunter und kompiliert den Code.</p>
+<h3 id="unittests">Unittests</h3>
+<p>Hierbei wird Unity als Testframework verwendet. Die Tests können mit folgendem Befehl ausgeführt werden:</p>
+<pre><code class="language-bash">pio test -e native_selected_unittests
+</code></pre>
+<p>Hierbei wird der Code auf dem Host-System kompiliert und ausgeführt.</p>
+<h3 id="linting-und-security">Linting und Security</h3>
+<p>Für das Linting und die Security wird <code>clang-tidy</code> und <code>cppcheck</code> verwendet. Diese können mit folgendem Befehl ausgeführt werden:</p>
+<pre><code class="language-bash">pio check -e native_selected_linting
+</code></pre>
 <h2 id="backend-service-monitoring-service">Backend-Service &amp; Monitoring-Service</h2>
 <h3 id="vorbereiteung">Vorbereiteung</h3>
 <p>Im Verzeichnis <code>/server/deployment/tests</code> führen Sie folgenden Befehl aus:</p>

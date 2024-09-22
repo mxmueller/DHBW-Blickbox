@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.06209087.min.css">
       
       
 
@@ -278,6 +278,30 @@
       SARA (Datenerfassung)
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="SARA (Datenerfassung)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serielle-schnittstelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serielle Schnittstelle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bluetooth-low-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bluetooth Low Energy
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -706,6 +730,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="SARA (Datenerfassung)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#serielle-schnittstelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serielle Schnittstelle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bluetooth-low-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bluetooth Low Energy
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1092,9 +1140,68 @@
   <h1>Setup</h1>
 
 <h2 id="sara-datenerfassung">SARA (Datenerfassung)</h2>
-<p>FEHLT -&gt; May</p>
+<p>Daten der angeschlossenen Sensoren können über die Serielle Schnittstelle, genauso wie 
+von der Bluetooth Low Energy Schnittstelle empfangen werden.</p>
+<h3 id="serielle-schnittstelle">Serielle Schnittstelle</h3>
+<p>Um Daten von der Seriellen Schnittstelle zu empfangen, muss das Gerät über USB
+an den Computer angeschlossen werden. Die Serielle Schnittstelle kann dann über
+den Port <code>/dev/ttyUSB0</code> erreicht werden. Dies kann über ein Terminalprogramm wie
+minicom oder screen erfolgen.</p>
+<pre><code class="language-bash">minicom -D /dev/ttyACM0 -b 115200
+</code></pre>
+<p>Anschließend müssen Befehle an das Gerät gesendet werden, um Daten zu empfangen.
+Diese müssen über ein CR LF angänsel übermittelt werden
+Das sieht wie folgt aus:</p>
+<pre><code class="language-c">serial.write(&quot;t\r\n&quot;);
+</code></pre>
+<p>Sara übermittelt dann die Daten in dem Muster:
+Computer --&gt; "t\r\n"
+"t:20.45\r\n"</p>
+<p>Befehle:
+- "t" -&gt; Temperatur
+- "h" -&gt; Luftfeuchtigkeit
+- "wd" -&gt; Windrichtung
+- "rfm" -&gt; Niederschlagsmessung
+- "ws" -&gt; Windgeschwindigkeit
+- "ble" -&gt; Bluetooth Low Energy Zustand
+- "bat" -&gt; Batteriestatus
+- "help" -&gt; Hilfe</p>
+<h3 id="bluetooth-low-energy">Bluetooth Low Energy</h3>
+<p>Die Bluetooth Low Energy Schnittstelle kann über die Kennung "SARA Weather Station" erreicht werden.
+Diese Kennung wird auch als BLE Local Name bezeichnet.
+Nachdem eine Verbindung hergestellt wurde können über die BLE-Service UUIDs die Daten abgerufen werden.
+Folgende Services sind implementiert:</p>
+<ul>
+<li>Air Service: 0x1101</li>
+<li>Temperatur Charakteristik: 0x2101 (Notify/Read)</li>
+<li>Luftfeuchtigkeit Charakteristik: 0x2102 (Notify/Read)</li>
+<li>Weather Station Service: 0x1102</li>
+<li>Niederschlagsmessung Charakteristik: 0x2203 (Notify/Read)</li>
+<li>Windrichtung Charakteristik: 0x2201 (Notify/Read)</li>
+<li>Windgeschwindigkeit Charakteristik: 0x2202 (Notify/Read)</li>
+<li>Power Service: 0x1103</li>
+<li>Batteriestatus Charakteristik: 0x2301 (Notify/Read)</li>
+<li>Batteriespannung Charakteristik: 0x2302 (Notify/Read)</li>
+</ul>
+<p>Notify: Hier auf auf die Charakteristik abonniert. Dabei wird bei einer Änderung der neue Wert übermittelt.
+Das Geschieht über die BLE-Notification, welche alle 200ms aktualisiert werden.</p>
+<p>Read: Bei Read wird der aktuelle Wert der Charakteristik abgefragt.</p>
+<blockquote>
+<p>Neue Services und Charakteristiken können über die Konfigurationsdatei <code>SARABLE.cpp</code> hinzugefügt werden.</p>
+</blockquote>
 <h2 id="sops">SOPS</h2>
-<p>FEHLT -&gt; May</p>
+<p>SOPS wird zur Verschlüsselung von Credentials verwendet. In diesem Projekt werden die Credentials in der Datei <code>server/secrets/secrets.dev.enc.env</code> gespeichert und mit SOPS verschlüsselt.</p>
+<p>Für Prod und Dev werden andere Keys verwendet. Alle Entwickler*innen brauchen einen Schlüssel für die Dev Credentials. Um neue Secrets hinzuzufügen wird sops auf dem Entwicklungs-PC benötigt.</p>
+<p>Um die Datei zu bearbeiten muss folgende Umgebungsvariable gesetzt werden. Diese zeigt auf den Schlüssel, der für die Verschlüsselung der secret Datei verwendet wurde.</p>
+<p>SOPS_AGE_KEY_FILE: /secrets/key.txt</p>
+<p>Mit <code>sops edit secrets.dev.enc.env</code> kann die Datei bearbeitet werden. Nach dem Speichern und schließen der Datei wird diese wieder verschlüsselt.</p>
+<p>Es kommt ein Docker Deployment zum Einsatz, welches die entschlüsselung automatisch vornimmt, somit ist nur der Schlüssel in <code>/server/secrets</code> notwendig.</p>
+<p>Um eine manuelle Entschlüsselung durchzuführen, kann folgender Befehl verwendet werden:</p>
+<pre><code class="language-bash">docker compose up sops --build
+</code></pre>
+<blockquote>
+<p>Das Docker Deployment ersetzt die entschlüsselte Datei nach jedem Start, sodass Änderungen in der entschlüsselten Datei nicht übernommen werden.</p>
+</blockquote>
 <h2 id="grafana-datenerfassung">Grafana (Datenerfassung)</h2>
 <h3 id="erstellen-eines-dashboards">Erstellen eines Dashboards</h3>
 <ol>
@@ -1120,7 +1227,119 @@
 </code></pre>
 <p>Die beiden Websockets sind standardmäßig über ws://localhost:5001 &amp; ws://localhost:5002 erreichbar. </p>
 <h2 id="nginx">NGINX</h2>
-<p>FEHLT -&gt; May</p>
+<p>Für das Deployment wird ein NGINX-Server verwendet, der als Reverse-Proxy für die verschiedenen Services dient. Die Konfiguration für NGINX befindet sich im Verzeichnis <code>server/prod</code>.</p>
+<p>Alternativ kann auch nginx proxy Manager verwendet werden. Hier muss man die Konfiguration in der GUI anpassen.</p>
+<p>So könnte die Konfiguration innerhalb des Proxy Managers aussehen:</p>
+<pre><code class="language-nginx">blickbox.maytastix.de
+    http://valentin:80
+dhbwapi.maytastix.de
+    http://server-python_app-1:5000
+dhbwgrafana.maytastix.de
+    https://grafana-server:3000
+npm.maytastix.de
+    http://server-reverse-proxy-1:81
+</code></pre>
+<p>Um einen schon vorhandenen Nginx Server zu konfigurieren, können folgende Schritte durchgeführt werden:</p>
+<ol>
+<li>Erstelle in /srv und /opt einen Ordner</li>
+</ol>
+<p>Das Deployment compose.prod.yml nutzt den Ordner /srv/blickbox für die Anwendungsdaten (volumes)
+Um das Prod Deployment zu starten führe folgendes Kommando aus docker compose -f compose.prod.yaml up</p>
+<p>In /opt wird das Repository geladen
+In /srv werden die Anwendungsdaten, die bei der Ausführung entstehen gespeichert
+Die Ports der Anwendungen werden auf localhost weitergeleitet:</p>
+<p>Port 3000 -&gt; Grafana
+Port 3001 -&gt; Valentin
+Port 3002 -&gt; API</p>
+<ol>
+<li>Für die Service sind folgende Routen vorgesehen</li>
+</ol>
+<p>https://blickbox.maytastix.de -&gt; Valentin
+https://blickbox.maytastix.de/api -&gt; API
+https://blickbox.maytastix.de/grafana -&gt; Grafana</p>
+<ol>
+<li>
+<p>Konfigurieren des Reverse Proxies Das Deployment nutzt einen auf dem Server laufenden Nginx Reverse Proxy welcher mit der Datei blickbox.maytastix.de konfiguriert wurde</p>
+</li>
+<li>
+<p>Erstelle die Datei in <code>etc/nginx/sites-available</code> blickbox.maytastix.de mit folgenden Inhalt</p>
+</li>
+</ol>
+<pre><code class="language-nginx">server {
+        listen 80;
+        listen [::]:80;
+        root /var/www/blickbox.maytastix.de;
+        index index.html;
+        server_name blickbox.maytastix.de;
+}
+</code></pre>
+<ol>
+<li>
+<p>Erstelle einen Symbolic Link um die Konfiguration nginx bekannt zu machen ln -s /etc/nginx/sites-available/blickbox.maytastix.de /etc/nginx/sites-enabled/</p>
+</li>
+<li>
+<p>Rufe certbot auf und erstelle ein Zertifikat für blickbox.maytastix.de
+Füge anschließend folgenden Inhalt unter die Zeilen ein.</p>
+</li>
+</ol>
+<pre><code class="language-nginx">root /var/www/blickbox.maytastix.de;
+index index.html;
+server_name blickbox.maytastix.de;
+
+   location / {
+        proxy_pass http://localhost:3001/; 
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        client_max_body_size 0;
+        add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains; preload&quot;;
+
+        access_log /var/log/nginx/valentin.access.log;
+        error_log /var/log/nginx/valentin.error.log;
+    }
+
+    location /api/ {
+            proxy_pass http://localhost:3002/; 
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 0;
+            add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains; preload&quot;;
+
+            access_log /var/log/nginx/api.access.log;
+            error_log /var/log/nginx/api.error.log;
+    }
+
+    location /grafana/ {
+            proxy_pass http://localhost:3000/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            client_max_body_size 0;
+            add_header Strict-Transport-Security &quot;max-age=31536000; includeSubDomains; preload&quot;;
+
+            access_log /var/log/nginx/graphana.access.log;
+            error_log /var/log/nginx/graphana.error.log;
+    }
+</code></pre>
+<ol>
+<li>
+<p>Vergleich die Datei /server/prod/blickbox.maytastix.de mit deiner Konfiguration
+Reloade nginx systemctl reload nginx</p>
+</li>
+<li>
+<p>Deine Services sollte über folgende Links erreichbar sein</p>
+</li>
+</ol>
+<p>https://blickbox.maytastix.de -&gt; Valentin
+https://blickbox.maytastix.de/api -&gt; API
+https://blickbox.maytastix.de/grafana -&gt; Grafana</p>
 <h2 id="jenknins-pipline">Jenknins Pipline</h2>
 <p>Diese Teil beschreibt die Einrichtung, Verwendung und Details der Jenkins-Pipeline für das Blickbox-Projekt.</p>
 <h3 id="einrichtung-der-jenkins-pipeline">Einrichtung der Jenkins-Pipeline</h3>
