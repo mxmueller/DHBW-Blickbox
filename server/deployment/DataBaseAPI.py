@@ -14,26 +14,28 @@ from docker.errors import ContainerError, APIError
 import os
 
 
+use_dev_container = os.getenv("API_USE_DEV_CONTAINER", "false").lower() == "true"                                  # Wichtig für die CI/CD Pipeline da die den Redis Server nicht kennt
+
 app = Flask(__name__)
 
 
-influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')
-redis_client = redis.Redis(host='redis', port=6379, db=0)
+influx_client = InfluxDBClient(host="influxdb", database='DHBW_Blickbox')                                          # Verbindung zur Influx Datenbank herstellen
+if not use_dev_container:
+    redis_client = redis.Redis(host='blickbox_redis', port=6379, db=0)                                             # Verbindung zum Redis Server herstellen (wenn nicht getestet wird)              
 
 
 
 
-
+# Funktion Kommuniziert mit dem Redis-Microservice und wartet auf eingehende Nachrichten
+# um die Container zu überwachen und bei Bedarf (zB Fehlern) neu zu starten
 def redis_listener():
     print("Redis listener started")
     p = redis_client.pubsub()
-    p.subscribe(["backend","valentin", "influx", "grafana"])
+    p.subscribe(["backend","valentin", "influx", "grafana"])                                
     for message in p.listen():
             if message['type'] == 'message':
-                channel = message['channel'].decode('utf-8')
-                print(message)
-                print(channel)
-                data = json.loads(message['data'])
+                channel = message['channel'].decode('utf-8')                                                       # Channel ist einer aus der subscription liste 
+                data = json.loads(message['data'])                                                                 # Daten kommen im Format {"request": "online"} oder {"request": "restart"}
                 if(data['request']) == 'online':
                     checkAliveness(channel)
                 if(data['request']) == 'restart':
@@ -41,6 +43,7 @@ def redis_listener():
 
 
 
+# Funktion überprüft ob der Container noch erreichbar ist und schickt das Ergebnis an den Microserice
 def checkAliveness(channel):
     timestamp = datetime.now()
     if channel == 'valentin':
@@ -56,7 +59,7 @@ def checkAliveness(channel):
             payload = {"type": "online", "timestamp": timestamp.strftime("%Y-%m-%d %H:%M:%S")}
             redis_client.publish("grafana-logs", json.dumps(payload))
     
-
+# Funktion startet einen Container im Compose neu
 def restart_container(channel):
     try:
         client = docker.from_env()
@@ -70,6 +73,7 @@ def restart_container(channel):
     except Exception as e:
         print(f"Unexpected error while restarting container: {e}")
 
+# Online Status von Valentin wird über einen http request abgefragt
 def pingValentin():
     try:
         response = requests.get("http://valentin")
@@ -81,18 +85,20 @@ def pingValentin():
         print(f"Valentin-Container ist nicht erreichbar: {e}")
         return False
 
+# Logs werden an den Redis-Server gesendet, von dort aus Managed der Microservice
 def log(title, message, type):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_entry = {'title': title, 'message': message, 'type': type, 'timestamp': timestamp}
-    redis_client.publish("api-logs",json.dumps(log_entry))
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")                                     # Zeitpunkt des Logs
+    log_entry = {'title': title, 'message': message, 'type': type, 'timestamp': timestamp}       # Log Eintrag
+    redis_client.publish("api-logs",json.dumps(log_entry))                                       # Log Eintrag wird an den Redis-Server gesendet
 
-
+# Cors wird umgangen 👀
 def return_response(message, value, status_code):
     data = {message: value}
     response = make_response(jsonify(data), status_code)
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+# Channel wird auf Containernamen gemappt
 def getContainerName(channel):
     if channel == "valentin":
         return "server-valentin-1"
@@ -101,17 +107,14 @@ def getContainerName(channel):
     elif channel == "grafana":
         return "server-grafana-1"
 
-
-
-thread_lock = Lock()
-
+# Frontend kann nicht direkt auf Redis zugreifen, deshalb macht das die API
 @app.route('/iot/api/valentin-log', methods=['POST'])
 def sendValentinToRedis():
-    data = request.json
-    redis_client.publish("valentin-logs",json.dumps(data))
+    data = request.json                                                                         # Log wie aus der log() Funktion
+    redis_client.publish("valentin-logs",json.dumps(data))                                      # wird einfach an Redis-Server weitergeleitet
     return return_response("Erfolgreich gelogt", "Niiiice", 200)
 
-
+# Ping route Fragt Online Status ab (ist eigentlich obsolet mit dem Microservice)
 @app.route('/iot/api/ping', methods=['GET'])
 def pingALL():
     onlineGrafana = pingGrafana()
@@ -128,41 +131,41 @@ def pingALL():
 
 
 
-
+# Blickbox sendet den Zuletzt Online Wert in die Datenbank (obsolet mit dem Microservice)
 @app.route('/iot/api/pingBB', methods=['POST'])
 def insertLastOnline():
-    log(title='POST', message=(url_for('insertLastOnline') + " from " + request.remote_addr), type='info')
-    if request.headers.get('blickbox') != 'true':
+    log(title='POST', message=(url_for('insertLastOnline') + " from " + request.remote_addr), type='info')                          # Es wird gelogt wer den Request gemacht hat
+    if request.headers.get('blickbox') != 'true':                                                                                   # Nur die Blickbox darf den Wert senden (schlechte Authentifizierung, ich weiß)                 
         log(title='Exception', message='Unauthorized acess detected!', type='error' )
         return return_response("error", "Unauthorized", 401)
     log(title='Try', message='Versuche Zuletzt Online Wert einzufügen', type='info' )
     try:
-        timestamp = datetime.now()
-        json_body = [
+        timestamp = datetime.now()                                                                                                  # Zeitpunkt des Eintrags
+        json_body = [                                                                                                               # Paket wird wie die InfluxDB es braucht zusammengebaut
             {
-                "measurement": "last_online",
-                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "measurement": "last_online",                                                                                       # last_online tabelle
+                "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),                                                                   # Zeitstempel
                 "fields": {
-                    "value": timestamp.strftime("%Y-%m-%d %H:%M:%S")
+                    "value": timestamp.strftime("%Y-%m-%d %H:%M:%S")                                                                # Wert ist der Zeitstempel
                 }
             }
         ]
-        influx_client.write_points(json_body)
+        influx_client.write_points(json_body)                                                                                       # Paket wird in die Datenbank geschrieben
         log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success' )
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
-    except Exception as e:
+    except Exception as e:                                                                                                          # Fehler werden gelogt
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
 
-
+# Funktion frägt den zuletzt Online Wert der Blickbox aus der Datenbank ab
 def pingBlickBox():
-    log(title='GET', message='pingBlickbox', type='info' )
+    log(title='GET', message='pingBlickbox', type='info' )                                      
     log(title='Try', message='Versuche den zuletzt Online Wert der Blickbox abzurufen', type='info' )
     try:
-        query = 'SELECT last("value") FROM "last_online"'
-        result = influx_client.query(query)
-        last_online_value = list(result.get_points())[0]['last']
+        query = 'SELECT last("value") FROM "last_online"'                                                               # Query um den letzten Wert der Blickbox zu bekommen
+        result = influx_client.query(query)                                                                             # Query wird ausgeführt
+        last_online_value = list(result.get_points())[0]['last']                                                        # Wert wird aus dem Resultat extrahiert
         log(title='Info', message=f'Zuletzt Online Wert der Blickbox abgerufen: {last_online_value}', type='success' )
         return last_online_value
     except Exception as e:
@@ -170,17 +173,17 @@ def pingBlickBox():
         log(title='Exception', message=error, type='error' )
         return None
 
-
+# Status von Grafana wird über die Grafana API abgefragt
 def pingGrafana():
     url = "http://grafana-server:3000/api/health"
     log(title='GET', message="pingGrafana", type='info' )
     log(title='Try', message='Versuche Verbindung mit Grafana herzusetellen', type='info' )
     try:
-        response = requests.get(url)
-        if response.status_code == 200:
+        response = requests.get(url)                                                                                        # Request an die Grafana API                   
+        if response.status_code == 200:                                                                                     # Wenn der Statuscode 200 ist, dann online
             log(title='Connected', message='Verbindung zu Grafana hergestellt', type='success' )
             return True
-        else:
+        else:                                                                                                               # sonst nicht :(
             log(title='Info', message=f'Grafana Server hat geantwortet mit Statuscode {response.status_code}', type='info' )
             return False
     except requests.ConnectionError:
@@ -188,7 +191,7 @@ def pingGrafana():
         return False
 
 
-
+# Status der Datenbank wird über die Influx Bibiliothek abgefragt
 def pingDB():
     log(title='GET', message="pingDB", type='info' )
     log(title='Try', message='Versuche Verbindung zur Datenbank herzusetellen', type='info' )
@@ -202,36 +205,36 @@ def pingDB():
         return False
 
 
-
+# Route um Temperatur werte in die Datenbank zu schreiben
 @app.route('/iot/api/insert/temperature', methods=['POST'])
 def insert_temperature():
-    log(title='POST', message=(url_for('insert_temperature') + " from " + request.remote_addr), type='info' )
-    if request.headers.get('blickbox') != 'true':
+    log(title='POST', message=(url_for('insert_temperature') + " from " + request.remote_addr), type='info' )                   # Es wird gelogt wer den Request gemacht hat
+    if request.headers.get('blickbox') != 'true':                                                                               # Nur die Blickbox darf den Wert senden (schlechte Authentifizierung, ich weiß)
         log(title='Exception', message='Unauthorized acess detected!', type='error' )
         return return_response("error", "Unauthorized", 401)
     
     log(title='Try', message='Versuche Temperatur-Wert einzufügen', type='info' )
     try:
-        data = request.json
-        if 'timestamp' in data:
+        data = request.json                                                                                                     # Daten werden aus dem Request geholt
+        if 'timestamp' in data:                                                                                                 # Wenn ein Zeitstempel mitgeschickt wurde, wird dieser genommen
             timestamp = data['timestamp']
             try:
-                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
-            except ValueError:
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")                                                   # Es wird versucht den Zeitstempel zu parsen
+            except ValueError:                                                                                                  # Wenn das nicht klappt, gibts schläge
                 log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error' )
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
-        else:
+        else:                                                                                                                   # Wenn kein Zeitstempel mitgeschickt wurde, macht das Backend die Arbeit
             timestamp = datetime.now()
 
-        if 'temperature' not in data:
+        if 'temperature' not in data:                                                                                           # Der Key muss temperature sein
             log(title='Exception', message="Key der Eingabe war nicht [temperature]", type='error' )
             return return_response("message", "Falscher Input!", 400)
-        temperature = float(data['temperature'])
-        if(temperature < -40.0 or temperature > 65.0):
+        temperature = float(data['temperature'])                                                                                # Wert wird in float umgewandelt
+        if(temperature < -40.0 or temperature > 65.0):                                                                          # und validiert
             log(title='Exception', message=f'Wert der Temperatur stimmt nicht. Wert: {temperature}', type='error' )
             return return_response("message", "Falscher Input! Temperatur nicht in Range", 400)
-        Warning(temperature, "temperature", 35.0, "Achtung sehr heiß", f'Pass auf, die Außentemperatur beträgt {temperature} Grad.')
-        json_body = [
+        Warning(temperature, "temperature", 35.0, "Achtung sehr heiß", f'Pass auf, die Außentemperatur beträgt {temperature} Grad.')    # Warnung bei zu hohen Temperaturen
+        json_body = [                                                                                                                   # Paket wird wie die InfluxDB es braucht zusammengebaut
             {
                 "measurement": "temperature",
                 "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -240,20 +243,19 @@ def insert_temperature():
                 }
             }
         ]
-        influx_client.write_points(json_body)
+        influx_client.write_points(json_body)                                                                                   # Paket wird in die Datenbank geschrieben
         log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success' )
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
-    except Exception as e:
-        error = str(e).replace('"', '').replace("'", "")
+    except Exception as e:                                                                                                      # Fehler werden gelogt
+        error = str(e).replace('"', '').replace("'", "")                                                                        # Anführungszeichen werden entfernt weil Probleme
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
 
-
+# Route um Luftfeuchtigkeits Werte in die Datenbank zu schreiben
 @app.route('/iot/api/insert/air-humidity', methods=['POST'])
 def insert_air_humidity():
-    log(title='POST', message=(url_for('insert_air_humidity') + " from " + request.remote_addr), type='info' )
-    
-    if request.headers.get('blickbox') != 'true':
+    log(title='POST', message=(url_for('insert_air_humidity') + " from " + request.remote_addr), type='info' )                  # Es wird gelogt wer den Request gemacht hat            
+    if request.headers.get('blickbox') != 'true':                                                                               # Nur die Blickbox darf den Wert senden (schlechte Authentifizierung, ich weiß)
         log(title='Exception', message='Unauthorized acess detected!', type='error' )
         return return_response("error", "Unauthorized", 401)
     
@@ -261,23 +263,23 @@ def insert_air_humidity():
     try:
         data = request.json
         if 'timestamp' in data:
-            timestamp = data['timestamp']
-            try:
-                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
-            except ValueError:
+            timestamp = data['timestamp']                                                                                       # Daten werden aus dem Request geholt
+            try:                                                                                                                # Wenn ein Zeitstempel mitgeschickt wurde, wird dieser genommen
+                timestamp = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")                                                   # Es wird versucht den Zeitstempel zu parsen
+            except ValueError:                                                                                                  # Wenn das nicht klappt, gibts schläge
                 log(title='Exception', message=f'Timestamp-Wert stimmt nicht. Wert: {timestamp}', type='error' )
                 return return_response("message", "Falsches Timestamp-Format! Richtiges Format: '%Y-%m-%d %H:%M:%S'", 400)
         else:
-            timestamp = datetime.now()
+            timestamp = datetime.now()                                                                                          # Wenn kein Zeitstempel mitgeschickt wurde, macht das Backend die Arbeit
 
-        if 'air_humidity' not in data:
+        if 'air_humidity' not in data:                                                                                          # Der Key muss air_humidity sein
             log(title='Exception', message="Key der Eingabe war nicht [air_humidity]", type='error' )
-            return return_response("message", "Falscher Input!", 400)
-        air_humidity = float(data['air_humidity'])
-        if(air_humidity < 0.0 or air_humidity > 100.0):
+            return return_response("message", "Falscher Input!", 400)   
+        air_humidity = float(data['air_humidity'])                                                                              # Wert wird in float umgewandelt
+        if(air_humidity < 0.0 or air_humidity > 100.0):                                                                         # und validiert
             log(title='Exception', message=f'Wert der Luftfeuchtigkeit stimmt nicht. Wert: {air_humidity}', type='error' )
             return return_response("message", "Falscher Input! Luftfeuchtigkeit nicht in Range", 400)
-        json_body = [
+        json_body = [                                                                                                           # Paket wird wie die InfluxDB es braucht zusammengebaut
             {
                 "measurement": "air_humidity",
                 "time": timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -286,16 +288,17 @@ def insert_air_humidity():
                 }
             }
         ]
-        influx_client.write_points(json_body)
+        influx_client.write_points(json_body)                                                                                   # Paket wird in die Datenbank geschrieben
         log(title='Info', message='Daten wurden erfolgreich eingefügt!', type='success' )
         return return_response("message", "Daten erfolgreich eingefügt!", 200)
     
-    except Exception as e:
-        error = str(e).replace('"', '').replace("'", "")
+    except Exception as e:                                                                                                      # Fehler werden gelogt
+        error = str(e).replace('"', '').replace("'", "")                                                                        # Anführungszeichen werden entfernt weil Probleme
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
-
-
+    
+# Route um Windrichtungs Werte in die Datenbank zu schreiben
+# Code ist ähnlich wie bei der temperature und air-humidity, Kommentare können von dort aus gelesen werden
 @app.route('/iot/api/insert/wind-direction', methods=['POST'])
 def insert_wind_direction():
     log(title='POST', message=(url_for('insert_wind_direction') + " from " + request.remote_addr), type='info' )
@@ -343,8 +346,9 @@ def insert_wind_direction():
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
-
-
+    
+# Route um Windgeschwindigkeits Werte in die Datenbank zu schreiben
+# Code ist ähnlich wie bei der temperature und air-humidity, Kommentare können von dort aus gelesen werden
 @app.route('/iot/api/insert/wind-speed', methods=['POST'])
 def insert_wind_speed():
     log(title='POST', message=(url_for('insert_wind_speed') + " from " + request.remote_addr), type='info' )
@@ -389,7 +393,9 @@ def insert_wind_speed():
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
-
+    
+# Route um Niederschlags Werte in die Datenbank zu schreiben
+# Code ist ähnlich wie bei der temperature und air-humidity, Kommentare können von dort aus gelesen werden
 @app.route('/iot/api/insert/rain', methods=['POST'])
 def insert_rain():
     log(title='POST', message=(url_for('insert_rain') + " from " + request.remote_addr), type='info' )
@@ -434,7 +440,9 @@ def insert_rain():
         error = str(e).replace('"', '').replace("'", "")
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
-    
+
+# Route um Batterie-Ladungs Werte in die Datenbank zu schreiben
+# Code ist ähnlich wie bei der temperature und air-humidity, Kommentare können von dort aus gelesen werden    
 @app.route('/iot/api/insert/battery-charge', methods=['POST'])
 def insert_battery_charge():
     log(title='POST', message=(url_for('insert_battery_charge') + " from " + request.remote_addr), type='info' )
@@ -482,7 +490,8 @@ def insert_battery_charge():
         log(title='Exception', message=error, type='error' )
         return return_response("error", str(e), 500)
 
-
+# Route um Batterie-Spannungs Werte in die Datenbank zu schreiben
+# Code ist ähnlich wie bei der temperature und air-humidity, Kommentare können von dort aus gelesen werden    
 @app.route('/iot/api/insert/battery-voltage', methods=['POST'])
 def insert_battery_voltage():
     log(title='POST', message=(url_for('insert_battery_voltage') + " from " + request.remote_addr), type='info' )
@@ -528,20 +537,20 @@ def insert_battery_voltage():
         return return_response("error", str(e), 500)
 
 
-
+# Funktion überprüft ob Warnungen rausgesendet werden
 def Warning(value, measurement, limit, subject, message):
     try:
-        query = f'SELECT last("value") FROM "{measurement}"'
-        result = influx_client.query(query)
-        last_value = list(result.get_points())[0]['last']
-        if(measurement == "battery_charge"):
-            last_value = 100.0 - last_value
+        query = f'SELECT last("value") FROM "{measurement}"'            # Letzer Wert wird aus Measurement geholt (zB Temperatur)
+        result = influx_client.query(query)                             # Query wird durchgeführt
+        last_value = list(result.get_points())[0]['last']               # Erster wert wird genommen
+        if(measurement == "battery_charge"):                            # Bei Akku Werten ist das Limit Invertiert deswegen von 100 abziehen
+            last_value = 100.0 - last_value 
             
-        if(value > limit and last_value < limit):
+        if(value > limit and last_value < limit):                       # Wenn das Limit unter-/überschritten wurde, wird eine Email geschickt
             sendEmail(subject, message)
     except Exception as e:
-        error = str(e).replace('"', '').replace("'", "")
-        log(title='Exception', message=error, type='error' )
+        error = str(e).replace('"', '').replace("'", "")                # Anführungszeichen werden entfernt weil die Probleme machen
+        log(title='Exception', message=error, type='error' )            # Fehler werden gelogt
 
 
 def sendEmail(subject, body):
@@ -561,11 +570,12 @@ def sendEmail(subject, body):
         server.login(senderEmail, password)
         server.sendmail(senderEmail, receiver_email, message.as_string())
 
-redis_thread = Thread(target=redis_listener)
-redis_thread.daemon = True
-redis_thread.start()
+if not use_dev_container:                                           # Wichtig für die CI/CD Pipeline da die den Redis Server nicht kennt
+    redis_thread = Thread(target=redis_listener)                    # Redis-Listener wird auf anderen Thread ausgeführt da er blockiert
+    redis_thread.daemon = True
+    redis_thread.start()
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000) 	            # App wird auf Port 5000 gestartet
 
 

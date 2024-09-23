@@ -51,8 +51,7 @@ pub mod ble_weather_station {
                     let low_byte = value[0] as u16;
                     let high_byte = value[1] as u16;
                     let combined_value = (high_byte << 8) | low_byte;
-                    let value = combined_value as f32 / 100.0;
-                    value
+                    combined_value as f32 / 100.0
                 }
                 Err(e) => {
                     peripheral.disconnect()
@@ -110,7 +109,7 @@ pub mod ble_weather_station {
             .await
             .map_err(|_| String::from("Failed to get an available Bluetooth adapter"))?;
 
-        let adapter = match adapters.into_iter().nth(0) {
+        let adapter = match adapters.into_iter().next() {
             Some(adapter) => adapter,
             None => Err(String::from("No Bluetooth adapter found"))?,
         };

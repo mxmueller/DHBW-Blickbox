@@ -11,7 +11,7 @@ def getURL(path):
     if(use_dev_container):
         return "http://localhost:5000/iot/api" + path
     else:
-        return "http://dhbwapi.maytastix.de/iot/api" + path
+        return "https://blickbox.maytastix.de/api/iot/api" + path
 
 
 session = requests.Session()
@@ -525,7 +525,7 @@ def test_batteryv_edge_cases_positve(skip_batteryv_tests, battery_voltage):
     assert response.json() == {"message": "Falscher Input! Batteriespannungs Wert nicht in Range"}
 
 @pytest.mark.usefixtures("skip_batteryv_tests")
-@pytest.mark.parametrize("battery_voltage", [20.4, 99.9, 50.0])
+@pytest.mark.parametrize("battery_voltage", [0.4, 1.9, 3.0])
 def test_batteryv_correct_values(skip_batteryv_tests, battery_voltage):
     if skip_batteryv_tests:
         pytest.skip("No-BatteryV Option gesetzt")

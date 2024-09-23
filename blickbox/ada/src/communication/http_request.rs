@@ -1,9 +1,10 @@
 pub mod http_request {
+    use std::collections::VecDeque;
     use reqwest;
     use reqwest::Client;
     use serde::Serialize;
-    use crate::communication::logging::logging::{log, LogChannel};
-    use crate::communication::redis::redis::RedisHandler;
+    use crate::communication::logging::logging::{log, LogEntry};
+    
     use crate::SensorData;
 
     #[derive(Serialize, Clone, Debug)]
@@ -41,10 +42,10 @@ pub mod http_request {
         timestamp: String,
         battery_voltage: f32,
     }
+  
 
     // Sendet Daten von Sara als JSON per HTTP an API
     pub async fn send_data(handler: &RedisHandler, url: &str, sensor_data: &SensorData) -> crate::Result<()> {
-
         let base_url = url;
 
         // Serialisiert Daten für API
@@ -69,8 +70,10 @@ pub mod http_request {
         // Erstellt reqwest HTTP Client
         let client = Client::new();
 
+        let mut buffer: VecDeque<LogEntry> = VecDeque::new();
+
         for data_type in data_types.clone() {
-            let url = format!("{}{}", base_url, data_type.0);
+            let url = format!("{}/{}", base_url, data_type.0);
 
             let json = data_type.1;
             println!("JSON: {} sent to <{:?}>", json, url);
@@ -93,18 +96,16 @@ pub mod http_request {
                 true => {
                     println!("Sensor data from {} sent successfully!", data_type.0);
                     let log_message = format!("ADA sent {}", data_type.0);
-                    let info_log = log(String::from("ADA"), log_message, String::from("info"));
-                    handler.log_to_channel(LogChannel::Ada, info_log).await;
+                    let log = log(String::from("ADA"), log_message, String::from("info"));
+                    buffer.push_back(log);
                 }
                 false => {
-                    let log_message = format!("ADA could not sent {}", data_type.0);
-                    let error_log = log(String::from("ADA"), log_message, String::from("error"));
-                    handler.log_to_channel(LogChannel::Ada, error_log).await;
                     Err(format!("Request failed: {:?}", response.status()))?;
                 }
-            }
+            };
         }
-        Ok(())
+        buffer.push_back(log(String::from("ADA"), String::from("Successfully sent batch of sensor data"), String::from("info")));
+        Ok(buffer)
     }
 
     pub fn get_temp_json(sensor_data: &SensorData) -> String {
@@ -112,8 +113,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             temperature: sensor_data.temperature,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_humidity_json(sensor_data: &SensorData) -> String {
@@ -121,8 +121,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             air_humidity: sensor_data.humidity,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_wind_speed_json(sensor_data: &SensorData) -> String {
@@ -130,8 +129,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             wind_speed: sensor_data.wind_speed,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_wind_direction_json(sensor_data: &SensorData) -> String {
@@ -139,8 +137,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             wind_direction: sensor_data.wind_direction,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_rain_json(sensor_data: &SensorData) -> String {
@@ -148,8 +145,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             rain: sensor_data.rain,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_battery_level_json(sensor_data: &SensorData) -> String {
@@ -157,8 +153,7 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             battery_charge: sensor_data.battery_charge,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 
     pub fn get_battery_voltage_json(sensor_data: &SensorData) -> String {
@@ -166,7 +161,6 @@ pub mod http_request {
             timestamp: sensor_data.clone().timestamp,
             battery_voltage: sensor_data.battery_voltage,
         };
-        let json = serde_json::to_string(&data).unwrap();
-        return json
+        serde_json::to_string(&data).unwrap()
     }
 }

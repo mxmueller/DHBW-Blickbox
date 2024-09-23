@@ -2,7 +2,7 @@ pub mod tests {
 
     #[cfg(test)]
     mod tests {
-        use std::collections::VecDeque;
+        
         use std::io::{Read, Seek, SeekFrom};
 
         use mockito;

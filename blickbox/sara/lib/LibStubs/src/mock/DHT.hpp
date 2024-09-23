@@ -1,7 +1,7 @@
 #ifndef DHT_MOCK_HPP
 #define DHT_MOCK_HPP
 
-#include <types/Numbers.h>
+#include <cstdint>
 #include <iostream>
 
 class DHT {

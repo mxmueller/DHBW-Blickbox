@@ -1,7 +1,7 @@
 #ifndef __SPARKFUN_WEATHER_METER_KIT_H__
 #define __SPARKFUN_WEATHER_METER_KIT_H__
 
-#include <types/Numbers.h>
+#include <cstdint>
 #include <stubs/ArduinoStubs.hpp>
 #include <makros/ArdunioMakros.hpp>
 #include <math.h>

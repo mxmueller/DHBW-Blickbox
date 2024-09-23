@@ -1,5 +1,5 @@
-import GrafanaValidation from './grafana.container';
+import GrafanaValidation from "./grafana.container";
 
-test('GrafanaValidation kann importiert werden', () => {
-    expect(GrafanaValidation).toBeDefined();
+test("GrafanaValidation kann importiert werden", () => {
+  expect(GrafanaValidation).toBeDefined();
 });
