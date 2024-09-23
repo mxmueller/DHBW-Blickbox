@@ -42,11 +42,13 @@ pub mod http_request {
         timestamp: String,
         battery_voltage: f32,
     }
+  
 
-    pub async fn send_data(url: &str, sensor_data: &SensorData) -> crate::Result<VecDeque<LogEntry>> {
-
+    // Sendet Daten von Sara als JSON per HTTP an API
+    pub async fn send_data(handler: &RedisHandler, url: &str, sensor_data: &SensorData) -> crate::Result<()> {
         let base_url = url;
 
+        // Serialisiert Daten für API
         let temp_json = get_temp_json(&sensor_data);
         let hum_json = get_humidity_json(&sensor_data);
         let ws_json = get_wind_speed_json(&sensor_data);
@@ -65,7 +67,7 @@ pub mod http_request {
             (String::from("battery-voltage"), battery_voltage_json),
         ];
 
-        // Create a reqwest HTTP client
+        // Erstellt reqwest HTTP Client
         let client = Client::new();
 
         let mut buffer: VecDeque<LogEntry> = VecDeque::new();
@@ -76,7 +78,7 @@ pub mod http_request {
             let json = data_type.1;
             println!("JSON: {} sent to <{:?}>", json, url);
 
-            // Send the sensor data as JSON in the body of a POST request
+            // Sendet Sensordaten als JSON im Body der POST-Anfrage
             let response = match client.post(url)
                 .header("Content-Type", "application/json")
                 .header("blickbox", "true")
@@ -89,6 +91,7 @@ pub mod http_request {
                 }
             };
 
+            // Überprüft Erfolg der Anfrage
             match response.status().is_success() {
                 true => {
                     println!("Sensor data from {} sent successfully!", data_type.0);

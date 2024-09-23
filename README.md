@@ -1,5 +1,6 @@
-## Board
-https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog
+### Sprint-Board: [Taiga Projektboard: Gruppe 1 IoT](https://taiga-dhhdhai-u11685.vm.elestio.app/project/gruppe-1-iot/backlog)
+
+### Dokumentation & Setup: [DHBW-Blickbox GitHub Pages](https://mxmueller.github.io/DHBW-Blickbox/)
 
 ## Git Workflow
 1. **Sprint-basierte Entwicklung:**
@@ -46,37 +47,3 @@ Im Team wurden die folgenden Kriterien definiert, damit eine Aufgabe oder ein Pr
 10. **Review mit dem Product Owner:** Der Product Owner hat das Ergebnis überprüft und akzeptiert.
 
 Die DoD wird regelmäßig überprüft und bei Bedarf aktualisiert, um sicherzustellen, dass sie den aktuellen Anforderungen entspricht.
-
-
-## Rollen
-**Dokumentation** 
-- Release Notes (Aron, Max)
-- Diagramme allg.  / UML (May)
-- arc42 (LaTeX) pflegen (Vivi, Aron)
-
-**PO/Scrum** (Max)
-- Moderation Freitagsmeeting 
-- Showcase der Demo
-- Backlog pflegen
-- Sprinttermine legen
-
-**Techlead Hardware** (May, Vivi)
-
-**Techlead Client**
-- Frontend (Max)
-- Backend (Aron)
-
-**Techlead Infrastruktur**
-- Server (Webserver für Client) (Max)
-- WLAN 
-- Sensordaten (May)
-
-
-## Releases
-Die Releases erfolgen innerhalb der Sprintwechsel. Als Dokumentation dienen die Releasnotes innerhalb der Git-Releases.
-
-
-## Releases
-Die Releases erfolgen innerhalb der Sprintwechsel. Als Dokumentation dienen die Releasnotes innerhalb der Git-Releases.
-
-

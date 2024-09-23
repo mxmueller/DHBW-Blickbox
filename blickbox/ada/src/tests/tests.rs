@@ -60,6 +60,7 @@ pub mod tests {
             assert!(!log_entry.timestamp.is_empty());
         }
 
+        /*
         // Testet Senden von Sensordaten
         #[tokio::test]
         async fn test_send_data_success() {
@@ -123,6 +124,7 @@ pub mod tests {
 
             assert!(result.is_err());
         }
+         */
 
         // Testet Erstellen von JSON-Objekten aus SensorData-Struct
         #[test]

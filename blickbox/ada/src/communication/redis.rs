@@ -33,6 +33,7 @@ pub mod redis {
             })
         }
 
+        // Legt fest, ob ein Log an die ADA- oder SARA-Channel gesendet wird
         pub async fn log_to_channel(&self, channel: LogChannel, log_entry: LogEntry) {
             let mut logs = self.logs.lock().await;
             logs.entry(channel)
@@ -40,6 +41,7 @@ pub mod redis {
                 .push_back(log_entry);
         }
 
+        // Versucht die Publish-Verbindung zu Redis-Mikroservice aufzubauen (3 Versuche)
         async fn acquire_publish_conn(&self) -> Result<tokio::sync::MutexGuard<'_, redis::aio::MultiplexedConnection>, String> {
             const MAX_RETRIES: u32 = 3;
             const RETRY_DELAY: Duration = Duration::from_secs(1);
@@ -61,6 +63,7 @@ pub mod redis {
             Err("Max retries reached while trying to acquire lock".to_string())
         }
 
+        // Publisht alle Logs an Redis-Mikroservice
         pub async fn publish_all(&self) -> Result<(), redis::RedisError> {
 
             let mut conn = match self.acquire_publish_conn().await {
@@ -73,6 +76,7 @@ pub mod redis {
 
             let mut buffers = self.logs.lock().await;
 
+            // Sendet entweder an SARA- oder ADA-Channel
             for (channel, buffer) in buffers.iter_mut() {
                 let channel_str = match channel {
                     LogChannel::Ada => "ada-logs",
@@ -89,6 +93,7 @@ pub mod redis {
             Ok(())
         }
 
+        // Publisht Handshake-Logs
         pub async fn publish_handshake(&self, channel_str: String, log: HandshakeLog) -> Result<(), redis::RedisError> {
             let mut conn = match self.acquire_publish_conn().await {
                 Ok(conn) => conn,
@@ -103,6 +108,7 @@ pub mod redis {
             Ok(())
         }
 
+        // Subscribt zu ADA- oder SARA-Channel
         pub async fn subscribe(&self, channel: &str) -> Result<(), redis::RedisError> {
             let mut conn = self.pubsub_conn.lock().await;
             conn.subscribe(channel).await?;
@@ -110,6 +116,7 @@ pub mod redis {
             Ok(())
         }
 
+        // Wartet auf Nachricht auf subscribtem Channel
         pub async fn listen(&self) -> Result<(), redis::RedisError> {
             let mut conn = self.pubsub_conn.lock().await;
             let mut pubsub_stream = conn.on_message();
@@ -120,6 +127,7 @@ pub mod redis {
 
                 println!("Received message on channel {}: {}", channel, payload);
 
+                // Prüft Art der Nachricht und handelt diese ab
                 if payload == "Restart" {
                     if channel.contains("ada") {
                         let restart_log = handshake_log(String::from("acknowledge"));
@@ -149,14 +157,14 @@ pub mod redis {
         }
     }
 
-
+    // Initialisiert Redis
     pub async fn initialize_redis(redis_url: &str) -> Result<RedisHandler, redis::RedisError> {
         let handler = RedisHandler::new(redis_url).await?;
 
-        // ADA subscription
+        // ADA Subscription
         handler.subscribe("ada").await?;
 
-        // SARA subscription
+        // SARA Subscription
         handler.subscribe("sara").await?;
 
         Ok(handler)

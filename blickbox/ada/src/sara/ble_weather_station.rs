@@ -19,7 +19,7 @@ pub mod ble_weather_station {
     const BATTERY_VOLTAGE_UUID: Uuid = uuid_from_u16(0x2302);
 
     pub async fn get_data_ble(peripheral: Peripheral, sensor_data: &mut SensorData) -> crate::Result<()> {
-        // Discover possible services from peripheral device
+        // Sucht mögliche Services vom Peripherie Gerät (SARA)
         peripheral.discover_services()
             .await
             .map_err(|_| String::from("Failed to discover services of peripheral"))?;
@@ -36,7 +36,7 @@ pub mod ble_weather_station {
 
         for uuid in characteristics {
 
-            // Find the temperature characteristics
+            // Findet Temperatur-Charakteristiken
             let characteristic = peripheral
                 .characteristics()
                 .iter()
@@ -45,6 +45,7 @@ pub mod ble_weather_station {
 
             println!("{}", uuid);
 
+            // Verarbeitet gelesene Werte
             let sensor_value = match peripheral.read(&characteristic).await {
                 Ok(value) => {
                     let low_byte = value[0] as u16;
@@ -60,6 +61,7 @@ pub mod ble_weather_station {
                 }
             };
 
+            // Setzt Sensorwerte für SensorData-Struct
             match uuid {
                 TEMP_NOTIFY_CHARACTERISTICS_UUID => {
                     println!("temp updated");
@@ -99,10 +101,10 @@ pub mod ble_weather_station {
     }
 
     pub async fn connect_peripheral_device() -> crate::Result<Peripheral> {
-        // Initialize the Bluetooth manager
+        // Initialisiert Bluetooth Manager
         let manager = Manager::new().await.unwrap();
 
-        // Get the first Bluetooth adapter available
+        // Erhält erst-möglichen Bluetooth Adapter
         let adapters = manager.adapters()
             .await
             .map_err(|_| String::from("Failed to get an available Bluetooth adapter"))?;
@@ -112,15 +114,13 @@ pub mod ble_weather_station {
             None => Err(String::from("No Bluetooth adapter found"))?,
         };
 
-        // Start scanning for Bluetooth devices
+        // Startet das Scannen für Bluetooth Geräte
         adapter.start_scan(ScanFilter::default())
             .await
             .map_err(|_| String::from("Failed to start scanning Bluetooth devices"))?;
         time::sleep(Duration::from_secs(2)).await;
 
-        //find the device we're interested in which would be saras services
-
-        // Connect to a peripheral device offering the desired service
+        // Verbindet zum Peripherie-Gerät, das den gewünschten Service (SARA Weather Station) anbietet
         let peripheral = match adapter.peripherals().await {
             Ok(peripherals) => {
                 let mut peripheral_found = None;
@@ -144,7 +144,7 @@ pub mod ble_weather_station {
             }
         };
 
-        // Connect to the peripheral
+        // Verbindet zum Peripherie-Gerät
         peripheral.connect()
             .await
             .map_err(|_| String::from("Failed to connect to peripheral"))?;

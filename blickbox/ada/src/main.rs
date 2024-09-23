@@ -85,6 +85,7 @@ async fn main() {
                 battery_voltage: 3.7,
             });
 
+            // Wenn Sensordaten vorhanden sind, werden diese an API gesendet und Logs erstellt
             if let Some(data) = sensor_data {
                 match send_data("https://blickbox.maytastix.de/api/iot/api/insert", &data).await {
                     Ok(logs) => {
@@ -99,6 +100,7 @@ async fn main() {
                 }
             }
 
+            // Sendet alle Logs
             if let Err(error) = handler.publish_all().await {
                 eprintln!("Failed to publish logs: {}", error);
                 let error_log = log(String::from("Error"), format!("Failed to publish logs: {}", error), String::from("error"));
@@ -108,7 +110,7 @@ async fn main() {
     }
 }
 
-
+// Verarbeitet Sensordaten (Datei erstellen und Daten später hineinschreiben, Struct erstellen, zu Sara verbinden und Daten erhalten)
 async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
 
     // Öffnet Datei in "append-mode" und erstellt sie, wenn sie nicht existiert
@@ -157,6 +159,7 @@ async fn handle_sensor_data(handler: &RedisHandler) -> Result<SensorData> {
     Ok(sensor_data)
 }
 
+// Aktuelle Zeit als String, um sie API zu senden
 pub fn get_time() -> String {
     let date_time_format: DateTime<Utc> = SystemTime::now().into();
     date_time_format.with_timezone(&Berlin).format("%Y-%m-%d %H:%M:%S").to_string()

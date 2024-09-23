@@ -3,6 +3,7 @@ pub mod mocking_sensor_data {
 
     use crate::SensorData;
 
+    // Generiert Mock-Sensordaten
     pub fn generate_mock_sensor_data() -> SensorData {
         let mut rng = rand::thread_rng();
         SensorData {
